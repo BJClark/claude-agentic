@@ -1,18 +1,19 @@
-# Claude Agentic Commands & Agents
+# Claude Agentic Commands, Skills & Agents
 
-A collection of specialized commands and agents for Claude to help with software development workflows including planning, research, implementation, and PR management.
+A collection of specialized skills, commands, and agents for Claude Code to help with software development workflows including planning, research, implementation, and PR management.
 
 ## Overview
 
 This toolkit provides:
-- **Commands**: Interactive workflows for planning, research, debugging, and PR management
+- **Skills**: Advanced orchestrating workflows with isolated execution, supporting files, and auto-approved tools
+- **Commands**: Simple interactive workflows for git, commits, and single-file operations
 - **Agents**: Specialized sub-agents for codebase analysis, pattern finding, and web research
 
 ## Installation
 
 ### Claude Code (CLI)
 
-Claude Code uses a `.claude/` directory for commands and agents.
+Claude Code uses a `.claude/` directory for skills, commands, and agents.
 
 ```bash
 # Clone the repository
@@ -22,6 +23,7 @@ git clone https://github.com/your-org/claude-agentic.git
 mkdir -p .claude
 cp -r claude-agentic/agents .claude/
 cp -r claude-agentic/commands .claude/
+cp -r claude-agentic/skills .claude/
 ```
 
 Or install globally for all projects:
@@ -30,9 +32,12 @@ Or install globally for all projects:
 mkdir -p ~/.claude
 cp -r claude-agentic/agents ~/.claude/
 cp -r claude-agentic/commands ~/.claude/
+cp -r claude-agentic/skills ~/.claude/
 ```
 
-Commands are available immediately - use `/create_plan`, `/research_codebase`, etc.
+Skills and commands are available immediately - use `/create_plan`, `/research-codebase`, etc.
+
+> **Note**: Skills (in `skills/`) are the recommended format for complex workflows. They support isolated execution (`context: fork`), auto-approved tools, and supporting files. Commands (in `commands/`) still work and are used for simpler operations.
 
 ### Cursor
 
