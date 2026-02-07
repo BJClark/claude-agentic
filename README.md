@@ -122,6 +122,16 @@ If commands don't appear, restart your editor/CLI to reload configurations.
 - **`/iterate_plan`** - Update existing implementation plans based on feedback
 - **`/validate_plan`** - Validate implementation plans against codebase reality
 
+### DDD Discovery-to-Implementation
+- **`/ddd_full`** - Complete end-to-end DDD workflow (all 7 steps with confirmation gates)
+- **`/ddd_align`** - Step 1: Align & understand the business domain from a PRD
+- **`/ddd_discover`** - Step 2: EventStorming — discover events, commands, actors, policies
+- **`/ddd_decompose`** - Step 3: Decompose domain into sub-domains and bounded contexts
+- **`/ddd_strategize`** - Step 4: Classify sub-domains on Core Domain Chart
+- **`/ddd_connect`** - Step 5: Context mapping — define relationships between contexts
+- **`/ddd_define`** - Step 7: Build Bounded Context and Aggregate Design Canvases
+- **`/ddd_plan`** - Step 8: Convert DDD artifacts into `/implement_plan`-compatible plans
+
 ### Research & Analysis
 - **`/research_codebase`** - Comprehensively research codebase using parallel agents
 - **`/debug`** - Debug issues with systematic investigation
@@ -151,6 +161,11 @@ These specialized agents are used by commands (or can be invoked directly):
 - **`codebase-analyzer`** - Analyzes HOW code works, traces data flow
 - **`codebase-locator`** - Finds WHERE code lives in the codebase
 - **`codebase-pattern-finder`** - Finds similar implementations and patterns
+
+### DDD Discovery
+- **`ddd-event-discoverer`** - Extracts domain building blocks (events, commands, actors, policies) from requirements
+- **`ddd-context-analyzer`** - Identifies bounded context boundaries from language patterns
+- **`ddd-canvas-builder`** - Synthesizes DDD artifacts into formal canvases with Mermaid diagrams
 
 ### Research & Documentation
 - **`web-search-researcher`** - Researches information from web sources
@@ -223,6 +238,26 @@ Claude: I'm ready to research the codebase. What would you like to know?
 
 User: How does webhook processing work?
 Claude: [Spawns parallel agents, synthesizes findings, creates research doc]
+```
+
+### DDD Discovery Workflow
+
+```
+User: /ddd_full path/to/prd.md
+Claude: [Runs all 7 DDD steps interactively, with confirmation gates between each]
+```
+
+Or run individual steps:
+
+```
+User: /ddd_align path/to/prd.md        → research/ddd/01-alignment.md
+User: /ddd_discover                     → research/ddd/02-event-catalog.md
+User: /ddd_decompose                    → research/ddd/03-sub-domains.md
+User: /ddd_strategize                   → research/ddd/04-strategy.md
+User: /ddd_connect                      → research/ddd/05-context-map.md
+User: /ddd_define                       → research/ddd/06-canvases.md
+User: /ddd_plan                         → plans/YYYY-MM-DD-ddd-*.md
+User: /implement_plan plans/...         → code implementation
 ```
 
 ### Generate PR Description
@@ -323,6 +358,14 @@ Commands can be chained for complex workflows:
 ```
 /research_codebase → /create_plan → /implement_plan → /describe_pr
 ```
+
+DDD discovery workflow:
+
+```
+/ddd_align → /ddd_discover → /ddd_decompose → /ddd_strategize → /ddd_connect → /ddd_define → /ddd_plan → /implement_plan
+```
+
+Or use `/ddd_full` for the complete end-to-end chain with confirmation gates.
 
 ## Contributing
 
