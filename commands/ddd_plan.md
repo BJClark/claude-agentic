@@ -5,6 +5,8 @@ model: opus
 
 # DDD Step 8: Plan (DDD to Implementation)
 
+Ultrathink about the translation from domain model to implementation. Consider how aggregates map to code structures, how events flow through infrastructure, and how to phase work for incremental delivery.
+
 Convert all DDD discovery artifacts into concrete implementation plans compatible with `/implement_plan`. Produce one plan per bounded context, ordered by strategic priority.
 
 ## Prerequisites

@@ -93,9 +93,44 @@ Then wait for user input.
    **Open Questions:**
    - [Technical uncertainty]
    - [Design decision needed]
-
-   Which approach aligns best with your vision?
    ```
+
+4. **Get structured decisions** using AskUserQuestion:
+
+   Use AskUserQuestion with up to 4 questions to get user decisions on:
+   - **Approach**: Which design option to pursue (populate options from your research)
+   - **Priority**: Speed vs quality vs simplicity tradeoff
+   - **Scope**: Full implementation vs MVP vs phased
+
+   Example:
+   ```
+   <invoke name="AskUserQuestion">
+     questions: [
+       {
+         "question": "Which implementation approach aligns best with your goals?",
+         "header": "Approach",
+         "multiSelect": false,
+         "options": [
+           {"label": "[Option A]", "description": "[Pros/cons from research]"},
+           {"label": "[Option B]", "description": "[Pros/cons from research]"},
+           {"label": "[Option C]", "description": "[Pros/cons from research]"}
+         ]
+       },
+       {
+         "question": "What's the implementation priority?",
+         "header": "Priority",
+         "multiSelect": false,
+         "options": [
+           {"label": "Speed", "description": "Fast implementation, accept some technical debt"},
+           {"label": "Quality", "description": "Thorough implementation, takes longer"},
+           {"label": "Simplicity", "description": "Minimal complexity, easiest to maintain"}
+         ]
+       }
+     ]
+   </invoke>
+   ```
+
+   Tailor the options based on what you discovered in research. Don't use generic options — make them specific to the actual design choices.
 
 ### Step 3: Plan Structure Development
 

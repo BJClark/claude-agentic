@@ -5,6 +5,8 @@ model: opus
 
 # DDD Full Workflow
 
+Ultrathink about the end-to-end domain discovery process. Consider how each step builds on the previous, where the most important decisions will be made, and how to maintain coherence across the entire artifact chain.
+
 Run the complete Domain-Driven Design discovery-to-implementation workflow. Chains all 7 steps with confirmation gates between each, producing a full artifact chain from PRD to implementable plans.
 
 ## Artifact Chain

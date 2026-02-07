@@ -16,7 +16,7 @@ Research the following topic: **$ARGUMENTS**
 - **Branch**: !`git branch --show-current`
 - **Last Commit**: !`git log -1 --oneline`
 - **Modified Files**: !`git status --short | head -10`
-- **Repository**: !`basename $(git rev-parse --show-toplevel)`
+- **Repository**: !`git rev-parse --show-toplevel`
 
 ## CRITICAL: Document What Exists
 

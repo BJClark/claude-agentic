@@ -5,6 +5,8 @@ model: opus
 
 # DDD Step 5: Connect (Context Mapping)
 
+Ultrathink about inter-context relationships and integration patterns. Consider power dynamics between teams, data ownership, translation needs, and the cost of coupling.
+
 Define the relationships between bounded contexts using standard context mapping patterns. Identify integration points, data flow direction, and upstream/downstream dependencies.
 
 ## Prerequisites

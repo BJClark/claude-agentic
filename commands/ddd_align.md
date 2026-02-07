@@ -5,6 +5,8 @@ model: opus
 
 # DDD Step 1: Align & Understand
 
+Ultrathink about the business domain before starting. Consider the core business entities, domain boundaries, ubiquitous language, and business invariants.
+
 Establish shared understanding of the business domain before any technical discovery. Extract business context, actors, value propositions, and constraints from a PRD or conversational description.
 
 ## Initial Response

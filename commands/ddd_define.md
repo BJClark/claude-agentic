@@ -5,6 +5,8 @@ model: opus
 
 # DDD Step 7: Define (Canvases)
 
+Ultrathink about aggregate design, invariant enforcement, and state lifecycle transitions. Consider consistency boundaries, concurrency implications, and the correctness criteria that matter most.
+
 Build formal Bounded Context Canvases and Aggregate Design Canvases for each context. Synthesize all prior artifacts into structured canvases with Mermaid state diagrams for aggregate lifecycles.
 
 ## Prerequisites

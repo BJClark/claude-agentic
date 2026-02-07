@@ -5,6 +5,8 @@ model: opus
 
 # DDD Step 3: Decompose
 
+Ultrathink about language boundaries and context separation. Consider where vocabulary shifts meaning, where pivotal events mark phase transitions, and where actor responsibilities diverge.
+
 Identify bounded context boundaries by analyzing language patterns in the event catalog. Group building blocks into sub-domains based on shared vocabulary, pivotal events, and actor boundaries.
 
 ## Prerequisites

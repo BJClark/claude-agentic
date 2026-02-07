@@ -5,6 +5,8 @@ model: opus
 
 # DDD Step 2: Discover (EventStorming)
 
+Ultrathink about domain events and their causal relationships before starting. Consider temporal ordering, failure modes, and implicit business rules.
+
 Perform structured EventStorming to extract domain building blocks from your requirements. Walk through the domain timeline interactively, identifying events, commands, actors, policies, and read models.
 
 ## Prerequisites

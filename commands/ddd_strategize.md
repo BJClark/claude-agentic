@@ -5,6 +5,8 @@ model: opus
 
 # DDD Step 4: Strategize
 
+Ultrathink about business differentiation and model complexity. Consider which contexts provide competitive advantage, which contain irreducible complexity, and where investment will generate the most value.
+
 Classify each sub-domain on the Core Domain Chart and make strategic investment decisions. Determine which contexts deserve deep modeling (CQRS/ES) versus simple implementations (CRUD).
 
 ## Prerequisites
