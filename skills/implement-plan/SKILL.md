@@ -5,6 +5,14 @@ model: opus
 context: fork
 allowed-tools: Read, Edit, Write, Grep, Glob, Bash, TodoWrite, AskUserQuestion
 argument-hint: [plan-file-path]
+hooks:
+  PostToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-on-save.sh"
+          timeout: 30
+          statusMessage: "Running lint check..."
 ---
 
 # Implement Plan

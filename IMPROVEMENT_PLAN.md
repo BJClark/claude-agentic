@@ -80,7 +80,9 @@ skills/
 │   └── SKILL.md
 ├── ddd-full/               # ✅ Phase 3
 │   └── SKILL.md
-├── debug/                  # ✅ Phase 3
+├── debug-issue/            # ✅ Phase 3 + Phase 2 (team mode)
+│   └── SKILL.md
+├── local-review/           # ✅ Phase 2 (migrated + team mode)
 │   └── SKILL.md
 ├── create-plan/            # ✅ Phase 3
 │   ├── SKILL.md
@@ -667,15 +669,17 @@ claude -p "/command-name" \
 
 ### Phase 2: Agent Teams (Week 2) 🚀
 
-1. Add team mode option to `ddd_full`
-2. Add team mode to `research_codebase`
-3. Add team mode to `local_review`
-4. Add team mode to `debug`
+**✅ COMPLETED:**
+1. ✅ Add team mode option to `ddd_full` — 3 teammates for parallel DDD steps with staged dependencies
+2. ✅ Add team mode to `research_codebase` — 3 parallel teammates (locator, analyzer, pattern-finder)
+3. ✅ Migrate `local_review` to skill and add team mode — 3 parallel reviewers (security, performance, tests)
+4. ✅ Add team mode to `debug` — competing hypothesis investigators with adversarial messaging
 
-**Expected Impact:**
-- 2-3x faster for complex research/review
-- More thorough coverage
-- Parallel exploration benefits
+**Results:**
+- All 4 team-enabled skills use AskUserQuestion to offer team vs single mode
+- Team structures follow documented coordination patterns (parallel, staged, adversarial)
+- local-review migrated from command to skill with `context:fork` and full review workflow
+- Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
 
 ### Phase 3: Full Skill Migration (Weeks 3-4) 📦
 
@@ -694,10 +698,11 @@ claude -p "/command-name" \
 
 ### Phase 4: Advanced Features (Ongoing) ⚡
 
-1. LSP integration for code intelligence (if applicable)
+**Partially Complete:**
+1. ✅ Skill-scoped hooks: lint-on-save for implement-plan (PostToolUse Write|Edit), artifact verification for ddd-full and debug-issue (TaskCompleted)
 2. Custom MCP servers for project-specific tools
-3. Advanced hook chains for quality gates
-4. Team coordination patterns documentation
+3. ✅ Hook scripts created: `.claude/hooks/lint-on-save.sh`, `.claude/hooks/verify-artifact-exists.sh`
+4. ✅ Team coordination patterns documentation: `research/2026-02-07-team-coordination-patterns.md`
 
 ---
 
@@ -805,9 +810,10 @@ claude -p "/command-name" \
 3. ✅ AskUserQuestion added to `create_plan`
 4. ✅ "ultrathink" added to all 8 DDD commands
 5. ✅ Phase 1 quick wins complete
-6. 🚀 Prototype agent teams for `ddd_full` (Phase 2)
+6. ✅ Agent teams added to ddd_full, research_codebase, local_review, debug (Phase 2)
 7. ✅ Phase 3 full skill migration complete (13 skills)
-8. 🎊 Measure and document improvements
+8. ✅ Skill-scoped hooks and team coordination patterns (Phase 4)
+9. 🎊 Measure and document improvements
 
 ---
 
@@ -832,4 +838,4 @@ claude -p "/command-name" \
 ---
 
 **Last Updated**: 2026-02-07
-**Status**: Phase 1 ✅ + Phase 3 ✅ Complete — Ready for Phase 2 (Agent Teams) or Phase 4 (Advanced Features)
+**Status**: Phase 1 ✅ + Phase 2 ✅ + Phase 3 ✅ + Phase 4 (partial) ✅ Complete — Custom MCP servers remaining

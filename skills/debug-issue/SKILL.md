@@ -6,6 +6,13 @@ context: fork
 user-invocable: true
 allowed-tools: Read, Grep, Glob, Bash, Task, AskUserQuestion
 argument-hint: [issue-description-or-plan-path]
+hooks:
+  TaskCompleted:
+    - hooks:
+        - type: command
+          command: "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/verify-artifact-exists.sh"
+          timeout: 10
+          statusMessage: "Verifying debug findings..."
 ---
 
 # Debug
@@ -117,6 +124,57 @@ Spawn parallel Task agents:
 Would you like me to investigate something specific further?
 ```
 
+## Agent Team Mode (Experimental)
+
+For complex bugs with unclear root cause, offer competing hypothesis investigation:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "This bug could have multiple root causes. Investigate with competing hypotheses?",
+    "header": "Team Mode",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Competing Hypotheses (Recommended)",
+        "description": "3 investigators test different theories in parallel. Faster root cause identification."
+      },
+      {
+        "label": "Single Investigation",
+        "description": "Investigate sequentially. Simpler, lower token cost."
+      }
+    ]
+  }]
+</invoke>
+
+**If team mode selected**, first formulate 3 hypotheses based on the problem description, then create a team:
+
+```
+Lead: Debug Coordinator (you)
+├─ Teammate 1: Hypothesis A investigator
+├─ Teammate 2: Hypothesis B investigator
+└─ Teammate 3: Hypothesis C investigator
+```
+
+**Coordination rules:**
+- Each teammate investigates one hypothesis exclusively
+- Teammates should actively try to **disprove** each other's theories by messaging findings
+- When a teammate finds evidence, they should share it with the team so others can evaluate
+- The lead monitors the debate and converges on the most supported theory
+- Read-only investigation — no file editing by teammates
+
+**Task setup:**
+1. Formulate 3 distinct hypotheses about the root cause
+2. Create 3 parallel investigation tasks, one per hypothesis
+3. Spawn teammates, each with their hypothesis and available evidence
+4. As evidence accumulates, steer the investigation toward the strongest theory
+
+**After team completes**, synthesize the debug report with:
+- Which hypothesis was confirmed/denied and why
+- Supporting evidence from each investigator
+- Root cause and recommended fix
+
+Requires: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in settings or environment.
+
 ## Guidelines
 
 - **Focus on manual testing scenarios**: For debugging during implementation
@@ -124,3 +182,4 @@ Would you like me to investigate something specific further?
 - **Read files completely**: No limit/offset
 - **No file editing**: Pure investigation only
 - **Guide back to user**: Some issues are outside reach
+- **Team mode is optional**: Only offer when the root cause is genuinely unclear

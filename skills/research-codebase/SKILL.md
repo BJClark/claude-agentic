@@ -103,20 +103,48 @@ gh repo view --json owner,name
 
 ## Agent Team Mode (Experimental)
 
-For complex research requiring multiple perspectives, you can optionally spawn an agent team:
+For complex research requiring multiple perspectives, offer team mode:
 
-- Lead: Research coordinator
-- Teammate 1: codebase-locator (WHERE)
-- Teammate 2: codebase-analyzer (HOW)
-- Teammate 3: codebase-pattern-finder (EXAMPLES)
-- Teammate 4: Historical context (docs/tickets)
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "This research could benefit from parallel exploration. Create an agent team?",
+    "header": "Team Mode",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Agent Team (Recommended)",
+        "description": "3 teammates explore WHERE, HOW, and EXAMPLES in parallel. More thorough coverage."
+      },
+      {
+        "label": "Single Session",
+        "description": "Use sub-agents within this session. Simpler, lower token cost."
+      }
+    ]
+  }]
+</invoke>
 
-Enable with: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`
-
-To use team mode, ask user first:
+**If team mode selected**, create a team with this structure:
 
 ```
-This research could benefit from parallel exploration. Create an agent team with 4 teammates?
-- Yes (Faster, more thorough)
-- No (Simpler, single session)
+Lead: Research Coordinator (you)
+├─ Teammate 1: Locator — find WHERE files/components live, map directory structure
+├─ Teammate 2: Analyzer — understand HOW code works, trace data flows and dependencies
+└─ Teammate 3: Pattern Finder — find EXAMPLES of similar patterns, usage conventions
 ```
+
+**Coordination rules:**
+- All 3 teammates start simultaneously (no dependencies between them)
+- Each teammate gets the research question and project context
+- Give each teammate their specific lens (location vs analysis vs patterns)
+- Teammates should message each other when they find cross-cutting connections
+- Lead synthesizes all findings into the final research document
+
+**Task setup:**
+1. Create 3 parallel tasks, one per teammate perspective
+2. Spawn teammates with specific prompts for their lens
+3. When all complete, synthesize findings into `research/YYYY-MM-DD-[topic].md`
+4. Cross-reference discoveries between teammates for comprehensive coverage
+
+**After team completes**, write the research document yourself using the template and all teammate findings.
+
+Requires: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in settings or environment.
