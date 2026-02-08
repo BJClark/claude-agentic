@@ -1,8 +1,9 @@
 ---
-name: debug
+name: debug-issue
 description: Debug issues by investigating logs, database state, and git history
 model: opus
 context: fork
+user-invocable: true
 allowed-tools: Read, Grep, Glob, Bash, Task, AskUserQuestion
 argument-hint: [issue-description-or-plan-path]
 ---
