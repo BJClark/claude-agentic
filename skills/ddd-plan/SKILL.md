@@ -43,7 +43,29 @@ From `04-strategy.md`:
 2. Supporting contexts that enable core
 3. Generic contexts last
 
-Present sequence table and confirm with user.
+Present the implementation sequence table, then:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this implementation sequence make sense?",
+    "header": "Sequence",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Sequence is correct",
+        "description": "Core first, then supporting, then generic — order looks right"
+      },
+      {
+        "label": "Reorder contexts",
+        "description": "I want to change which contexts are implemented first"
+      },
+      {
+        "label": "Skip some contexts",
+        "description": "Not all contexts need implementation plans right now"
+      }
+    ]
+  }]
+</invoke>
 
 ### Step 3: Map DDD Artifacts to Plan Sections
 
@@ -59,11 +81,57 @@ Present sequence table and confirm with user.
 
 ### Step 4: Present Plan Strategy Per Context
 
-For each context, propose phases: Domain Model, Application Layer, Infrastructure, Integration, Testing. Wait for confirmation.
+For each context, present the proposed phases, then:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this phase strategy for [Context Name] look right?",
+    "header": "Phases",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Phases look good",
+        "description": "Domain Model -> Application -> Infrastructure -> Integration -> Testing"
+      },
+      {
+        "label": "Adjust phases",
+        "description": "I want to reorder, combine, or split phases"
+      },
+      {
+        "label": "Simplify",
+        "description": "This context doesn't need all 5 phases"
+      }
+    ]
+  }]
+</invoke>
 
 ### Step 5: Write Implementation Plans
 
 One plan per bounded context at `plans/YYYY-MM-DD-ddd-[context-name].md` using the standard plan template with phases, success criteria (automated + manual), and DDD artifact references.
+
+After writing all plans, present them for final review:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "I've written implementation plans for all contexts. Ready to finalize?",
+    "header": "Final Review",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Plans look good",
+        "description": "Ready to see the summary and start implementing"
+      },
+      {
+        "label": "Revise specific plan",
+        "description": "I want to adjust a specific context's plan"
+      },
+      {
+        "label": "Review all plans first",
+        "description": "Let me read through each plan before finalizing"
+      }
+    ]
+  }]
+</invoke>
 
 ### Step 6: Present Summary
 

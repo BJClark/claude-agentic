@@ -85,11 +85,32 @@ Present findings in this format and ask for corrections:
 Does this accurately capture the business domain?
 ```
 
-### Step 3: Iterate Based on Feedback
+### Step 3: Validate with User
 
-- If the user corrects or adds information, update the summary
-- Ask targeted follow-up questions for gaps
-- Continue until the user confirms the summary is accurate
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this Business Domain Summary accurately capture your domain?",
+    "header": "Alignment",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Looks accurate",
+        "description": "Summary captures the business domain correctly, proceed to write artifact"
+      },
+      {
+        "label": "Needs corrections",
+        "description": "Some details are wrong or missing — I'll provide corrections"
+      },
+      {
+        "label": "Major gaps",
+        "description": "Significant parts of the domain are missing or misunderstood"
+      }
+    ]
+  }]
+</invoke>
+
+- If "Needs corrections" or "Major gaps": ask targeted follow-up questions, update summary, and re-validate
+- Continue iterating until the user confirms accuracy
 
 ### Step 4: Write Alignment Artifact
 

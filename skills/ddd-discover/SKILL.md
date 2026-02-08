@@ -57,14 +57,85 @@ Present discovered building blocks chronologically:
 ---
 
 Let's walk through this timeline together.
-Does this accurately represent how the process begins?
 ```
 
-For each flow, ask about triggers, failure paths, and alternatives.
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this event timeline accurately represent the domain process?",
+    "header": "Timeline",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Timeline is accurate",
+        "description": "Events and their ordering look correct"
+      },
+      {
+        "label": "Events missing",
+        "description": "There are events or flows not captured here"
+      },
+      {
+        "label": "Order is wrong",
+        "description": "Some events are in the wrong sequence or have wrong triggers"
+      },
+      {
+        "label": "Needs discussion",
+        "description": "I want to walk through specific flows in more detail"
+      }
+    ]
+  }]
+</invoke>
+
+For each flow, present the trigger->command->event chain and ask:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "For this flow, are the triggers, failure paths, and alternatives correct?",
+    "header": "Flow Review",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Flow is correct",
+        "description": "Triggers, happy path, and failure paths are accurate"
+      },
+      {
+        "label": "Missing failure paths",
+        "description": "There are error scenarios not captured"
+      },
+      {
+        "label": "Wrong triggers",
+        "description": "The triggers or actors for this flow are incorrect"
+      }
+    ]
+  }]
+</invoke>
 
 ### Step 4: Fill Gaps Interactively
 
-For each gap: present clearly, ask user to fill or confirm out of scope, add error/failure events.
+For each gap found, present it clearly and ask:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "[Gap description] — how should we handle this?",
+    "header": "Gap",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "I'll fill this in",
+        "description": "I have the domain knowledge to resolve this gap"
+      },
+      {
+        "label": "Out of scope",
+        "description": "This is outside the current domain boundary"
+      },
+      {
+        "label": "Needs research",
+        "description": "We need to investigate this further before deciding"
+      }
+    ]
+  }]
+</invoke>
+
+Add error/failure events for any gaps resolved.
 
 ### Step 5: Build Mermaid Diagrams
 

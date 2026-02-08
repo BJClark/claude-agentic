@@ -42,7 +42,52 @@ Explain the two axes (Business Differentiation x Model Complexity) and quadrants
 
 ### Step 3: Classify Each Sub-domain Interactively
 
-For each context, ask user to rate differentiation and complexity. Wait for input before proceeding.
+For each context, present the context description and ask:
+
+<invoke name="AskUserQuestion">
+  questions: [
+    {
+      "question": "How would you rate [Context Name]'s business differentiation?",
+      "header": "Differentiation",
+      "multiSelect": false,
+      "options": [
+        {
+          "label": "High",
+          "description": "This is a competitive advantage — unique to our business"
+        },
+        {
+          "label": "Medium",
+          "description": "Somewhat differentiating but not a core advantage"
+        },
+        {
+          "label": "Low",
+          "description": "Commodity capability — most competitors have this"
+        }
+      ]
+    },
+    {
+      "question": "How would you rate [Context Name]'s model complexity?",
+      "header": "Complexity",
+      "multiSelect": false,
+      "options": [
+        {
+          "label": "High",
+          "description": "Complex business rules, many invariants, rich state transitions"
+        },
+        {
+          "label": "Medium",
+          "description": "Moderate complexity, some business rules"
+        },
+        {
+          "label": "Low",
+          "description": "Simple CRUD-like operations, few business rules"
+        }
+      ]
+    }
+  ]
+</invoke>
+
+Wait for input on each context before proceeding to the next.
 
 ### Step 4: Determine Architecture Strategy
 
@@ -60,6 +105,30 @@ Create Mermaid quadrantChart showing all contexts plotted.
 ### Step 6: Present Strategy Summary
 
 Show classification table with architecture, investment level, and implementation order.
+
+After presenting the strategy summary table:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this strategic classification and architecture mapping look correct?",
+    "header": "Strategy",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Looks correct",
+        "description": "Classifications and architecture choices are appropriate"
+      },
+      {
+        "label": "Reclassify some",
+        "description": "Some contexts need different differentiation or complexity ratings"
+      },
+      {
+        "label": "Architecture concerns",
+        "description": "I disagree with some architecture recommendations"
+      }
+    ]
+  }]
+</invoke>
 
 ### Step 7: Write Strategy Artifact
 

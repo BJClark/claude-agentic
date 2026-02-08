@@ -42,7 +42,29 @@ Based on strategic classification:
 - **Supporting contexts**: Full BC Canvas + abbreviated Aggregate Canvas
 - **Generic contexts**: Abbreviated BC Canvas only
 
-Present the plan and ask if ready to begin.
+Present the canvas scope plan, then:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Here's the canvas plan based on strategic classification. Ready to begin?",
+    "header": "Scope",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Ready to begin",
+        "description": "Canvas scope looks right, start with core contexts"
+      },
+      {
+        "label": "Adjust scope",
+        "description": "I want to change which contexts get full vs abbreviated canvases"
+      },
+      {
+        "label": "Focus on specific context",
+        "description": "I only want canvases for specific contexts right now"
+      }
+    ]
+  }]
+</invoke>
 
 ### Step 3: Build Canvases Per Context
 
@@ -50,11 +72,63 @@ For each context (core first):
 
 **A. Spawn `ddd-canvas-builder` agent** with all artifact paths.
 
-**B. Present Bounded Context Canvas** with: Name, Purpose, Classification, Architecture, Ubiquitous Language, Business Rules, Inbound/Outbound Communication. Ask for review.
+**B. Present Bounded Context Canvas** with: Name, Purpose, Classification, Architecture, Ubiquitous Language, Business Rules, Inbound/Outbound Communication.
 
-**C. For core/supporting, present Aggregate Design Canvas** with: Enforced Invariants, Handled Commands, Created Events, State Lifecycle (Mermaid stateDiagram-v2), Correctness Criteria. Ask for review.
+After presenting the Bounded Context Canvas:
 
-Wait for confirmation on each canvas before proceeding.
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this Bounded Context Canvas for [Context Name] look correct?",
+    "header": "BC Canvas",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Canvas is correct",
+        "description": "All fields are accurate, proceed to Aggregate Canvas"
+      },
+      {
+        "label": "Needs corrections",
+        "description": "Some fields need updating — I'll specify which"
+      },
+      {
+        "label": "Missing information",
+        "description": "There are gaps marked [INSUFFICIENT DATA] I can fill"
+      }
+    ]
+  }]
+</invoke>
+
+**C. For core/supporting, present Aggregate Design Canvas** with: Enforced Invariants, Handled Commands, Created Events, State Lifecycle (Mermaid stateDiagram-v2), Correctness Criteria.
+
+After presenting the Aggregate Design Canvas:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this Aggregate Design Canvas for [Aggregate Name] look correct?",
+    "header": "Aggregate",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Canvas is correct",
+        "description": "Invariants, commands, events, and state lifecycle are accurate"
+      },
+      {
+        "label": "Wrong invariants",
+        "description": "The enforced invariants need correction"
+      },
+      {
+        "label": "State lifecycle issues",
+        "description": "The state transitions don't match the real domain behavior"
+      },
+      {
+        "label": "Missing information",
+        "description": "There are gaps I can fill in"
+      }
+    ]
+  }]
+</invoke>
+
+Wait for confirmation on each canvas before proceeding to the next context.
 
 ### Step 4: Write Canvases Artifact
 

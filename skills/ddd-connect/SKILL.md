@@ -43,7 +43,35 @@ From shared events, identify all context pairs with direction.
 
 ### Step 4: Define Each Relationship Interactively
 
-For each pair: present shared events, direction, classification context, and ask which pattern fits. Wait for user input on each.
+For each context pair, present shared events and direction, then ask:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "What integration pattern fits between [Context A] (upstream) and [Context B] (downstream)?",
+    "header": "Pattern",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Customer-Supplier",
+        "description": "Upstream accommodates downstream needs, downstream has influence"
+      },
+      {
+        "label": "Conformist",
+        "description": "Downstream conforms to upstream model, no negotiation"
+      },
+      {
+        "label": "ACL (Anti-Corruption Layer)",
+        "description": "Downstream translates upstream model to protect its own domain"
+      },
+      {
+        "label": "Partnership",
+        "description": "Both contexts evolve together with mutual dependency"
+      }
+    ]
+  }]
+</invoke>
+
+If the user selects "Other", present the remaining patterns: OHS, Published Language, Shared Kernel, Separate Ways.
 
 ### Step 5: Document Data Flow
 
@@ -52,6 +80,30 @@ For each relationship: what data crosses, in what format, what translation is ne
 ### Step 6: Build Context Map Diagram
 
 Create Mermaid diagram showing all contexts and relationships with pattern labels.
+
+After presenting the complete context map diagram:
+
+<invoke name="AskUserQuestion">
+  questions: [{
+    "question": "Does this context map accurately represent all relationships?",
+    "header": "Map Review",
+    "multiSelect": false,
+    "options": [
+      {
+        "label": "Map is correct",
+        "description": "All relationships and patterns are accurately captured"
+      },
+      {
+        "label": "Missing relationships",
+        "description": "There are context interactions not shown on the map"
+      },
+      {
+        "label": "Wrong patterns",
+        "description": "Some relationship patterns need to be changed"
+      }
+    ]
+  }]
+</invoke>
 
 ### Step 7: Write Context Map Artifact
 
