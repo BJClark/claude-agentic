@@ -22,6 +22,7 @@ I can help you with Linear tickets. What would you like to do?
 2. Add a comment to a ticket (I'll use our conversation context)
 3. Search for tickets
 4. Update ticket status or details
+5. Manage initiatives, milestones, or project updates → use `/linear_pm`
 ```
 
 ### For specific create requests:
@@ -330,6 +331,7 @@ When moving tickets through the workflow:
 - Ask for clarification rather than guessing project/status
 - Remember that Linear descriptions support full markdown including code blocks
 - Always use the `links` parameter for external URLs (not just markdown links)
+- For product management (initiatives, milestones, project updates, project labels), use `/linear_pm`
 - remember - you must get a "Problem to solve"!
 
 ## Comment Quality Guidelines

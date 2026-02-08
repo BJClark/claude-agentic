@@ -29,7 +29,9 @@ think deeply
 think deeply
 
 2. when the plan is complete, `humanlayer thoughts sync` and attach the doc to the ticket using the MCP tools and create a terse comment with a link to it (re-read .claude/commands/linear.md if needed)
-2a. move the item to "plan in review" using the MCP tools
+2a. if the ticket's project has milestones, note which milestone this plan targets in the comment
+2b. move the item to "plan in review" using the MCP tools
+2c. if no project update has been created recently, suggest the user run `/linear_pm` to create one
 
 think deeply, use TodoWrite to track your tasks. When fetching from linear, get the top 10 items by priority but only work on ONE item - specifically the highest priority SMALL or XS sized issue.
 

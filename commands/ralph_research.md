@@ -51,7 +51,7 @@ think deeply about the findings
 
 4. update the ticket:
 4a. attach the research document to the ticket using the MCP tools with proper link formatting
-4b. add a comment summarizing the research outcomes
+4b. add a comment summarizing the research outcomes — if the ticket's project has milestones, note which milestone this research relates to
 4c. move the item to "research in review" using the MCP tools
 
 think deeply, use TodoWrite to track your tasks. When fetching from linear, get the top 10 items by priority but only work on ONE item - specifically the highest priority issue.
