@@ -21,10 +21,9 @@ description: Create implementation plan for highest priority Linear ticket ready
 think deeply
 
 1. move the item to "plan in progress" using the MCP tools
-1a. read ./claude/commands/create_plan.md
-1b. determine if the item has a linked implementation plan document based on the `links` section
-1d. if the plan exists, you're done, respond with a link to the ticket
-1e. if the research is insufficient or has unaswered questions, create a new plan document following the instructions in ./claude/commands/create_plan.md
+1a. determine if the item has a linked implementation plan document based on the `links` section
+1b. if the plan exists, you're done, respond with a link to the ticket
+1c. if the research is insufficient or has unanswered questions, create a new plan document using `/create-plan`
 
 think deeply
 

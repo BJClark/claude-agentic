@@ -26,7 +26,7 @@ think deeply
 think deeply about the research needs
 
 2. conduct the research:
-2a. read .claude/commands/research_codebase.md for guidance on effective codebase research
+2a. use `/research-codebase` for guidance on effective codebase research
 2b. if the linear comments suggest web research is needed, use WebSearch to research external solutions, APIs, or best practices
 2c. search the codebase for relevant implementations and patterns
 2d. examine existing similar features or related code
