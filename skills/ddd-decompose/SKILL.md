@@ -17,8 +17,8 @@ Identify bounded context boundaries by analyzing language patterns in the event 
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current`
-- **Last Commit**: !`git log -1 --oneline`
+- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
+- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
 
 ## Prerequisites
 

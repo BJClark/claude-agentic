@@ -17,8 +17,8 @@ Enrich a Linear or GitHub issue so it's ready for an engineer to start planning.
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current`
-- **Last Commit**: !`git log -1 --oneline`
+- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
+- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
 
 ## Initial Response
 

@@ -24,8 +24,8 @@ Run the complete Domain-Driven Design discovery-to-implementation workflow.
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current`
-- **Last Commit**: !`git log -1 --oneline`
+- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
+- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
 
 ## Artifact Chain
 

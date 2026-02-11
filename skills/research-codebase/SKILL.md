@@ -13,10 +13,10 @@ Research the following topic: **$ARGUMENTS**
 
 ## Current Codebase Context
 
-- **Branch**: !`git branch --show-current`
-- **Last Commit**: !`git log -1 --oneline`
-- **Modified Files**: !`git status --short | head -10`
-- **Repository**: !`git rev-parse --show-toplevel`
+- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
+- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
+- **Modified Files**: !`(git status --short 2>/dev/null || echo "N/A") | head -10`
+- **Repository**: !`git rev-parse --show-toplevel 2>/dev/null || echo "N/A"`
 
 ## CRITICAL: Document What Exists
 

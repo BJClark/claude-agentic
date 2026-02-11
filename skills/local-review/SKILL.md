@@ -15,9 +15,9 @@ Set up a local review environment for a colleague's branch and optionally run a 
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current`
-- **Last Commit**: !`git log -1 --oneline`
-- **Remotes**: !`git remote -v | head -6`
+- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
+- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
+- **Remotes**: !`(git remote -v 2>/dev/null || echo "N/A") | head -6`
 
 ## Worktree Setup
 
