@@ -81,29 +81,11 @@ Please perform the manual verification steps listed in the plan:
 - [List manual verification items from the plan]
 ```
 
-Then ask:
+Then get phase gate decision using AskUserQuestion:
+- **Phase gate**: Phase [N] automated checks passed. How would you like to proceed?
+- Options should cover: proceed to next phase, fix issues first, review changes
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Phase [N] automated checks passed. How would you like to proceed?",
-    "header": "Phase Gate",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Proceed to Next Phase",
-        "description": "Manual verification looks good, continue implementation"
-      },
-      {
-        "label": "Fix Issues First",
-        "description": "I found problems during manual testing that need attention"
-      },
-      {
-        "label": "Review Changes",
-        "description": "I want to review the changes before moving on"
-      }
-    ]
-  }]
-</invoke>
+Tailor options based on what checks passed and what manual verification is needed.
 
 If instructed to execute multiple phases consecutively, skip the pause until the last phase. Otherwise, assume you are just doing one phase.
 

@@ -38,29 +38,11 @@ If no parameter provided, ask for it in the format: `gh_username:branchName`
 
 ## Review Phase
 
-After worktree setup, offer review mode:
+After worktree setup, get review mode using AskUserQuestion:
+- **Review mode**: Worktree is set up. How would you like to review?
+- Options should include: Quick Diff Review, Agent Team Review (Recommended), Setup Only
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Worktree is set up. How would you like to review?",
-    "header": "Review Mode",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Quick Diff Review",
-        "description": "Review the diff in this session. Fast, focused on changes only."
-      },
-      {
-        "label": "Agent Team Review (Recommended)",
-        "description": "3 parallel reviewers: security, performance, and test coverage. More thorough."
-      },
-      {
-        "label": "Setup Only",
-        "description": "Just set up the worktree, I'll review manually."
-      }
-    ]
-  }]
-</invoke>
+Tailor recommendation based on the size of the diff.
 
 ### Quick Diff Review
 

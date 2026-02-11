@@ -128,23 +128,11 @@ Would you like me to investigate something specific further?
 
 For complex bugs with unclear root cause, offer competing hypothesis investigation:
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "This bug could have multiple root causes. Investigate with competing hypotheses?",
-    "header": "Team Mode",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Competing Hypotheses (Recommended)",
-        "description": "3 investigators test different theories in parallel. Faster root cause identification."
-      },
-      {
-        "label": "Single Investigation",
-        "description": "Investigate sequentially. Simpler, lower token cost."
-      }
-    ]
-  }]
-</invoke>
+Get team mode preference using AskUserQuestion:
+- **Team mode**: This bug could have multiple root causes. Investigate with competing hypotheses?
+- Options should include: Competing Hypotheses with note about parallel investigation (Recommended), Single Investigation with note about simpler/lower cost
+
+Tailor the recommendation based on bug complexity.
 
 **If team mode selected**, first formulate 3 hypotheses based on the problem description, then create a team:
 

@@ -44,50 +44,11 @@ Explain the two axes (Business Differentiation x Model Complexity) and quadrants
 
 For each context, present the context description and ask:
 
-<invoke name="AskUserQuestion">
-  questions: [
-    {
-      "question": "How would you rate [Context Name]'s business differentiation?",
-      "header": "Differentiation",
-      "multiSelect": false,
-      "options": [
-        {
-          "label": "High",
-          "description": "This is a competitive advantage — unique to our business"
-        },
-        {
-          "label": "Medium",
-          "description": "Somewhat differentiating but not a core advantage"
-        },
-        {
-          "label": "Low",
-          "description": "Commodity capability — most competitors have this"
-        }
-      ]
-    },
-    {
-      "question": "How would you rate [Context Name]'s model complexity?",
-      "header": "Complexity",
-      "multiSelect": false,
-      "options": [
-        {
-          "label": "High",
-          "description": "Complex business rules, many invariants, rich state transitions"
-        },
-        {
-          "label": "Medium",
-          "description": "Moderate complexity, some business rules"
-        },
-        {
-          "label": "Low",
-          "description": "Simple CRUD-like operations, few business rules"
-        }
-      ]
-    }
-  ]
-</invoke>
+For each context, get classification using AskUserQuestion with two questions:
+- **Differentiation**: How differentiating is [Context Name] for the business? (High/Medium/Low)
+- **Complexity**: How complex is the domain model for [Context Name]? (High/Medium/Low)
 
-Wait for input on each context before proceeding to the next.
+Present the context description first. Tailor the option descriptions to match what was discovered about each specific context. Wait for input on each context before proceeding to the next.
 
 ### Step 4: Determine Architecture Strategy
 
@@ -106,29 +67,11 @@ Create Mermaid quadrantChart showing all contexts plotted.
 
 Show classification table with architecture, investment level, and implementation order.
 
-After presenting the strategy summary table:
+After presenting the strategy summary table, get validation using AskUserQuestion:
+- **Strategy review**: Does the strategic classification and architecture mapping look correct?
+- Options should cover: looks correct, reclassify some contexts, architecture concerns
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Does this strategic classification and architecture mapping look correct?",
-    "header": "Strategy",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Looks correct",
-        "description": "Classifications and architecture choices are appropriate"
-      },
-      {
-        "label": "Reclassify some",
-        "description": "Some contexts need different differentiation or complexity ratings"
-      },
-      {
-        "label": "Architecture concerns",
-        "description": "I disagree with some architecture recommendations"
-      }
-    ]
-  }]
-</invoke>
+Tailor options based on the specific classifications presented.
 
 ### Step 7: Write Strategy Artifact
 

@@ -45,33 +45,12 @@ From shared events, identify all context pairs with direction.
 
 For each context pair, present shared events and direction, then ask:
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "What integration pattern fits between [Context A] (upstream) and [Context B] (downstream)?",
-    "header": "Pattern",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Customer-Supplier",
-        "description": "Upstream accommodates downstream needs, downstream has influence"
-      },
-      {
-        "label": "Conformist",
-        "description": "Downstream conforms to upstream model, no negotiation"
-      },
-      {
-        "label": "ACL (Anti-Corruption Layer)",
-        "description": "Downstream translates upstream model to protect its own domain"
-      },
-      {
-        "label": "Partnership",
-        "description": "Both contexts evolve together with mutual dependency"
-      }
-    ]
-  }]
-</invoke>
+For each context pair, present shared events and direction, then get a decision using AskUserQuestion:
+- **Pattern selection**: What integration pattern fits between [Context A] (upstream) and [Context B] (downstream)?
+- Options should include the most relevant patterns: Customer-Supplier, Conformist, ACL, Partnership
+- Note that "Other" allows selecting from remaining patterns (OHS, Published Language, Shared Kernel, Separate Ways)
 
-If the user selects "Other", present the remaining patterns: OHS, Published Language, Shared Kernel, Separate Ways.
+Tailor options based on the specific relationship characteristics discovered.
 
 ### Step 5: Document Data Flow
 
@@ -81,29 +60,11 @@ For each relationship: what data crosses, in what format, what translation is ne
 
 Create Mermaid diagram showing all contexts and relationships with pattern labels.
 
-After presenting the complete context map diagram:
+After presenting the complete context map diagram, get validation using AskUserQuestion:
+- **Map review**: Does this context map accurately represent all relationships?
+- Options should cover: map correct, missing relationships, wrong patterns
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Does this context map accurately represent all relationships?",
-    "header": "Map Review",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Map is correct",
-        "description": "All relationships and patterns are accurately captured"
-      },
-      {
-        "label": "Missing relationships",
-        "description": "There are context interactions not shown on the map"
-      },
-      {
-        "label": "Wrong patterns",
-        "description": "Some relationship patterns need to be changed"
-      }
-    ]
-  }]
-</invoke>
+Tailor options based on the specific map presented.
 
 ### Step 7: Write Context Map Artifact
 

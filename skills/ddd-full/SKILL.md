@@ -100,23 +100,11 @@ Start implementation with:
 
 For large PRDs, agent teams can parallelize the early exploration phases. Ask the user before spawning:
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "This is a complex DDD workflow. Use an agent team for parallel exploration?",
-    "header": "Team Mode",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Agent Team (Recommended)",
-        "description": "3 teammates explore alignment, events, and decomposition in parallel. ~3x faster for large PRDs."
-      },
-      {
-        "label": "Single Session",
-        "description": "Work through all 7 steps sequentially. Simpler, lower token cost."
-      }
-    ]
-  }]
-</invoke>
+Get team mode preference using AskUserQuestion:
+- **Team mode**: Should we use agent teams for parallel exploration?
+- Options should include: Agent Team with note about ~3x speed for large PRDs (Recommended), Single Session with note about simpler/lower cost
+
+Tailor the recommendation based on the PRD complexity.
 
 **If team mode selected**, create a team with this structure:
 

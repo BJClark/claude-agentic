@@ -103,25 +103,11 @@ gh repo view --json owner,name
 
 ## Agent Team Mode (Experimental)
 
-For complex research requiring multiple perspectives, offer team mode:
+For complex research requiring multiple perspectives, get team mode preference using AskUserQuestion:
+- **Team mode**: This research could benefit from parallel exploration. Create an agent team?
+- Options should include: Agent Team with note about parallel WHERE/HOW/EXAMPLES exploration (Recommended), Single Session with note about simpler/lower cost
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "This research could benefit from parallel exploration. Create an agent team?",
-    "header": "Team Mode",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Agent Team (Recommended)",
-        "description": "3 teammates explore WHERE, HOW, and EXAMPLES in parallel. More thorough coverage."
-      },
-      {
-        "label": "Single Session",
-        "description": "Use sub-agents within this session. Simpler, lower token cost."
-      }
-    ]
-  }]
-</invoke>
+Tailor the recommendation based on research complexity.
 
 **If team mode selected**, create a team with this structure:
 

@@ -43,29 +43,11 @@ From `04-strategy.md`:
 2. Supporting contexts that enable core
 3. Generic contexts last
 
-Present the implementation sequence table, then:
+Present the implementation sequence table, then get confirmation using AskUserQuestion:
+- **Sequence check**: Does this implementation sequence make sense?
+- Options should cover: sequence correct, reorder contexts, skip some contexts
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Does this implementation sequence make sense?",
-    "header": "Sequence",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Sequence is correct",
-        "description": "Core first, then supporting, then generic — order looks right"
-      },
-      {
-        "label": "Reorder contexts",
-        "description": "I want to change which contexts are implemented first"
-      },
-      {
-        "label": "Skip some contexts",
-        "description": "Not all contexts need implementation plans right now"
-      }
-    ]
-  }]
-</invoke>
+Tailor options based on the specific contexts and their strategic priority.
 
 ### Step 3: Map DDD Artifacts to Plan Sections
 
@@ -81,57 +63,21 @@ Present the implementation sequence table, then:
 
 ### Step 4: Present Plan Strategy Per Context
 
-For each context, present the proposed phases, then:
+For each context, present proposed phases, then get validation using AskUserQuestion:
+- **Phase review**: Does this phase strategy for [Context Name] look right?
+- Options should cover: phases look good, adjust phases, simplify
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Does this phase strategy for [Context Name] look right?",
-    "header": "Phases",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Phases look good",
-        "description": "Domain Model -> Application -> Infrastructure -> Integration -> Testing"
-      },
-      {
-        "label": "Adjust phases",
-        "description": "I want to reorder, combine, or split phases"
-      },
-      {
-        "label": "Simplify",
-        "description": "This context doesn't need all 5 phases"
-      }
-    ]
-  }]
-</invoke>
+Tailor options based on the specific context's architecture classification.
 
 ### Step 5: Write Implementation Plans
 
 One plan per bounded context at `plans/YYYY-MM-DD-ddd-[context-name].md` using the standard plan template with phases, success criteria (automated + manual), and DDD artifact references.
 
-After writing all plans, present them for final review:
+After writing all plans, get final confirmation using AskUserQuestion:
+- **Final review**: Implementation plans written for all contexts. Ready to finalize?
+- Options should cover: plans look good, revise specific plan, review all plans first
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "I've written implementation plans for all contexts. Ready to finalize?",
-    "header": "Final Review",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Plans look good",
-        "description": "Ready to see the summary and start implementing"
-      },
-      {
-        "label": "Revise specific plan",
-        "description": "I want to adjust a specific context's plan"
-      },
-      {
-        "label": "Review all plans first",
-        "description": "Let me read through each plan before finalizing"
-      }
-    ]
-  }]
-</invoke>
+Tailor options based on what was actually written.
 
 ### Step 6: Present Summary
 

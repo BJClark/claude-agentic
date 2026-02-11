@@ -54,87 +54,31 @@ Present boundaries and validate each interactively:
 
 After presenting each proposed boundary, ask:
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Does the [Context Name] boundary grouping make sense?",
-    "header": "Boundary",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Grouping is correct",
-        "description": "These building blocks belong together in this context"
-      },
-      {
-        "label": "Blocks misplaced",
-        "description": "Some building blocks should be in a different context"
-      },
-      {
-        "label": "Should be split",
-        "description": "This context is too large and should be divided"
-      },
-      {
-        "label": "Should be merged",
-        "description": "This context should be combined with another"
-      }
-    ]
-  }]
-</invoke>
+After presenting each proposed boundary, get validation using AskUserQuestion:
+- **Boundary check**: Does the [Context Name] boundary grouping make sense?
+- Options should cover: grouping correct, blocks misplaced, should be split, should be merged
+
+Tailor options to the specific context being reviewed.
 
 ### Step 4: Validate Pivotal Events
 
 Present pivotal events as boundary markers with from/to context transitions.
 
-After presenting pivotal events as boundary markers:
+After presenting pivotal events as boundary markers, get validation using AskUserQuestion:
+- **Pivotal events**: Do these events correctly mark boundaries between contexts?
+- Options should cover: events correct, missing pivotal events, wrong boundaries
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Do these pivotal events correctly mark the boundaries between contexts?",
-    "header": "Pivotal Events",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Events are correct",
-        "description": "These events accurately mark phase transitions between contexts"
-      },
-      {
-        "label": "Missing pivotal events",
-        "description": "There are boundary-marking events not identified here"
-      },
-      {
-        "label": "Wrong boundaries",
-        "description": "Some of these events don't actually mark context transitions"
-      }
-    ]
-  }]
-</invoke>
+Tailor options based on the specific pivotal events discovered.
 
 ### Step 5: Resolve Ambiguous Groupings
 
 For each ambiguous building block, present trade-offs and ask:
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "[Block ID] could belong to [Context A] or [Context B]. Where should it go?",
-    "header": "Placement",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "[Context A]",
-        "description": "[Rationale for placing in Context A]"
-      },
-      {
-        "label": "[Context B]",
-        "description": "[Rationale for placing in Context B]"
-      },
-      {
-        "label": "Duplicate in both",
-        "description": "This concept exists in both contexts with different meanings"
-      }
-    ]
-  }]
-</invoke>
+For each ambiguous building block, present trade-offs and get a decision using AskUserQuestion:
+- **Placement decision**: Where should [Block ID] go — [Context A] or [Context B]?
+- Options should include the candidate contexts plus "duplicate in both" if the concept has different meanings in each
 
-Document the user's rationale for each decision.
+Tailor options based on the specific block and its relationships. Document the user's rationale for each decision.
 
 ### Step 6: Build Sub-domain Map
 

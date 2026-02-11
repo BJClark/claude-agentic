@@ -41,25 +41,9 @@ Determine the platform from the input:
 
 - **Linear**: Input matches `ENG-\d+` (case-insensitive)
 - **GitHub**: Input matches `#\d+`, or contains `github.com/.*/issues/\d+`
-- **Ambiguous**: If auto-detection fails:
-
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Is this a Linear or GitHub issue?",
-    "header": "Platform",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Linear",
-        "description": "e.g., ENG-1234"
-      },
-      {
-        "label": "GitHub",
-        "description": "e.g., #123 or github.com URL"
-      }
-    ]
-  }]
-</invoke>
+- **Ambiguous**: If auto-detection fails, get platform using AskUserQuestion:
+  - **Platform**: Is this a Linear or GitHub issue?
+  - Options: Linear, GitHub
 
 ### Step 2: Fetch Ticket Content
 
@@ -102,25 +86,9 @@ Present the assessment to the user:
 **Gaps to fill**: [summary of what's missing]
 ```
 
-If the ticket meets all criteria, present your assessment and then ask:
-
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "This ticket looks well-specified. Should I look for implementation-specific details that could still help an engineer plan?",
-    "header": "Continue?",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Yes, keep going",
-        "description": "Most tickets benefit from implementation specifics (API contracts, error handling, edge cases, dependencies)"
-      },
-      {
-        "label": "No, it's ready",
-        "description": "Stop here — the ticket has enough detail"
-      }
-    ]
-  }]
-</invoke>
+If the ticket meets all criteria, present your assessment and get a decision using AskUserQuestion:
+- **Continue?**: This ticket looks well-specified. Should I look for implementation-specific details?
+- Options should cover: yes keep going (with note about what specifics could be found), no it's ready
 
 If the user says to keep going, proceed to Step 4. If they say it's ready, stop.
 
@@ -154,99 +122,29 @@ If no artifacts are found, note that and move to clarification.
 
 ### Step 5: Interactive Clarification
 
-Work through gaps one at a time. For each gap, use the invoke patterns below — fill in the bracket placeholders dynamically based on what you learned from the ticket and artifacts.
+Work through gaps one at a time using AskUserQuestion for each.
 
-**5a. If problem statement is missing or vague:**
+**5a. If problem statement is missing or vague**, get clarification using AskUserQuestion:
+- **Problem**: What problem does this solve from a user perspective?
+- Offer inferred interpretations based on what you found, plus a "neither" option
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "What problem does this solve from a user perspective?",
-    "header": "Problem",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "[Inferred problem 1]",
-        "description": "[Why this interpretation makes sense]"
-      },
-      {
-        "label": "[Inferred problem 2]",
-        "description": "[Why this interpretation makes sense]"
-      },
-      {
-        "label": "Neither — I'll describe it",
-        "description": "These interpretations are wrong, let me explain"
-      }
-    ]
-  }]
-</invoke>
+Tailor interpretations to the specific ticket content.
 
-**5b. If acceptance criteria are missing:**
+**5b. If acceptance criteria are missing**, get them using AskUserQuestion with multiSelect:
+- **Done criteria**: What does "done" look like for this ticket?
+- Suggest criteria based on what was learned from the ticket and artifacts
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "What does 'done' look like for this ticket?",
-    "header": "Done criteria",
-    "multiSelect": true,
-    "options": [
-      {
-        "label": "[Suggested criterion 1]",
-        "description": "[What this criterion validates]"
-      },
-      {
-        "label": "[Suggested criterion 2]",
-        "description": "[What this criterion validates]"
-      },
-      {
-        "label": "[Suggested criterion 3]",
-        "description": "[What this criterion validates]"
-      }
-    ]
-  }]
-</invoke>
+Tailor suggested criteria to the specific feature/fix being described.
 
-**5c. For each ambiguity:**
+**5c. For each ambiguity**, get clarification using AskUserQuestion:
+- **Clarification**: [The specific clarifying question about this ambiguity]
+- Offer options that reflect the realistic choices, with implementation implications
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "[The specific clarifying question about this ambiguity]",
-    "header": "Clarification",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "[Option 1]",
-        "description": "[What this means for implementation]"
-      },
-      {
-        "label": "[Option 2]",
-        "description": "[What this means for implementation]"
-      },
-      {
-        "label": "[Option 3]",
-        "description": "[What this means for implementation]"
-      }
-    ]
-  }]
-</invoke>
+Tailor options to the specific ambiguity and what artifacts suggest.
 
-**5d. When all gaps are addressed:**
-
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Are there any other details an engineer would need to start planning?",
-    "header": "Anything else?",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "No, looks complete",
-        "description": "All gaps have been addressed"
-      },
-      {
-        "label": "Yes, I want to add more context",
-        "description": "I have additional details to share"
-      }
-    ]
-  }]
-</invoke>
+**5d. When all gaps are addressed**, check using AskUserQuestion:
+- **Anything else?**: Are there any other details an engineer would need to start planning?
+- Options should cover: no looks complete, yes I want to add more context
 
 If the user selects "Other" for any question, they'll provide free-text input — incorporate their response into the enrichment.
 
@@ -278,31 +176,11 @@ The following sections will be **appended** to the existing description:
 
 Only include sections that have content. If artifacts found nothing useful, omit "Context from Artifacts". If acceptance criteria already existed, omit that section.
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Ready to update the ticket with these additions?",
-    "header": "Confirm",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Update ticket",
-        "description": "Append these sections to the ticket description"
-      },
-      {
-        "label": "Needs changes",
-        "description": "I want to adjust the proposed additions first"
-      },
-      {
-        "label": "Cancel",
-        "description": "Don't update the ticket"
-      }
-    ]
-  }]
-</invoke>
+Get confirmation using AskUserQuestion:
+- **Confirm**: Ready to update the ticket with these additions?
+- Options should cover: update ticket, needs changes, cancel
 
-- If "Needs changes": ask what to change, update the preview, and re-confirm
-- If "Cancel": stop without modifying the ticket
-- If "Update ticket": proceed to Step 7
+If "Needs changes", ask what to change, update the preview, and re-confirm. If "Cancel", stop without modifying the ticket. If "Update ticket", proceed to Step 7.
 
 ### Step 7: Update Ticket
 

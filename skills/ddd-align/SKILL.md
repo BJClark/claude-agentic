@@ -87,30 +87,11 @@ Does this accurately capture the business domain?
 
 ### Step 3: Validate with User
 
-<invoke name="AskUserQuestion">
-  questions: [{
-    "question": "Does this Business Domain Summary accurately capture your domain?",
-    "header": "Alignment",
-    "multiSelect": false,
-    "options": [
-      {
-        "label": "Looks accurate",
-        "description": "Summary captures the business domain correctly, proceed to write artifact"
-      },
-      {
-        "label": "Needs corrections",
-        "description": "Some details are wrong or missing — I'll provide corrections"
-      },
-      {
-        "label": "Major gaps",
-        "description": "Significant parts of the domain are missing or misunderstood"
-      }
-    ]
-  }]
-</invoke>
+Get user validation using AskUserQuestion:
+- **Alignment check**: Does the Business Domain Summary accurately capture the domain?
+- Options should include: looks accurate, needs corrections, has major gaps
 
-- If "Needs corrections" or "Major gaps": ask targeted follow-up questions, update summary, and re-validate
-- Continue iterating until the user confirms accuracy
+Tailor options based on what you found. If corrections needed, ask targeted follow-up questions, update summary, and re-validate. Continue iterating until the user confirms accuracy.
 
 ### Step 4: Write Alignment Artifact
 
