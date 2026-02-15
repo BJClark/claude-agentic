@@ -1,4 +1,0 @@
-# Dev symlinks (users install via copy, not symlinks)
-.claude/agents
-.claude/commands
-.claude/skills
