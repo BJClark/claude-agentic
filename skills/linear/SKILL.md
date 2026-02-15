@@ -3,15 +3,15 @@ name: linear
 description: "Manage Linear tickets - create, update, comment, search, and follow workflow patterns. Use when working with Linear issues or tickets."
 model: opus
 context: fork
-allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, Bash(linear *), Bash(gh *), TodoWrite
+allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [action or ticket-id]
 ---
 
 # Linear Ticket Management
 
-Ultrathink about the team's workflow stages and how this request fits into the Triage -> Spec -> Research -> Plan -> Dev -> Review -> Done lifecycle. Consider what the user needs and the most efficient path to accomplish it.
+Ultrathink about the team's workflow stages and how this request fits into the Backlog -> Todo -> Ready for Research -> In Research -> Ready for Plan -> In Plan -> In Progress -> In Review -> Done lifecycle. Consider what the user needs and the most efficient path to accomplish it.
 
-Manage Linear tickets: create from thoughts documents, update status, add comments and links, search and filter. For product management (initiatives, milestones, project updates), use `/linear-pm` instead.
+Manage Linear tickets: create, update status, add comments and links, search and filter. For product management (initiatives, milestones, project updates), use `/linear-pm` instead.
 
 **Input**: $ARGUMENTS
 
@@ -20,67 +20,56 @@ Manage Linear tickets: create from thoughts documents, update status, add commen
 - **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
 - **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
 
-## Initial Setup
+## Workspaces
 
-First, verify that Linear MCP tools are available by checking if any `mcp__linear__` tools exist. If not, respond:
-```
-I need access to Linear tools to help with ticket management. Please run the `/mcp` command to enable the Linear MCP server, then try again.
-```
+This skill works across three Linear workspaces via MCP. Tools are namespaced:
+- **Stellar**: `mcp__mise-tools__linear_stellar_*`
+- **Kickplan**: `mcp__mise-tools__linear_kickplan_*`
+- **Meerkat**: `mcp__mise-tools__linear_meerkat_*`
+
+See [references/ids.md](references/ids.md) for all team, user, workflow state, and label IDs per workspace.
 
 ## Initial Response
 
-1. **If a specific action or ticket ID is provided**: Parse the input and begin the appropriate workflow
-2. **If no parameters**:
+1. **If a workspace and action are clear from context**: Begin the appropriate workflow
+2. **If the workspace is ambiguous**, get it using AskUserQuestion:
+   - **Workspace**: Which Linear workspace?
+   - Options should cover: Stellar, Kickplan, Meerkat
+3. **If no action is specified**, get it using AskUserQuestion:
+   - **Action**: What would you like to do?
+   - Options should cover: Create a ticket, Search for tickets, Update ticket status, Add comment to a ticket
 
-Get the action using AskUserQuestion:
-- **Action**: What would you like to do with Linear?
-- Options should cover: Create ticket from thoughts document, Add comment to a ticket, Search for tickets, Update ticket status, Product management (initiatives/milestones) -> use /linear-pm
+## Workflow
 
-Tailor options based on available context. If a ticket was recently discussed, include that context.
+All teams follow the same status progression:
 
-Then wait for user input.
-
-## Team Workflow & Status Progression
-
-The team follows a specific workflow to ensure alignment before code implementation:
-
-1. **Triage** -> All new tickets start here for initial review
-2. **Spec Needed** -> More detail needed - problem and solution outline necessary
-3. **Research Needed** -> Investigation required before plan can be written
-4. **Research in Progress** -> Active investigation underway
-5. **Research in Review** -> Research findings under review (optional)
-6. **Ready for Plan** -> Research complete, needs implementation plan
-7. **Plan in Progress** -> Actively writing the plan
-8. **Plan in Review** -> Plan is written and under discussion
-9. **Ready for Dev** -> Plan approved, ready for implementation
-10. **In Dev** -> Active development
-11. **Code Review** -> PR submitted
-12. **Done** -> Completed
+1. **Backlog** — parked, not yet prioritized
+2. **Todo** — prioritized, ready for someone to pick up
+3. **Ready for Research** — needs investigation before planning
+4. **In Research** — active investigation underway
+5. **Ready for Plan** — research complete, needs implementation plan
+6. **In Plan** — actively writing the plan
+7. **In Progress** — active development
+8. **In Review** — PR submitted or work under review
+9. **Done** — completed
 
 **Key principle**: Review and alignment happen at the plan stage (not PR stage) to move faster and avoid rework.
 
 ## Process Steps
 
-### Step 1: Create Ticket from Thoughts Document
+### Step 1: Create Ticket
 
-1. **Locate the document:**
-   - If given a path, read it directly
-   - If given a topic, search `thoughts/` using Grep to find relevant documents
-   - If multiple matches, present the list and get selection using AskUserQuestion:
-     - **Document**: Which thoughts document should this ticket be based on?
-     - Options: the matching documents found
+1. **If given a thoughts document or topic**, read it and extract:
+   - The core problem or feature
+   - Key implementation details
+   - Referenced files or areas
+   - What stage the idea is at
 
-2. **Analyze the document content:**
-   - Identify the core problem or feature
-   - Extract key implementation details
-   - Note referenced files or areas
-   - Determine what stage the idea is at (ideation vs ready to implement)
+2. **Get the team** using AskUserQuestion:
+   - **Team**: Which team should own this ticket?
+   - Options: teams from the selected workspace (see references/ids.md)
 
-3. **Get Linear workspace context:**
-   - List teams: `mcp__linear__list_teams`
-   - List projects: `mcp__linear__list_projects`
-
-4. **Draft the ticket and present it:**
+3. **Draft the ticket and present it:**
    ```
    ## Draft Linear Ticket
 
@@ -91,96 +80,70 @@ The team follows a specific workflow to ensure alignment before code implementat
    [2-3 sentence summary]
 
    ## Key Details
-   - [Important details from thoughts]
+   - [Important details]
    - [Technical decisions or constraints]
 
-   ## Implementation Notes (if applicable)
-   [Technical approach or steps outlined]
-
    ## References
-   - Source: `thoughts/[path]` ([View on GitHub](url))
+   - Source: [link if applicable]
    ```
 
-5. **Get ticket configuration using AskUserQuestion:**
-   - **Priority**: What priority for this ticket?
-   - Options should cover: Urgent (critical blockers), High (important with deadlines), Medium (standard - default), Low (nice-to-have)
+4. **Get priority** using AskUserQuestion:
+   - **Priority**: What priority?
+   - Options should cover: Urgent (critical blockers), High (important), Medium (standard), Low (nice-to-have)
 
-   Then get project confirmation using AskUserQuestion:
-   - **Project**: Which project?
-   - Options: default to M U L T I C L A U D E, plus other active projects found
-
-6. **Get final confirmation using AskUserQuestion:**
+5. **Get confirmation** using AskUserQuestion:
    - **Create**: Ready to create this ticket?
-   - Options should cover: create it, needs changes to description, cancel
+   - Options should cover: create it, needs changes, cancel
 
-7. **Create the ticket:**
-   Use `mcp__linear__create_issue` with title, description, teamId, projectId, priority, stateId (Triage), labelIds (auto-assigned), and links.
+6. **Create the ticket** using `mcp__mise-tools__linear_{workspace}_create_issue` with:
+   - title, description, teamId, priority
+   - stateId: use the **Backlog** state for the selected team
+   - labelIds: auto-assign based on content (see references/ids.md for label IDs)
+   - assigneeId: Will's user ID for the workspace
 
-8. **Post-creation:** Show the created ticket URL. Get next action using AskUserQuestion:
-   - **Follow-up**: Ticket created. What next?
-   - Options should cover: add sub-tasks, update thoughts doc with ticket reference, done
+7. **Post-creation:** Show the created ticket URL and identifier.
 
-### Step 2: Add Comments and Links
+### Step 2: Search for Tickets
 
-1. **Identify the ticket:**
-   - Use context from conversation to identify the relevant ticket
-   - If uncertain, use `mcp__linear__get_issue` to confirm
+1. **Gather search criteria** — use context from the conversation or get it using AskUserQuestion:
+   - **Filter**: How would you like to filter?
+   - Options should cover: by status, by team, by keyword, all recent
+
+2. **Execute search** with `mcp__mise-tools__linear_{workspace}_list_issues` using query, teamId, stateId, limit 20.
+
+3. **Present results** showing ticket identifier, title, status, and assignee.
+
+### Step 3: Update Ticket Status
+
+1. **Get current status** by fetching ticket details with `mcp__mise-tools__linear_{workspace}_get_issue`.
+
+2. **Suggest the next status** based on workflow progression and get confirmation using AskUserQuestion:
+   - **Status**: Move to the next stage?
+   - Options: the logical next status(es) in the workflow, plus "different status" and "cancel"
+
+   Tailor options based on current status (e.g., from Todo suggest Ready for Research; from In Research suggest Ready for Plan).
+
+3. **Update** with `mcp__mise-tools__linear_{workspace}_update_issue` using the stateId from references/ids.md for the correct team.
+
+### Step 4: Add Comments and Links
+
+1. **Identify the ticket** from conversation context or ask.
 
 2. **Format comments for quality:**
    - Keep comments concise (~10 lines) unless more detail needed
    - Focus on key insights, not mechanical summaries
-   - Include file references with backticks and GitHub links
-   - Wrap paths in backticks: `thoughts/allison/example.md`
+   - Include file references with backticks
 
-3. **For comments with links:**
-   First update the issue with the link via `mcp__linear__update_issue`, then create the comment via `mcp__linear__create_comment`.
+3. **Create the comment** with `mcp__mise-tools__linear_{workspace}_create_comment`.
 
-4. **For links only:**
-   Update the issue with the link and add a brief comment noting what was added.
-
-### Step 3: Search for Tickets
-
-1. **Gather search criteria** using AskUserQuestion if not specified:
-   - **Filter**: How would you like to filter results?
-   - Options should cover: by status, by project, by assignee, all recent
-
-2. **Execute search** with `mcp__linear__list_issues` using query, teamId, projectId, stateId, limit 20.
-
-3. **Present results** showing ticket ID, title, status, assignee, grouped by project if multiple.
-
-### Step 4: Update Ticket Status
-
-1. **Get current status** by fetching ticket details.
-
-2. **Suggest the next status** based on workflow progression and get confirmation using AskUserQuestion:
-   - **Status**: Move [ticket] to the next stage?
-   - Options should cover: the logical next status(es) in the workflow, plus "different status" and "cancel"
-
-   Tailor options based on current status (e.g., from Triage suggest Spec Needed; from Research in Progress suggest Ready for Plan or Research in Review).
-
-3. **Update** with `mcp__linear__update_issue` and consider adding a comment explaining the change.
-
-## Comment Quality Guidelines
-
-Focus on extracting the most valuable information for a human reader:
-
-- **Key insights over summaries**: What's the critical understanding?
-- **Decisions and tradeoffs**: What approach was chosen and what it enables/prevents
-- **Blockers resolved**: What was preventing progress and how it was addressed
-- **State changes**: What's different now and what it means for next steps
-- **Surprises or discoveries**: Unexpected findings that affect the work
-
-Avoid mechanical lists of changes, restating what's obvious from diffs, or generic summaries.
+4. **If adding links**, update the issue with `mcp__mise-tools__linear_{workspace}_update_issue` first, then add a comment noting what was linked.
 
 ## Guidelines
 
 1. **Problem first**: All tickets MUST include a clear "problem to solve". If the user only gives implementation details, ask for the problem from a user perspective
 2. **Concise but complete**: Keep tickets scannable, not walls of text
-3. **Links via parameter**: Always use the `links` parameter for external URLs, not just markdown links in description
-4. **Don't create from brainstorming**: Don't create tickets from early-stage brainstorming unless explicitly requested
-5. **Ask, don't guess**: Ask for clarification on project/status rather than guessing
-6. **Preserve sources**: Always link back to source material
-7. **Auto-label**: Apply labels automatically based on ticket content (see [references/ids.md](references/ids.md))
-8. **Cross-reference**: For product management tasks, direct users to `/linear-pm`
-
-See [references/ids.md](references/ids.md) for team, label, workflow state, and user IDs.
+3. **Links via parameter**: Use the `links` parameter for external URLs, not just markdown links in description
+4. **Ask, don't guess**: Ask for clarification on team/status rather than guessing
+5. **Auto-label**: Apply labels automatically based on ticket content (see references/ids.md)
+6. **Cross-reference**: For product management tasks, direct users to `/linear-pm`
+7. **Workspace-aware**: Always use the correct workspace-namespaced MCP tools and the matching IDs from references/ids.md
