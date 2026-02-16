@@ -17,9 +17,9 @@ Build new skills for this repository following established conventions and Conte
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
-- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
-- **Existing Skills**: !`ls skills/ 2>/dev/null | head -20`
+- **Branch**: !`git branch --show-current`
+- **Last Commit**: !`git log -1 --oneline`
+- **Existing Skills**: !`ls skills/`
 
 ## Initial Response
 

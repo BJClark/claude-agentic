@@ -17,8 +17,8 @@ Manage Linear tickets: create, update status, add comments and links, search and
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
-- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
+- **Branch**: !`git branch --show-current`
+- **Last Commit**: !`git log -1 --oneline`
 
 ## Workspaces
 

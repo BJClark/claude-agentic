@@ -19,8 +19,8 @@ For issue-level management (create tickets, update status, add comments), use `/
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
-- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
+- **Branch**: !`git branch --show-current`
+- **Last Commit**: !`git log -1 --oneline`
 
 ## Workspaces
 

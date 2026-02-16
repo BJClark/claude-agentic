@@ -17,8 +17,8 @@ Define relationships between bounded contexts using standard context mapping pat
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
-- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
+- **Branch**: !`git branch --show-current`
+- **Last Commit**: !`git log -1 --oneline`
 
 ## Prerequisites
 

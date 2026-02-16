@@ -41,9 +41,9 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, 
 
 Git context commands use `!` prefix with backticks:
 ```
-- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
-- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
-- **Modified Files**: !`(git status --short 2>/dev/null || echo "N/A") | head -10`
+- **Branch**: !`git branch --show-current`
+- **Last Commit**: !`git log -1 --oneline`
+- **Modified Files**: !`git status --short`
 ```
 
 User input is referenced as `$ARGUMENTS`.

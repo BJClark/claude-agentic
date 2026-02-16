@@ -25,9 +25,9 @@ Investigate issues by examining logs, database state, and git history without ed
 
 ## Current Context
 
-- **Branch**: !`git branch --show-current 2>/dev/null || echo "N/A"`
-- **Last Commit**: !`git log -1 --oneline 2>/dev/null || echo "N/A"`
-- **Modified Files**: !`(git status --short 2>/dev/null || echo "N/A") | head -10`
+- **Branch**: !`git branch --show-current`
+- **Last Commit**: !`git log -1 --oneline`
+- **Modified Files**: !`git status --short`
 
 ## Initial Response
 
