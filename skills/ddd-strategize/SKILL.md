@@ -22,7 +22,7 @@ Classify each sub-domain on the Core Domain Chart and make strategic investment 
 
 ## Prerequisites
 
-- `research/ddd/03-sub-domains.md` must exist (run `/ddd_decompose` first)
+- `research/ddd/03-sub-domains.md` must exist (run `/ddd-decompose` first)
 - `research/ddd/01-alignment.md` for business context
 
 ## Process Steps
@@ -82,7 +82,7 @@ Create `research/ddd/04-strategy.md` with Core Domain Chart, classifications, ar
 ```
 Strategy artifact written to `research/ddd/04-strategy.md`.
 
-Next step: Run `/ddd_connect` to map relationships between bounded contexts.
+Next step: Run `/ddd-connect` to map relationships between bounded contexts.
 ```
 
 ## Guidelines

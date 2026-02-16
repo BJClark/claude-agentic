@@ -85,7 +85,7 @@ Summary:
 - [N] state lifecycle diagrams
 - [N] data gaps flagged
 
-Next step: Run `/ddd_plan` to convert DDD artifacts into implementation plans.
+Next step: Run `/ddd-plan` to convert DDD artifacts into implementation plans.
 ```
 
 ## Guidelines

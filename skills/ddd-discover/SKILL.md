@@ -22,7 +22,7 @@ Perform structured EventStorming to extract domain building blocks from your req
 
 ## Prerequisites
 
-- `research/ddd/01-alignment.md` must exist (run `/ddd_align` first)
+- `research/ddd/01-alignment.md` must exist (run `/ddd-align` first)
 
 ## Process Steps
 
@@ -100,7 +100,7 @@ Summary:
 - [N] events, [N] commands, [N] actors, [N] policies, [N] read models
 - [N] gaps resolved, [N] open questions remaining
 
-Next step: Run `/ddd_decompose` to identify bounded context boundaries.
+Next step: Run `/ddd-decompose` to identify bounded context boundaries.
 ```
 
 ## Guidelines

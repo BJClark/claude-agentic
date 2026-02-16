@@ -1,6 +1,6 @@
 ---
 name: ddd-plan
-description: "DDD Step 8: Convert DDD artifacts into implementation plans for /implement_plan"
+description: "DDD Step 8: Convert DDD artifacts into implementation plans for /implement-plan"
 model: opus
 context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
@@ -11,7 +11,7 @@ argument-hint: [domain-name]
 
 Ultrathink about the translation from domain model to implementation. Consider how aggregates map to code structures, how events flow through infrastructure, and how to phase work for incremental delivery.
 
-Convert all DDD artifacts into concrete implementation plans compatible with `/implement_plan`.
+Convert all DDD artifacts into concrete implementation plans compatible with `/implement-plan`.
 
 **Input**: $ARGUMENTS
 
@@ -88,16 +88,16 @@ Tailor options based on what was actually written.
 |------|---------|-------------|--------|
 
 Implementation order:
-1. [First] -> `/implement_plan plans/YYYY-MM-DD-ddd-[name].md`
+1. [First] -> `/implement-plan plans/YYYY-MM-DD-ddd-[name].md`
 2. [Second] -> after first is complete
 
-Each plan is compatible with `/implement_plan`.
+Each plan is compatible with `/implement-plan`.
 ```
 
 ## Guidelines
 
 1. **One plan per bounded context**: Don't combine contexts
-2. **Standard plan template format**: Compatible with `/implement_plan`
+2. **Standard plan template format**: Compatible with `/implement-plan`
 3. **Architecture matches strategy**: CQRS/ES only where classified
 4. **Phases are incremental and testable**: Each has automated + manual verification
 5. **Trace to DDD artifacts**: Every item references its source (E1, C1, canvas)

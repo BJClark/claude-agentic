@@ -22,7 +22,7 @@ Define relationships between bounded contexts using standard context mapping pat
 
 ## Prerequisites
 
-- `research/ddd/04-strategy.md` must exist (run `/ddd_strategize` first)
+- `research/ddd/04-strategy.md` must exist (run `/ddd-strategize` first)
 - `research/ddd/03-sub-domains.md` for context boundaries
 
 ## Process Steps
@@ -80,7 +80,7 @@ Summary:
 - Patterns used: [list]
 - [N] ACLs identified
 
-Next step: Run `/ddd_define` to build Bounded Context Canvases and Aggregate Design Canvases.
+Next step: Run `/ddd-define` to build Bounded Context Canvases and Aggregate Design Canvases.
 ```
 
 ## Guidelines

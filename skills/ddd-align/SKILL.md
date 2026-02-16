@@ -1,6 +1,6 @@
 ---
 name: ddd-align
-description: "DDD Step 1: Align & understand the business domain from a PRD or description"
+description: "DDD Step 1: Align & understand the business domain from a PRD or description. Use when you have a PRD, product spec, or business description and want to start domain discovery."
 model: opus
 context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
@@ -30,7 +30,7 @@ When invoked:
 I'll help you start the DDD discovery process by aligning on the business domain.
 
 Please provide:
-1. A PRD file path (e.g., `/ddd_align path/to/prd.md`)
+1. A PRD file path (e.g., `/ddd-align path/to/prd.md`)
 2. Or describe the system/product you want to model
 
 I'll extract the business context, actors, value propositions, and constraints — then we'll validate together before moving to domain discovery.
@@ -126,8 +126,8 @@ Create `research/ddd/` directory if it doesn't exist.
 ```
 Alignment artifact written to `research/ddd/01-alignment.md`.
 
-Next step: Run `/ddd_discover` to perform EventStorming.
-Or run `/ddd_full` for the complete end-to-end DDD workflow.
+Next step: Run `/ddd-discover` to perform EventStorming.
+Or invoke the `ddd-architect` agent for the complete end-to-end DDD workflow.
 ```
 
 ## Guidelines

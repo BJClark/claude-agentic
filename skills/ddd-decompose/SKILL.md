@@ -22,7 +22,7 @@ Identify bounded context boundaries by analyzing language patterns in the event 
 
 ## Prerequisites
 
-- `research/ddd/02-event-catalog.md` must exist (run `/ddd_discover` first)
+- `research/ddd/02-event-catalog.md` must exist (run `/ddd-discover` first)
 - `research/ddd/01-alignment.md` should be accessible
 
 ## Process Steps
@@ -97,7 +97,7 @@ Summary:
 - [N] bounded contexts: [N] core, [N] supporting, [N] generic
 - [N] pivotal events marking boundaries
 
-Next step: Run `/ddd_strategize` to classify sub-domains and make investment decisions.
+Next step: Run `/ddd-strategize` to classify sub-domains and make investment decisions.
 ```
 
 ## Guidelines
@@ -107,4 +107,4 @@ Next step: Run `/ddd_strategize` to classify sub-domains and make investment dec
 3. **Pivotal events are strongest markers**: Phase transitions indicate boundaries
 4. **Don't force symmetry**: Contexts can be vastly different sizes
 5. **Preserve building block IDs**: E1, C1, A1, P1, R1 from event catalog
-6. **Preliminary classifications only**: Full analysis in `/ddd_strategize`
+6. **Preliminary classifications only**: Full analysis in `/ddd-strategize`
