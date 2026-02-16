@@ -26,7 +26,7 @@ branch name: BRANCH_NAME
 path to plan file: $FILEPATH
 
 Launch prompt for the worktree session:
-    /implement_plan at $FILEPATH — once complete and tests pass, use /commit, then /describe-pr, then add a comment to the Linear ticket with the PR link
+    /implement_plan at $FILEPATH — once complete and tests pass, use /commit, then /describe-pr, then add a comment to the Linear ticket with the PR link and move the ticket to "In Review" status
 ```
 
 Incorporate any user feedback then:

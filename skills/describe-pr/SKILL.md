@@ -79,6 +79,13 @@ Write to `prs/{number}_description.md` or `thoughts/shared/prs/{number}_descript
 - Confirm update successful
 - If verification steps unchecked, remind user
 
+### 10. Linear Ticket Status Reminder
+
+After updating the PR, check if the branch name contains a Linear ticket reference (e.g., `ENG-1234`, `eng-1234`, or similar patterns):
+- Extract the ticket identifier from the branch name
+- Remind the user: "If you haven't already, move **[ticket-id]** to **In Review** status in Linear to reflect the PR submission."
+- If running as part of a larger workflow (e.g., called from `/ralph_impl` or `/create_worktree`), the calling command should handle the status update via MCP tools.
+
 ## Guidelines
 
 - Works across different repositories — always read local template
