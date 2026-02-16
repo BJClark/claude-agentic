@@ -14,6 +14,11 @@
 - [Pattern to follow]
 - [Constraint to work within]
 
+## Technical Decisions
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| [e.g. Storage engine] | [e.g. PostgreSQL JSONB] | [Why this was chosen over alternatives] |
+
 ## What We're NOT Doing
 [Explicitly list out-of-scope items]
 
