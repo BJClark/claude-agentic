@@ -3,7 +3,7 @@ name: research-codebase
 description: Research codebase comprehensively by exploring components, patterns, and connections. Document what exists without evaluation.
 model: opus
 context: fork
-allowed-tools: Read, Grep, Glob, Bash(git *), TodoWrite
+allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, TodoWrite
 argument-hint: [research-question]
 ---
 
@@ -91,6 +91,46 @@ gh repo view --json owner,name
 - Present concise summary with key file references
 - Ask if follow-up questions
 - For follow-ups: append to same document, update frontmatter
+
+### 8. Link to Linear Ticket (Optional)
+
+After presenting findings, check if the research should be attached to a Linear ticket.
+
+**8a. Detect ticket context**: If the $ARGUMENTS mention a ticket identifier (e.g., `ENG-1234`, `PLAT-567`), use that directly. Otherwise, get the decision using AskUserQuestion:
+- **Linear ticket**: Should this research be attached to a Linear ticket?
+- Options should cover: Yes with a specific ticket ID (ask for it next), No thanks
+
+**8b. If attaching to a ticket**:
+
+1. Determine the workspace from the ticket prefix or get it using AskUserQuestion:
+   - **Workspace**: Which Linear workspace?
+   - Options: Stellar, Kickplan, Meerkat
+
+2. Fetch the ticket using `mcp__mise-tools__linear_{workspace}_get_issue` to confirm it exists and get current context.
+
+3. Compose a concise research summary comment (~10 lines max):
+   ```
+   ## Research: [Topic]
+
+   **Document**: `[path to research document]`
+
+   **Key findings**:
+   - [Finding 1]
+   - [Finding 2]
+   - [Finding 3]
+
+   **Open questions**: [any unresolved items, or "None"]
+   ```
+
+4. Post the comment using `mcp__mise-tools__linear_{workspace}_create_comment`.
+
+5. If the ticket is in "Ready for Research" or "In Research" status, suggest advancing it using AskUserQuestion:
+   - **Status update**: This ticket is in [current status]. Move to Ready for Plan?
+   - Options should cover: Yes move to Ready for Plan, Leave status as-is
+
+   If yes, update using `mcp__mise-tools__linear_{workspace}_update_issue` with the appropriate stateId. See [linear references](../linear/references/ids.md) for state IDs per workspace and team.
+
+6. Confirm what was posted: show the ticket identifier and a note that the research was linked.
 
 ## Important Notes
 
