@@ -2,7 +2,7 @@
 name: describe-pr
 description: Generate comprehensive PR descriptions following repository templates
 context: fork
-allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *), Write, Edit
+allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *), Write, Edit, AskUserQuestion
 argument-hint: [pr-number]
 ---
 
