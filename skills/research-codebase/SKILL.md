@@ -28,6 +28,14 @@ Research the following topic: **$ARGUMENTS**
 
 You are creating technical documentation of the existing system.
 
+## Linear Ticket Detection
+
+If the input references a Linear ticket (e.g. `ENG-1234`, `PLAT-56`, or a `thoughts/shared/tickets/*.md` file):
+1. Note the ticket identifier for later use in Step 8 (automatic upload)
+2. If a ticket file exists, read it fully for context
+3. If only an identifier is provided, fetch ticket details using Linear MCP tools (see [Linear reference IDs](../linear/references/ids.md) for workspace and team IDs)
+4. Use the ticket's title and description to inform the research question
+
 ## Research Process
 
 ### 1. Read Mentioned Files First
@@ -92,23 +100,21 @@ gh repo view --json owner,name
 - Ask if follow-up questions
 - For follow-ups: append to same document, update frontmatter
 
-### 8. Link to Linear Ticket (Optional)
+### 8. Upload to Linear & Advance Status
 
-After presenting findings, check if the research should be attached to a Linear ticket.
+After presenting findings, upload the research to Linear and advance the ticket status.
 
-**8a. Detect ticket context**: If the $ARGUMENTS mention a ticket identifier (e.g., `ENG-1234`, `PLAT-567`), use that directly. Otherwise, get the decision using AskUserQuestion:
-- **Linear ticket**: Should this research be attached to a Linear ticket?
-- Options should cover: Yes with a specific ticket ID (ask for it next), No thanks
+**If a Linear ticket was detected** (from the input):
 
-**8b. If attaching to a ticket**:
-
-1. Determine the workspace from the ticket prefix or get it using AskUserQuestion:
+1. Determine the workspace from the ticket identifier prefix or get it using AskUserQuestion:
    - **Workspace**: Which Linear workspace?
    - Options: Stellar, Kickplan, Meerkat
 
-2. Fetch the ticket using `mcp__mise-tools__linear_{workspace}_get_issue` to confirm it exists and get current context.
+2. Use ToolSearch to load the needed MCP tools for the workspace: `get_issue`, `create_comment`, `update_issue`
 
-3. Compose a concise research summary comment (~10 lines max):
+3. Fetch the ticket using `mcp__mise-tools__linear_{workspace}_get_issue` to get current status and team.
+
+4. Compose a research summary comment:
    ```
    ## Research: [Topic]
 
@@ -122,15 +128,24 @@ After presenting findings, check if the research should be attached to a Linear 
    **Open questions**: [any unresolved items, or "None"]
    ```
 
-4. Post the comment using `mcp__mise-tools__linear_{workspace}_create_comment`.
+5. Post the comment using `mcp__mise-tools__linear_{workspace}_create_comment`.
 
-5. If the ticket is in "Ready for Research" or "In Research" status, suggest advancing it using AskUserQuestion:
-   - **Status update**: This ticket is in [current status]. Move to Ready for Plan?
-   - Options should cover: Yes move to Ready for Plan, Leave status as-is
+6. Move the ticket to "Ready for Plan" if it's currently in an earlier state (Backlog, Todo, Ready for Research, In Research). Use the appropriate stateId from [linear references](../linear/references/ids.md) for the ticket's team and workspace. Update using `mcp__mise-tools__linear_{workspace}_update_issue`.
 
-   If yes, update using `mcp__mise-tools__linear_{workspace}_update_issue` with the appropriate stateId. See [linear references](../linear/references/ids.md) for state IDs per workspace and team.
+7. Confirm what was done:
+   ```
+   Linear sync complete:
+   - Research comment posted to [TICKET-ID]
+   - Ticket moved to "Ready for Plan"
+   ```
 
-6. Confirm what was posted: show the ticket identifier and a note that the research was linked.
+**If no Linear ticket was detected**:
+
+Get the decision using AskUserQuestion:
+- **Linear ticket**: Should this research be attached to a Linear ticket?
+- Options should cover: Yes (provide ticket ID), No thanks
+
+If yes, follow steps 1-7 above with the provided ticket ID.
 
 ## Important Notes
 
