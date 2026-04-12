@@ -2,7 +2,6 @@
 name: pm-synthesize
 description: "Synthesize Jeff and DDD artifacts into a Linear build plan. Use when you have a story map and want to generate a structured plan for bulk Linear creation."
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [story-map-path]
 ---

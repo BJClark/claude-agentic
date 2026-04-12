@@ -2,7 +2,6 @@
 name: analyze-project
 description: "Analyze a Linear project's stories for completeness and gaps, improve them, and prepare all cards for research"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [project-name or project-id]
 disable-model-invocation: true

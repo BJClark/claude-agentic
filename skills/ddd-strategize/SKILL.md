@@ -2,7 +2,6 @@
 name: ddd-strategize
 description: "DDD Step 4: Strategize — classify sub-domains and make investment decisions"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]
 ---

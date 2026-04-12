@@ -2,7 +2,6 @@
 name: local-review
 description: Set up worktree for reviewing colleague's branch with optional parallel review team
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit, AskUserQuestion, Task
 argument-hint: [gh_username:branchName]
 ---

@@ -2,7 +2,6 @@
 name: ddd-discover
 description: "DDD Step 2: EventStorming — discover domain events, commands, actors, and policies"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [prd-file-path]
 ---

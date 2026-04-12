@@ -2,7 +2,6 @@
 name: ddd-connect
 description: "DDD Step 5: Context Mapping — define relationships between bounded contexts"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]
 ---

@@ -2,7 +2,6 @@
 name: linear
 description: "Manage Linear tickets - create, update, comment, search, and follow workflow patterns. Use when working with Linear issues or tickets."
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [action or ticket-id]
 ---

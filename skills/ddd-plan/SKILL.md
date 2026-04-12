@@ -2,7 +2,6 @@
 name: ddd-plan
 description: "DDD Step 8: Convert DDD artifacts into implementation plans for /implement-plan"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]
 ---

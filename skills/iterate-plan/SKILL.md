@@ -2,7 +2,6 @@
 name: iterate-plan
 description: Iterate on existing implementation plans with thorough research and updates
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite
 argument-hint: [plan-file-path feedback]
 ---

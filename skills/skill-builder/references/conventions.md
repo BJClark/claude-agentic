@@ -9,7 +9,7 @@ Quick reference for building skills in this repo. Distilled from analyzing exist
 | `name` | Yes | kebab-case identifier, matches folder name | `create-plan` |
 | `description` | Yes | WHAT + WHEN in one sentence | `"Create plans. Use when starting implementation."` |
 | `model` | No | Model to use (default: opus) | `opus` |
-| `context` | No | Execution context | `fork` |
+| `context` | No | Execution context. **Do NOT set to `fork` if the skill uses `AskUserQuestion`** — that tool is unavailable in subagents. Leave unset to run inline. | _(unset)_ |
 | `allowed-tools` | No | Comma-separated tool list | `Read, Grep, Glob, Write` |
 | `argument-hint` | No | Hint shown in CLI | `[ticket-id]` |
 | `user-invocable` | No | Can user call directly | `true` |
@@ -61,6 +61,8 @@ User input is referenced as `$ARGUMENTS`.
 ## AskUserQuestion Patterns
 
 Always use AskUserQuestion for decisions. Never print questions as plain text.
+
+**Critical constraint**: `AskUserQuestion` is unavailable in subagents (see [Claude Code docs — Limitations](https://code.claude.com/docs/en/agent-sdk/user-input#limitations)). Any skill that needs to ask the user a question must **not** declare `context: fork` — leave `context` unset so the skill runs inline in the main session. Listing `AskUserQuestion` in `allowed-tools` under a forked skill does nothing.
 
 **Good**: Tailored options based on actual findings
 ```

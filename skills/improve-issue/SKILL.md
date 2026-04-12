@@ -2,7 +2,6 @@
 name: improve-issue
 description: "Enrich a ticket with clarifications and context so an engineer can start planning"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, Bash
 argument-hint: [ENG-1234 or #123 or github-url]
 ---

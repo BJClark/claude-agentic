@@ -2,7 +2,6 @@
 name: SKILL_NAME
 description: "WHAT_IT_DOES. Use when TRIGGER_CONDITIONS."
 model: opus
-context: fork
 allowed-tools: TOOL_LIST
 argument-hint: [ARGUMENT_HINT]
 ---

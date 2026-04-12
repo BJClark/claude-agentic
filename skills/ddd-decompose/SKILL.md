@@ -2,7 +2,6 @@
 name: ddd-decompose
 description: "DDD Step 3: Decompose the domain into sub-domains and bounded contexts"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [domain-name]
 ---

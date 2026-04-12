@@ -2,7 +2,6 @@
 name: skill-builder
 description: "Build new Claude Skills using Context Engineering principles (Research, Plan, Implement). Use when creating or improving skills for this repo."
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, Bash(git *)
 argument-hint: [skill-name]
 ---
@@ -122,7 +121,6 @@ Draft the YAML frontmatter based on research:
 name: [kebab-case]
 description: "[What it does]. Use when [trigger conditions]."
 model: opus
-context: fork
 allowed-tools: [minimal set needed]
 argument-hint: [what user provides]
 ---
@@ -130,7 +128,7 @@ argument-hint: [what user provides]
 
 Follow these conventions from existing skills:
 - `model: opus` unless the skill is simple enough for a smaller model
-- `context: fork` for skills that run as independent sessions
+- **Do NOT set `context: fork`** if the skill uses `AskUserQuestion`. That tool is unavailable in subagents (see [Claude Code docs — Limitations](https://code.claude.com/docs/en/agent-sdk/user-input#limitations)). Leave `context` unset so the skill runs inline in the main session.
 - `allowed-tools`: Only include tools the skill actually needs. Common patterns:
   - Research-only: `Read, Grep, Glob, Bash(git *), TodoWrite`
   - Research + interaction: `Read, Grep, Glob, Task, AskUserQuestion, TodoWrite`

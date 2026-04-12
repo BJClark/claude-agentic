@@ -2,7 +2,6 @@
 name: ddd-define
 description: "DDD Step 7: Define bounded context canvases and aggregate design canvases"
 model: opus
-context: fork
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [domain-name]
 ---
