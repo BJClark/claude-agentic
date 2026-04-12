@@ -2,8 +2,7 @@
 name: create-plan
 description: Create detailed implementation plans through interactive research and iteration. Optionally syncs plan to Linear tickets with phase sub-issues.
 model: opus
-context: fork
-allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite
+allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, Skill
 argument-hint: [ticket-or-description]
 ---
 
@@ -114,47 +113,9 @@ Include a **Technical Decisions** section in the plan documenting choices made i
 2. Iterate based on feedback
 3. Continue refining until satisfied
 
-### Step 7: Linear Sync
+### Step 7: Sync to Linear
 
-After the plan is finalized and the user is satisfied, check if a Linear ticket was detected.
-
-**If no Linear ticket**: Get decision using AskUserQuestion:
-- **Linear sync**: Would you like to attach this plan to a Linear ticket?
-- Options should cover: yes (provide ticket ID), no thanks, create a new ticket for this
-
-If "no thanks", skip to summary. If "create a new ticket", ask for the workspace and team, then create one using the Linear MCP tools (see [Linear reference IDs](../linear/references/ids.md)).
-
-**If a Linear ticket exists (detected or provided)**:
-
-1. **Determine the workspace** from the ticket identifier prefix or ask using AskUserQuestion if ambiguous. Use the correct workspace-namespaced MCP tools: `mcp__mise-tools__linear_{workspace}_*`
-
-2. **Post the plan as a comment** on the ticket using `mcp__mise-tools__linear_{workspace}_create_comment`:
-   - Include a concise summary of the plan (not the full plan text)
-   - Link to the plan file path
-   - List the phases with brief descriptions
-
-3. **Create sub-issues for each phase** using `mcp__mise-tools__linear_{workspace}_create_issue` with `parentId` set to the parent ticket's ID:
-   - **Title**: `Phase N: [Phase descriptive name]` (e.g. "Phase 1: Database schema migration")
-   - **Description**: The phase overview, key changes, and success criteria from the plan
-   - **Team**: Same team as the parent ticket
-   - **State**: Backlog
-   - **Labels**: Same labels as the parent ticket
-   - Set `blockedBy` so each phase is blocked by the previous one (Phase 2 blocked by Phase 1, etc.)
-
-4. **Update the parent ticket**:
-   - Move status to "In Plan" if it's currently in an earlier state (Backlog, Todo, Ready for Research, In Research, Ready for Plan)
-   - Attach the plan file as a link using the `links` parameter if the plan has been synced to a URL
-
-5. **Present the sync results**:
-   ```
-   Linear sync complete:
-   - Comment posted to [TICKET-ID]
-   - Created [N] phase sub-issues:
-     - [TICKET-ID-1]: Phase 1: [name]
-     - [TICKET-ID-2]: Phase 2: [name]
-     ...
-   - Parent ticket moved to "In Plan"
-   ```
+If a Linear ticket was detected in the input, automatically invoke `/linear-ticket-status-sync [TICKET-ID] create-plan` using the Skill tool to sync the plan artifact and advance the ticket status.
 
 ## Guidelines
 
@@ -164,7 +125,7 @@ If "no thanks", skip to summary. If "create a new ticket", ask for the workspace
 4. **Be Practical**: Incremental testable changes, consider migration/rollback
 5. **No Open Questions in Final Plan**: Research or ask immediately
 6. **Decide Before Writing**: Resolve technical decisions interactively before committing them to the plan, not after
-7. **Linear Sync is Optional**: Never force Linear integration -- always give the user an opt-out
+7. **Linear Sync is Separate**: Linear sync is handled by `/linear-ticket-status-sync`, not this skill
 
 ## Common Patterns
 

@@ -2,8 +2,7 @@
 name: implement-plan
 description: Implement technical plans from thoughts/shared/plans with automated verification and phase gates
 model: opus
-context: fork
-allowed-tools: Read, Edit, Write, Grep, Glob, Bash, TodoWrite, AskUserQuestion
+allowed-tools: Read, Edit, Write, Grep, Glob, Bash, TodoWrite, AskUserQuestion, Skill
 argument-hint: [plan-file-path]
 hooks:
   PostToolUse:
@@ -108,3 +107,7 @@ If the plan has existing checkmarks:
 - Verify previous work only if something seems off
 
 Remember: You're implementing a solution, not just checking boxes. Keep the end goal in mind and maintain forward momentum.
+
+## Linear Sync
+
+After implementation is complete, if a Linear ticket was detected in the plan or branch name, automatically invoke `/linear-ticket-status-sync [TICKET-ID] implement-plan` using the Skill tool to sync progress and advance the ticket status.

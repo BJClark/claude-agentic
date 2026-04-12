@@ -2,8 +2,7 @@
 name: research-codebase
 description: Research codebase comprehensively by exploring components, patterns, and connections. Document what exists without evaluation.
 model: opus
-context: fork
-allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, TodoWrite
+allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, TodoWrite, Skill
 argument-hint: [research-question]
 ---
 
@@ -100,52 +99,9 @@ gh repo view --json owner,name
 - Ask if follow-up questions
 - For follow-ups: append to same document, update frontmatter
 
-### 8. Upload to Linear & Advance Status
+### 8. Sync to Linear
 
-After presenting findings, upload the research to Linear and advance the ticket status.
-
-**If a Linear ticket was detected** (from the input):
-
-1. Determine the workspace from the ticket identifier prefix or get it using AskUserQuestion:
-   - **Workspace**: Which Linear workspace?
-   - Options: Stellar, Kickplan, Meerkat
-
-2. Use ToolSearch to load the needed MCP tools for the workspace: `get_issue`, `create_comment`, `update_issue`
-
-3. Fetch the ticket using `mcp__mise-tools__linear_{workspace}_get_issue` to get current status and team.
-
-4. Compose a research summary comment:
-   ```
-   ## Research: [Topic]
-
-   **Document**: `[path to research document]`
-
-   **Key findings**:
-   - [Finding 1]
-   - [Finding 2]
-   - [Finding 3]
-
-   **Open questions**: [any unresolved items, or "None"]
-   ```
-
-5. Post the comment using `mcp__mise-tools__linear_{workspace}_create_comment`.
-
-6. Move the ticket to "Ready for Plan" if it's currently in an earlier state (Backlog, Todo, Ready for Research, In Research). Use the appropriate stateId from [linear references](../linear/references/ids.md) for the ticket's team and workspace. Update using `mcp__mise-tools__linear_{workspace}_update_issue`.
-
-7. Confirm what was done:
-   ```
-   Linear sync complete:
-   - Research comment posted to [TICKET-ID]
-   - Ticket moved to "Ready for Plan"
-   ```
-
-**If no Linear ticket was detected**:
-
-Get the decision using AskUserQuestion:
-- **Linear ticket**: Should this research be attached to a Linear ticket?
-- Options should cover: Yes (provide ticket ID), No thanks
-
-If yes, follow steps 1-7 above with the provided ticket ID.
+If a Linear ticket was detected in the input, automatically invoke `/linear-ticket-status-sync [TICKET-ID] research-codebase` using the Skill tool to sync the research artifact and advance the ticket status.
 
 ## Important Notes
 

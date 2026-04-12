@@ -2,8 +2,7 @@
 name: qa
 description: "Walk through acceptance criteria in the browser using Chrome integration to validate that a ticket's requirements actually work. Use when a feature is implemented and needs manual QA verification."
 model: opus
-context: fork
-allowed-tools: Read, Grep, Glob, Bash, Task, AskUserQuestion, TodoWrite, mcp__claude-in-chrome__*
+allowed-tools: Read, Grep, Glob, Bash, Task, AskUserQuestion, TodoWrite, Skill, mcp__claude-in-chrome__*
 argument-hint: [ticket-id-or-url]
 ---
 
@@ -200,21 +199,11 @@ Written to: research/YYYY-MM-DD-qa-[ticket-id].md
 
 Get next steps using AskUserQuestion:
 - **Next steps**: How would you like to proceed with these results?
-- Options should cover: File bugs for failures (creates Linear tickets), Comment results on the original ticket, Re-test failed criteria (after fixes), Mark ticket as Done (all passed), Just keep the report
+- Options should cover: Re-test failed criteria (after fixes), Just keep the report
 
-Tailor options based on the actual results. If everything passed, emphasize the "mark as Done" option. If there are failures, emphasize bug filing.
+Tailor options based on the actual results.
 
-**If "File bugs for failures" selected**:
-- For each FAIL or PARTIAL result, create a sub-issue on the original ticket using Linear MCP tools
-- Include the specific failure description, expected vs actual behavior, and steps to reproduce
-
-**If "Comment results on the original ticket" selected**:
-- Post a concise QA summary as a comment on the Linear ticket
-- Include the overall verdict and any issues found
-
-**If "Mark ticket as Done" selected**:
-- Update the Linear ticket status to "Done" using the correct workspace MCP tools
-- Post a comment confirming QA verification passed
+After presenting results, if a Linear ticket was detected, automatically invoke `/linear-ticket-status-sync [TICKET-ID] qa` using the Skill tool to sync the QA report and advance the ticket status.
 
 ## Guidelines
 

@@ -1,8 +1,7 @@
 ---
 name: describe-pr
 description: Generate comprehensive PR descriptions following repository templates
-context: fork
-allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *), Write, Edit, AskUserQuestion
+allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *), Write, Edit, AskUserQuestion, Skill
 argument-hint: [pr-number]
 ---
 
@@ -79,12 +78,9 @@ Write to `prs/{number}_description.md` or `thoughts/shared/prs/{number}_descript
 - Confirm update successful
 - If verification steps unchecked, remind user
 
-### 10. Linear Ticket Status Reminder
+### 10. Linear Sync
 
-After updating the PR, check if the branch name contains a Linear ticket reference (e.g., `ENG-1234`, `eng-1234`, or similar patterns):
-- Extract the ticket identifier from the branch name
-- Remind the user: "If you haven't already, move **[ticket-id]** to **In Review** status in Linear to reflect the PR submission."
-- If running as part of a larger workflow (e.g., called from `/ralph_impl` or `/create_worktree`), the calling command should handle the status update via MCP tools.
+After updating the PR, check if the branch name contains a Linear ticket reference (e.g., `ENG-1234`, `eng-1234`, or similar patterns). If found, automatically invoke `/linear-ticket-status-sync [TICKET-ID] describe-pr` using the Skill tool to sync the PR and advance the ticket status.
 
 ## Guidelines
 
