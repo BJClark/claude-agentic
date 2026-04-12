@@ -1,6 +1,6 @@
 ---
 name: implement-plan
-description: Implement technical plans from thoughts/shared/plans with automated verification and phase gates
+description: Implement technical plans from thoughts/shared/plans with automated verification and phase gates. Use when you have an approved plan file and are ready to execute it phase by phase.
 model: opus
 allowed-tools: Read, Edit, Write, Grep, Glob, Bash, TodoWrite, AskUserQuestion, Skill
 argument-hint: [plan-file-path]
@@ -65,6 +65,9 @@ After implementing a phase:
 - Fix any issues before proceeding
 - Update your progress in both the plan and your todos
 - Check off completed items in the plan file itself using Edit
+
+After each phase, run deterministic verification:
+`bash skills/implement-plan/scripts/verify.sh [phase-number]`
 
 ### Phase Gate
 

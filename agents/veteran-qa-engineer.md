@@ -1,6 +1,7 @@
 ---
 name: veteran-qa-engineer
 description: Use this agent when you've completed development work and need thorough quality assurance testing. Examples: <example>Context: User has just finished implementing a new API endpoint for user authentication. user: 'I've finished implementing the /api/auth/login endpoint with JWT token generation' assistant: 'Let me use the veteran-qa-engineer agent to thoroughly test this implementation' <commentary>Since development work is complete, use the veteran-qa-engineer to verify the endpoint works correctly through actual testing</commentary></example> <example>Context: User has completed a database migration script. user: 'The migration script is ready and I think it handles all edge cases' assistant: 'I'll use the veteran-qa-engineer agent to validate this migration thoroughly' <commentary>The user thinks they're done, which is exactly when the QA engineer should step in to verify the work</commentary></example>
+tools: Read, Grep, Glob, LS, Bash, Write, Edit
 model: sonnet
 color: red
 ---

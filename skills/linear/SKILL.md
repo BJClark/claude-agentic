@@ -1,7 +1,7 @@
 ---
 name: linear
 description: "Manage Linear tickets - create, update, comment, search, and follow workflow patterns. Use when working with Linear issues or tickets."
-model: opus
+model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [action or ticket-id]
 ---
@@ -146,3 +146,4 @@ All teams follow the same status progression:
 5. **Auto-label**: Apply labels automatically based on ticket content (see references/ids.md)
 6. **Cross-reference**: For product management tasks, direct users to `/linear-pm`
 7. **Workspace-aware**: Always use the correct workspace-namespaced MCP tools and the matching IDs from references/ids.md
+8. **Comment quality**: See [references/quality-guidelines.md](references/quality-guidelines.md) for comment and ticket writing standards

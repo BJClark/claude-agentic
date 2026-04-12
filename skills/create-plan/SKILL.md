@@ -1,6 +1,6 @@
 ---
 name: create-plan
-description: Create detailed implementation plans through interactive research and iteration. Optionally syncs plan to Linear tickets with phase sub-issues.
+description: Create detailed implementation plans through interactive research and iteration. Optionally syncs plan to Linear tickets with phase sub-issues. Use when you need to create a new implementation plan for a ticket or feature.
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, Skill
 argument-hint: [ticket-or-description]

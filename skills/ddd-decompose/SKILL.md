@@ -1,7 +1,7 @@
 ---
 name: ddd-decompose
-description: "DDD Step 3: Decompose the domain into sub-domains and bounded contexts"
-model: opus
+description: "DDD Step 3: Decompose the domain into sub-domains and bounded contexts. Use when you have an event catalog and need to identify bounded context boundaries."
+model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [domain-name]
 ---

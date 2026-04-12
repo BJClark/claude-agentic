@@ -1,7 +1,7 @@
 ---
 name: iterate-plan
-description: Iterate on existing implementation plans with thorough research and updates
-model: opus
+description: Iterate on existing implementation plans with thorough research and updates. Use when you have an existing plan and want to revise it based on feedback or new findings.
+model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite
 argument-hint: [plan-file-path feedback]
 ---

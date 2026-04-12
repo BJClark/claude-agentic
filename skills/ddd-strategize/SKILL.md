@@ -1,7 +1,7 @@
 ---
 name: ddd-strategize
-description: "DDD Step 4: Strategize — classify sub-domains and make investment decisions"
-model: opus
+description: "DDD Step 4: Strategize — classify sub-domains and make investment decisions. Use when you have identified sub-domains and need to classify them on a Core Domain Chart."
+model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]
 ---

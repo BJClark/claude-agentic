@@ -1,6 +1,7 @@
 ---
 name: sitrep
 description: Use this agent when we're going in circles or before we compact.
+tools: Read, Grep, Glob, LS, Bash
 model: haiku
 ---
 

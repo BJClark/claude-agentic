@@ -1,7 +1,7 @@
 ---
 name: ddd-plan
-description: "DDD Step 8: Convert DDD artifacts into implementation plans for /implement-plan"
-model: opus
+description: "DDD Step 8: Convert DDD artifacts into implementation plans for /implement-plan. Use when DDD artifacts are complete and you need to translate them into phased implementation plans."
+model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]
 ---

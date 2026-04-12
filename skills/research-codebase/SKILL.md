@@ -1,6 +1,6 @@
 ---
 name: research-codebase
-description: Research codebase comprehensively by exploring components, patterns, and connections. Document what exists without evaluation.
+description: Research codebase comprehensively by exploring components, patterns, and connections. Document what exists without evaluation. Use when you need a factual deep dive into how a specific part of the codebase works.
 model: opus
 allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, TodoWrite, Skill
 argument-hint: [research-question]

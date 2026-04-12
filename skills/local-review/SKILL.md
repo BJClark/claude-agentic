@@ -1,6 +1,6 @@
 ---
 name: local-review
-description: Set up worktree for reviewing colleague's branch with optional parallel review team
+description: Set up worktree for reviewing colleague's branch with optional parallel review team. Use when you need to review a colleague's branch in an isolated git worktree.
 model: opus
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit, AskUserQuestion, Task
 argument-hint: [gh_username:branchName]

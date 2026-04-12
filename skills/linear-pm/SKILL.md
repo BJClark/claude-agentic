@@ -1,7 +1,7 @@
 ---
 name: linear-pm
 description: "Manage Linear product management - initiatives, milestones, project updates, and project labels. Use when working at the strategic layer above individual issues."
-model: opus
+model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [action or initiative-name]
 ---

@@ -1,7 +1,7 @@
 ---
 name: ddd-align
 description: "DDD Step 1: Align & understand the business domain from a PRD or description. Use when you have a PRD, product spec, or business description and want to start domain discovery."
-model: opus
+model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [prd-file-path]
 ---

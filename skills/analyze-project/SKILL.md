@@ -1,7 +1,7 @@
 ---
 name: analyze-project
-description: "Analyze a Linear project's stories for completeness and gaps, improve them, and prepare all cards for research"
-model: opus
+description: "Analyze a Linear project's stories for completeness and gaps, improve them, and prepare all cards for research. Use when you have a Linear project and want to audit story quality and move cards to Ready for Research."
+model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [project-name or project-id]
 disable-model-invocation: true
@@ -67,205 +67,22 @@ Present project context:
    - **Workstreams**: What are the major logical groupings of work?
 4. Consider sibling projects — what do they cover that this project doesn't need to?
 
-Present scope analysis:
-
-```
-## Project Scope Analysis
-
-**Starting state**: [description of current situation]
-**End state**: [description of what the project delivers]
-
-**Workstreams**:
-1. [Workstream name] — [brief description, N stories]
-2. [Workstream name] — [brief description, N stories]
-...
-
-**Sibling project boundaries**: [what adjacent projects cover]
-```
-
 **Gate**: Get confirmation using AskUserQuestion:
 - **Scope**: Does this scope summary accurately capture what this project is trying to achieve?
 - Options should cover: Yes proceed to assessment, Needs adjustment, I want to clarify the end state
 
-If the user adjusts, incorporate their feedback and re-present. Do not proceed until the scope is confirmed.
+### Step 3: Assess Stories, Identify Gaps, and Execute
 
-### Step 3: Assess Each Story
+See [references/analysis-criteria.md](references/analysis-criteria.md) for the detailed story assessment checklist, gap analysis dimensions, triage report template, and story improvement/creation process.
 
-Evaluate every story against this project-level checklist:
+Follow the criteria to:
+1. Assess every story against the project-level checklist
+2. Perform gap analysis across all 5 dimensions
+3. Present the triage report with proposed actions
+4. Execute approved improvements (batch updates, new stories, flagged story decisions)
+5. Transition all cards to "Ready for Research"
 
-| Criterion | What to look for |
-|-----------|-----------------|
-| **Problem statement** | Clear description of what this story addresses and why it matters for the project |
-| **Acceptance criteria** | How do we know this story is done? What does success look like? |
-| **Scope clarity** | Is it clear what's in and out of scope for this story? |
-| **Dependencies** | Are upstream/downstream dependencies on other stories or projects identified? |
-| **Fits the narrative** | Does this story clearly contribute to getting from start state to end state? |
-
-Classify each story:
-- **Ready** — clear enough for an engineer to begin research
-- **Needs improvement** — has specific, identifiable gaps
-- **Unclear** — fundamentally unclear purpose or scope within the project
-
-### Step 4: Gap Analysis
-
-With the full picture of all stories and the confirmed scope, identify:
-
-1. **Missing stories** — work needed to get from start state to end state that no existing story covers. Think about what an engineer would need to build that isn't captured.
-2. **Overlap** — stories that seem to duplicate effort or cover the same ground
-3. **Ordering concerns** — stories that imply a sequence but don't express dependencies
-4. **Scope creep** — stories that don't clearly serve the project's end state
-5. **Cross-project gaps** — work that falls between this project and sibling projects in the initiative
-
-### Step 5: Present Triage Report
-
-Present everything as a structured report:
-
-```
-## Project Triage Report
-
-### Scope
-**Start state**: [what exists today]
-**End state**: [what the project delivers]
-
-### Story Assessment
-
-**Ready** ([N] stories):
-- [ID] — [Title]
-
-**Needs Improvement** ([N] stories):
-| Story | Issues |
-|-------|--------|
-| [ID] — [Title] | [specific gaps: missing AC, unclear scope, etc.] |
-
-**Unclear** ([N] stories):
-| Story | Issues |
-|-------|--------|
-| [ID] — [Title] | [why it's unclear] |
-
-### Gaps Identified
-1. **[Gap name]** — [description of missing work]
-2. **[Gap name]** — [description of missing work]
-
-### Overlaps & Concerns
-- [Any overlaps, ordering issues, scope creep, cross-project gaps]
-
-### Proposed Actions
-- Improve [N] existing stories (fill gaps in descriptions/AC)
-- Create [N] new stories (cover identified gaps)
-- Flag [N] stories for discussion (unclear purpose or possible scope creep)
-```
-
-**Gate**: Get decision using AskUserQuestion:
-- **Actions**: How would you like to proceed?
-- Options should cover: Execute all proposed actions, Let me review each action individually, Adjust the plan first, Stop here
-
-Tailor options based on the scale of proposed changes.
-
-### Step 6: Execute Improvements
-
-Based on user's decision from Step 5, execute the approved actions.
-
-#### 6a. Improve Existing Stories
-
-For stories classified as "Needs improvement":
-
-1. Draft the updated description for each story, filling identified gaps
-2. Present changes in batches of up to 5 stories:
-
-```
-## Proposed Updates (Batch [N])
-
-### [ID] — [Title]
-**Adding**:
-- Problem statement: [drafted content]
-- Acceptance criteria: [drafted content]
-- [Other sections as needed]
-
-### [ID] — [Title]
-...
-```
-
-3. Get batch approval using AskUserQuestion:
-   - **Batch [N]**: Apply these updates?
-   - Options should cover: Apply all, Skip some, Edit before applying
-
-4. For approved updates:
-   - Fetch current description via `get_issue`
-   - Append new sections (never overwrite original content)
-   - Update via `update_issue`
-   - Add comment: "Story enriched during project analysis: [brief note of what was added]"
-
-5. Report progress every 5 items:
-```
-Progress: [8/15 stories updated]
-```
-
-#### 6b. Create New Stories
-
-For gaps that need new stories:
-
-1. Draft each new story with:
-   - Title
-   - Description with problem statement
-   - Acceptance criteria
-   - Which workstream it belongs to
-   - Why it's needed (which gap it fills)
-
-2. Present all new stories for approval:
-
-```
-## Proposed New Stories
-
-### [Title]
-**Fills gap**: [which gap from the triage report]
-**Workstream**: [which workstream]
-**Description**: [full draft]
-**Acceptance criteria**: [list]
-```
-
-3. Get approval using AskUserQuestion:
-   - **New stories**: Create these stories?
-   - Options should cover: Create all, Let me pick which ones, Edit before creating
-
-4. Create approved stories via `create_issue` with:
-   - The project's team ID
-   - Appropriate labels
-   - Link to the project
-
-#### 6c. Handle Flagged Stories
-
-For stories flagged for discussion, present each and get a decision using AskUserQuestion:
-- **[ID] — [Title]**: This story [reason for flag]. What should we do?
-- Options should cover: Keep as-is, Rewrite it, Remove from project, Merge with another story
-
-### Step 7: Transition All Cards to Ready for Research
-
-1. Fetch the current list of all stories in the project (including newly created ones)
-2. Identify which stories are NOT already at or past "Ready for Research" in the workflow
-3. Look up the correct "Ready for Research" state ID from `skills/linear/references/ids.md` for the team and workspace
-
-Present the transition plan:
-
-```
-## Status Transitions
-
-**Will move to "Ready for Research"**:
-- [ID] — [Title] (currently: [current status])
-- [ID] — [Title] (currently: [current status])
-
-**Already at or past "Ready for Research"**:
-- [ID] — [Title] (currently: [current status])
-
-**Total**: [N] stories to transition
-```
-
-**Gate**: Get confirmation using AskUserQuestion:
-- **Confirm transitions**: Ready to move these cards to "Ready for Research"?
-- Options should cover: Yes move them all, Let me exclude some, Cancel
-
-Execute approved transitions via `update_issue` with the state ID.
-
-### Step 8: Summary
+### Step 4: Summary
 
 ```
 ## Project Analysis Complete

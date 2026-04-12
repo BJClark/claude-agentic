@@ -1,6 +1,7 @@
 ---
 name: describe-pr
-description: Generate comprehensive PR descriptions following repository templates
+description: Generate comprehensive PR descriptions following repository templates. Use when you have an open PR or branch and need a well-structured description from the diff and commit history.
+model: sonnet
 allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *), Write, Edit, AskUserQuestion, Skill
 argument-hint: [pr-number]
 ---
