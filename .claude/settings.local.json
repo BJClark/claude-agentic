@@ -1,7 +1,31 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "WebSearch",
+      "Skill(create-plan)",
+      "Bash(head:*)",
+      "mcp__mise-tools__linear_stellar_list_teams",
+      "mcp__mise-tools__linear_kickplan_list_teams",
+      "mcp__mise-tools__linear_meerkat_list_teams",
+      "mcp__mise-tools__linear_stellar_list_users",
+      "mcp__mise-tools__linear_kickplan_list_users",
+      "mcp__mise-tools__linear_meerkat_list_users",
+      "mcp__mise-tools__linear_stellar_list_comments",
+      "mcp__mise-tools__linear_stellar_list_issue_statuses",
+      "mcp__mise-tools__linear_stellar_list_issue_labels",
+      "mcp__mise-tools__linear_meerkat_list_issue_labels",
+      "mcp__mise-tools__linear_meerkat_list_issue_statuses",
+      "mcp__mise-tools__linear_kickplan_list_issue_statuses",
+      "Bash(git -C /Users/willclark/Developer/scidept/claude-agentic add skills/linear/SKILL.md skills/linear-pm/SKILL.md)",
+      "Bash(git -C /Users/willclark/Developer/scidept/claude-agentic commit -m \"Update linear skills for multi-workspace MCP and correct workflow states\")",
+      "Bash(git -C /Users/willclark/Developer/scidept/claude-agentic push)",
+      "Bash(/Users/willclark/Developer/scidept/claude-agentic/scripts/install.sh)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }
