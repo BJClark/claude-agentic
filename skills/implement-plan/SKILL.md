@@ -2,21 +2,15 @@
 name: implement-plan
 description: Implement technical plans from thoughts/shared/plans with automated verification and phase gates. Use when you have an approved plan file and are ready to execute it phase by phase.
 model: opus
-allowed-tools: Read, Edit, Write, Grep, Glob, Bash, TodoWrite, AskUserQuestion, Skill
+allowed-tools: Read, Grep, Glob, Bash(git *), Task, TodoWrite, AskUserQuestion, Skill
 argument-hint: [plan-file-path]
-hooks:
-  PostToolUse:
-    - matcher: "Write|Edit"
-      hooks:
-        - type: command
-          command: "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-on-save.sh"
-          timeout: 30
-          statusMessage: "Running lint check..."
 ---
 
 # Implement Plan
 
 Implement the approved technical plan at: **$ARGUMENTS**
+
+You are an orchestrator. Each phase of the plan is implemented by a `plan-implementer` subagent in an isolated context — your job is to delegate, gate, and sync. Do NOT read implementation files, make edits, or run verification yourself; the subagent does that and returns a compact report.
 
 ## Current Context
 
@@ -27,90 +21,61 @@ Implement the approved technical plan at: **$ARGUMENTS**
 ## Getting Started
 
 When given a plan path:
-- Read the plan completely and check for existing checkmarks (- [x])
-- Read the original ticket and all files mentioned in the plan
-- **Read files fully** - never use limit/offset parameters
-- Think deeply about how the pieces fit together
-- Create a todo list to track your progress
-- Start implementing if you understand what needs to be done
+- Read the plan file once, fully (no limit/offset) — you need its structure, phase list, and current checkbox state
+- Identify the first unchecked phase (or the phase the user specified)
+- If no plan path was provided, ask for one and wait
 
-If no plan path provided, ask for one.
+## Per-Phase Loop
 
-## Implementation Philosophy
+For each phase you intend to implement:
 
-Plans are carefully designed, but reality can be messy. Your job is to:
-- Follow the plan's intent while adapting to what you find
-- Implement each phase fully before moving to the next
-- Verify your work makes sense in the broader codebase context
-- Update checkboxes in the plan as you complete sections
+### 1. Delegate implementation
 
-When things don't match the plan exactly, think about why and communicate clearly.
+Spawn a `plan-implementer` subagent via the `Task` tool:
 
-If you encounter a mismatch:
-- STOP and think deeply about why the plan can't be followed
-- Present the issue clearly:
-  ```
-  Issue in Phase [N]:
-  Expected: [what the plan says]
-  Found: [actual situation]
-  Why this matters: [explanation]
+- `subagent_type`: `"plan-implementer"`
+- `description`: short, e.g. `"Implement phase N of <plan>"`
+- `prompt`: include
+  - Absolute path to the plan file
+  - Which phase to implement (number + title)
+  - The Linear ticket identifier if one is present in the plan or branch name
+  - Any relevant constraint the user has already communicated in this session
 
-  How should I proceed?
-  ```
+The subagent will read the plan and files itself, implement the phase, run verification, update plan checkboxes, and return a structured report. Its tool calls do NOT accumulate in your context.
 
-## Verification Approach
+### 2. Handle the report
 
-After implementing a phase:
-- Run the success criteria checks (usually `make check test` covers everything)
-- Fix any issues before proceeding
-- Update your progress in both the plan and your todos
-- Check off completed items in the plan file itself using Edit
+If the subagent reports `status: blocked` or `partial`, surface the blockers/divergences to the user and stop. Do not paper over failures by spawning another subagent.
 
-After each phase, run deterministic verification:
-`bash skills/implement-plan/scripts/verify.sh [phase-number]`
+If the subagent reports `status: completed`, proceed to the gate.
 
-### Phase Gate
+### 3. Phase Gate
 
-After completing all automated verification for a phase, use AskUserQuestion to gate progress:
+Use `AskUserQuestion` to gate progression:
 
-```
-Phase [N] Complete - Ready for Manual Verification
+- Question: `Phase [N] Complete - Ready for Manual Verification`
+- Summarize what the subagent reported (files changed, verification results)
+- List the manual verification items the subagent returned
+- Options covering: proceed to next phase, fix issues first, review changes, stop here
 
-Automated verification passed:
-- [List automated checks that passed]
+If the user asked you to execute multiple phases consecutively, skip the gate until the last one. Otherwise assume one phase per invocation.
 
-Please perform the manual verification steps listed in the plan:
-- [List manual verification items from the plan]
-```
-
-Then get phase gate decision using AskUserQuestion:
-- **Phase gate**: Phase [N] automated checks passed. How would you like to proceed?
-- Options should cover: proceed to next phase, fix issues first, review changes
-
-Tailor options based on what checks passed and what manual verification is needed.
-
-If instructed to execute multiple phases consecutively, skip the pause until the last phase. Otherwise, assume you are just doing one phase.
-
-Do not check off items in the manual testing steps until confirmed by the user.
-
-## If You Get Stuck
-
-When something isn't working as expected:
-- First, make sure you've read and understood all the relevant code
-- Consider if the codebase has evolved since the plan was written
-- Present the mismatch clearly and ask for guidance
-
-Use sub-tasks sparingly - mainly for targeted debugging or exploring unfamiliar territory.
+Do not tick manual-verification checkboxes in the plan yourself — only do so after the user confirms the manual steps passed, by spawning a short `plan-implementer` task to tick them (or ask the user to confirm and then use `Edit` on the plan once, if that's cheaper).
 
 ## Resuming Work
 
-If the plan has existing checkmarks:
+If the plan has existing `- [x]` checkmarks:
 - Trust that completed work is done
-- Pick up from the first unchecked item
-- Verify previous work only if something seems off
-
-Remember: You're implementing a solution, not just checking boxes. Keep the end goal in mind and maintain forward momentum.
+- Ask the subagent to pick up from the first unchecked item in the targeted phase
+- Do not re-verify previous phases unless the user asks
 
 ## Linear Sync
 
-After implementation is complete, if a Linear ticket was detected in the plan or branch name, automatically invoke `/linear-ticket-status-sync [TICKET-ID] implement-plan` using the Skill tool to sync progress and advance the ticket status.
+When the last phase of the plan is complete, if a Linear ticket was detected in the plan or the current branch name, invoke `/linear-ticket-status-sync [TICKET-ID] implement-plan` via the `Skill` tool to sync progress and advance the ticket status.
+
+## What NOT to do here
+
+- Do not `Read` or `Edit` source files the plan references — delegate to the subagent
+- Do not run `make check test` or other verification — the subagent does that
+- Do not use `Bash` for anything except the context-gathering `git` calls at the top
+- Do not expand the plan's scope in response to a blocker — stop and ask the user
