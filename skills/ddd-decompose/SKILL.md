@@ -1,6 +1,6 @@
 ---
 name: ddd-decompose
-description: "DDD Step 3: Decompose the domain into sub-domains and bounded contexts. Use when you have an event catalog and need to identify bounded context boundaries."
+description: "DDD Step 3 (Decompose): break the domain into sub-domains and bounded contexts. Use after EventStorming when you have an event catalog and need to draw context boundaries. Triggers on 'decompose the domain', 'identify bounded contexts', 'split into subdomains'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [domain-name]

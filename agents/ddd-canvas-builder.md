@@ -1,6 +1,6 @@
 ---
 name: ddd-canvas-builder
-description: Synthesizes DDD artifacts into formal canvases
+description: "Synthesize DDD discovery artifacts into formal Bounded Context Canvases and Aggregate Design Canvases. Use when finalized DDD artifacts exist and you need the formal canvas documents produced."
 tools: Read, Grep, Glob, LS
 model: sonnet
 ---

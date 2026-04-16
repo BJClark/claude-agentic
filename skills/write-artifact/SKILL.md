@@ -1,6 +1,6 @@
 ---
 name: write-artifact
-description: "Write, save, or serialize a markdown artifact (plan, research doc, PR description, DDD canvas, PM build plan) to disk with auto-injected frontmatter (date, git commit, branch, repository) and optional named templates. Use when another skill needs to emit a structured markdown file — e.g. 'save this plan', 'write the research doc', 'persist the DDD alignment', 'emit a PR description'. Invoked via the Skill tool from other skills to keep template boilerplate out of the caller's main context."
+description: "Write, save, or serialize a markdown artifact (plan, research doc, PR description, DDD canvas, PM build plan) to disk with auto-injected frontmatter (date, git commit, branch, repository) and optional named templates. Use when another skill needs to emit a structured markdown file. Triggers on 'save this plan', 'write the research doc', 'persist the DDD alignment', 'emit a PR description'. Invoked via the Skill tool from other skills to keep template boilerplate out of the caller's main context."
 model: sonnet
 context: fork
 allowed-tools: Read, Write, Bash(git *), Bash(mkdir *), Bash(date *), Bash(basename *)

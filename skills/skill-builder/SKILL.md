@@ -1,6 +1,6 @@
 ---
 name: skill-builder
-description: "Build new Claude Skills using Context Engineering principles (Research, Plan, Implement). Use when creating or improving skills for this repo."
+description: "Build or improve Claude Code skills for this repo using a Research → Plan → Implement workflow with interactive validation gates. Use when creating a new slash command/skill or refactoring an existing one. Triggers on 'build a skill', 'create /foo skill', 'new skill for X'."
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, Bash(git *)
 argument-hint: [skill-name]

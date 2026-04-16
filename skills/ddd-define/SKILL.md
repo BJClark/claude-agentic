@@ -1,6 +1,6 @@
 ---
 name: ddd-define
-description: "DDD Step 7: Define bounded context canvases and aggregate design canvases. Use when you have finalized bounded contexts and need to produce formal BC and Aggregate canvases."
+description: "DDD Step 7 (Define): produce formal Bounded Context Canvases and Aggregate Design Canvases. Use after contexts and relationships are finalized and you need the formal canvas artifacts. Triggers on 'write the BC canvas', 'define aggregates', 'create DDD canvases'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [domain-name]

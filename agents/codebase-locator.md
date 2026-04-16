@@ -1,6 +1,6 @@
 ---
 name: codebase-locator
-description: Locates files, directories, and components relevant to a feature or task
+description: "Locate files, directories, and components relevant to a feature or task using Grep and Glob. Use when you need to quickly find where something lives in the codebase before analyzing or editing it."
 tools: Grep, Glob, LS
 model: sonnet
 ---

@@ -1,6 +1,6 @@
 ---
 name: linear-pm
-description: "Manage Linear product management - initiatives, milestones, project updates, and project labels. Use when working at the strategic layer above individual issues."
+description: "Manage Linear strategic PM entities — initiatives, milestones, project updates, and project labels. Use when working above the individual-ticket layer on cross-project planning. Triggers on 'create an initiative', 'update the milestone', 'post project update'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [action or initiative-name]

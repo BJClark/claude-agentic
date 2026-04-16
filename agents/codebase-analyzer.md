@@ -1,6 +1,6 @@
 ---
 name: codebase-analyzer
-description: Analyzes codebase implementation details
+description: "Read and analyze specific files to document implementation details — data flow, call paths, dependencies, invariants — without evaluation. Use when you need a factual deep-dive into how specific code works before planning a change."
 tools: Read, Grep, Glob, LS
 model: sonnet
 ---

@@ -1,6 +1,6 @@
 ---
 name: ddd-event-discoverer
-description: Extracts domain building blocks from requirements text
+description: "Extract domain building blocks — events, commands, actors, and policies — from a PRD or requirements text. Use during EventStorming to build the initial event catalog before decomposition."
 tools: Read, Grep, Glob, LS
 model: sonnet
 ---

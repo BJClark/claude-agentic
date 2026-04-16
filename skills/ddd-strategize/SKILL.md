@@ -1,6 +1,6 @@
 ---
 name: ddd-strategize
-description: "DDD Step 4: Strategize — classify sub-domains and make investment decisions. Use when you have identified sub-domains and need to classify them on a Core Domain Chart."
+description: "DDD Step 4 (Strategize): classify sub-domains as Core, Supporting, or Generic on a Core Domain Chart and make investment decisions. Use after decomposition to prioritize investment. Triggers on 'strategize the domain', 'classify subdomains', 'Core Domain Chart'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]

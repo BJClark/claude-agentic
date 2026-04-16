@@ -1,6 +1,6 @@
 ---
 name: analyze-project
-description: "Analyze a Linear project's stories for completeness and gaps, improve them, and prepare all cards for research. Use when you have a Linear project and want to audit story quality and move cards to Ready for Research."
+description: "Analyze a Linear project's stories for completeness and gaps, improve them, and move cards to Ready for Research. Use when starting a Linear project and needing to audit story quality before research or planning. Triggers on 'analyze this project', 'audit the stories', 'prep project for research'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [project-name or project-id]

@@ -1,6 +1,6 @@
 ---
 name: ddd-architect
-description: "DDD domain discovery architect. Orchestrates the 7-step DDD workflow from PRD to implementation plans with confirmation gates between each step. Use when starting or resuming domain discovery."
+description: "Orchestrate the full 7-step DDD domain discovery workflow from PRD to implementation plan, with user confirmation gates between each step. Use when starting or resuming Domain-Driven Design for a product."
 tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task, Skill
 model: opus
 ---

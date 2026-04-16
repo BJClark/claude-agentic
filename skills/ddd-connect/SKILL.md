@@ -1,6 +1,6 @@
 ---
 name: ddd-connect
-description: "DDD Step 5: Context Mapping — define relationships between bounded contexts. Use when you have defined bounded contexts and need to map relationships and integration patterns between them."
+description: "DDD Step 5 (Context Mapping): define relationships and integration patterns between bounded contexts. Use after bounded contexts are defined and you need to map how they communicate. Triggers on 'map the contexts', 'connect bounded contexts', 'draw the context map'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]

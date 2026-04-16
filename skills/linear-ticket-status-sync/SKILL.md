@@ -1,6 +1,6 @@
 ---
 name: linear-ticket-status-sync
-description: "Sync skill artifacts to a Linear ticket and advance its status. Use after running any skill (research, plan, implement, QA) to ensure the ticket has full context for the next step."
+description: "Sync skill artifacts (research docs, plans, implementation notes, QA results) to a Linear ticket and advance its status. Use after running research, plan, implement, or QA skills to keep the ticket current. Triggers on 'sync to Linear', 'update the ticket status', 'attach artifacts to ENG-1234'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, ToolSearch, mcp__mise-tools__linear_*
 argument-hint: [ticket-id] [skill-name?]

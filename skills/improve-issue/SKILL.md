@@ -1,6 +1,6 @@
 ---
 name: improve-issue
-description: "Enrich a ticket with clarifications and context so an engineer can start planning. Use when a Linear or GitHub ticket is too vague and needs acceptance criteria and technical context."
+description: "Enrich a Linear or GitHub ticket with acceptance criteria and technical context so an engineer can start planning. Use when a ticket is vague or missing context. Triggers on 'improve this ticket', 'clarify ENG-1234', 'add acceptance criteria to #123'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, Bash
 argument-hint: [ENG-1234 or #123 or github-url]

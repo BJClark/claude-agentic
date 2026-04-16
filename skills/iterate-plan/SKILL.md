@@ -1,6 +1,6 @@
 ---
 name: iterate-plan
-description: Iterate on existing implementation plans with thorough research and updates. Use when you have an existing plan and want to revise it based on feedback or new findings.
+description: "Revise an existing implementation plan with thorough research based on feedback or new findings. Use when a plan already exists and needs updates from review, learnings, or scope changes. Triggers on 'update this plan', 'iterate on the plan', 'revise plan from feedback'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite
 argument-hint: [plan-file-path feedback]

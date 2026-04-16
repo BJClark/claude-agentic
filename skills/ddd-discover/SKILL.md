@@ -1,6 +1,6 @@
 ---
 name: ddd-discover
-description: "DDD Step 2: EventStorming — discover domain events, commands, actors, and policies. Use when you have a PRD or requirements and need to extract domain building blocks via EventStorming."
+description: "DDD Step 2 (EventStorming): discover domain events, commands, actors, and policies from a PRD or requirements text. Use after alignment when extracting domain building blocks. Triggers on 'eventstorm this', 'extract domain events', 'discover the domain'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [prd-file-path]

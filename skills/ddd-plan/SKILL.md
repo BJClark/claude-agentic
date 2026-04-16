@@ -1,6 +1,6 @@
 ---
 name: ddd-plan
-description: "DDD Step 8: Convert DDD artifacts into implementation plans for /implement-plan. Use when DDD artifacts are complete and you need to translate them into phased implementation plans."
+description: "DDD Step 8 (Plan): convert completed DDD artifacts into phased implementation plans ready for /implement-plan. Use after discovery and design are finished and you need buildable plans. Triggers on 'plan DDD implementation', 'turn canvases into a plan', 'translate DDD to implementation'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [domain-name]

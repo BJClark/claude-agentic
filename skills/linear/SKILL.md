@@ -1,6 +1,6 @@
 ---
 name: linear
-description: "Manage Linear tickets - create, update, comment, search, and follow workflow patterns. Use when working with Linear issues or tickets."
+description: "Manage Linear tickets — create, update, comment, search, and follow team workflow patterns. Use when working with Linear issues at the ticket level. Triggers on 'create a ticket', 'update ENG-1234', 'comment on the issue', 'search Linear'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite
 argument-hint: [action or ticket-id]

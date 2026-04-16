@@ -1,6 +1,6 @@
 ---
 name: pm-synthesize
-description: "Synthesize Jeff and DDD artifacts into a Linear build plan. Use when you have a story map and want to generate a structured plan for bulk Linear creation."
+description: "Synthesize a Jeff Patton story map and DDD artifacts into a Linear build plan ready for bulk creation of initiatives, projects, milestones, and issues. Use when story mapping and domain discovery are done. Triggers on 'synthesize the build plan', 'turn the story map into Linear', 'generate PM plan'."
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [story-map-path]

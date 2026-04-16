@@ -1,6 +1,6 @@
 ---
 name: pm-architect
-description: "PM workspace architect. Translates Jeff story maps and DDD artifacts into Linear initiatives, projects, milestones, and issues. Use when building or updating a Linear workspace from discovery artifacts."
+description: "Translate Jeff Patton story maps and DDD artifacts into Linear initiatives, projects, milestones, and issues. Use when discovery is complete and you need to build or update a Linear workspace from those artifacts."
 tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task, Skill
 model: opus
 ---

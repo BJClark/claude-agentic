@@ -1,6 +1,6 @@
 ---
 name: ddd-align
-description: "DDD Step 1: Align & understand the business domain from a PRD or description. Use when you have a PRD, product spec, or business description and want to start domain discovery."
+description: "DDD Step 1 (Align): understand the business domain from a PRD, product spec, or business description. Use when starting Domain-Driven Design discovery. Triggers on 'align on the domain', 'start DDD from this PRD', 'understand this product'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion
 argument-hint: [prd-file-path]

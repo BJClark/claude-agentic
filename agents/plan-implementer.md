@@ -1,6 +1,6 @@
 ---
 name: plan-implementer
-description: Executes a single phase of an approved implementation plan. Reads the plan, implements the targeted phase's code changes, runs automated verification, checks off completed items in the plan file, and returns a concise structured report. Use when an orchestrator (typically the implement-plan skill) needs to implement one phase of a plan without inflating main-session context.
+description: "Execute a single phase of an approved implementation plan: read the plan, apply the targeted phase's code changes, run verification, check off completed items, and return a structured report. Use when an orchestrator (typically the implement-plan skill) needs to implement one phase without inflating main-session context."
 tools: Read, Edit, Write, Grep, Glob, Bash, TodoWrite
 model: opus
 ---
