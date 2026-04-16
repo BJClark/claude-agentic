@@ -1,11 +1,14 @@
 ---
 name: jdx-stack
 description: >-
-  Rewrite bash commands to use the jdx tool stack (mise, pitchfork, fnox) instead of
-  legacy equivalents. Use when constructing commands for tool versions, env vars, task
-  running, background services, or secrets. Triggers on 'nvm', 'pyenv', 'rbenv', 'asdf',
-  'direnv', 'make', 'npm run', 'node version', 'python version', 'install node',
-  'background process', 'manage secrets', 'mise', 'pitchfork', 'fnox'.
+  Rewrite bash commands to the jdx stack (mise/pitchfork/fnox) before running them.
+  Use when constructing ANY bash that: starts a background service, backgrounds a
+  process with & or nohup, kills a pid, checks a port with lsof, runs
+  docker compose up/down/ps/logs, invokes make / npm run / yarn / pnpm run, pins a
+  language version, sources .env/.envrc, installs a global npm/yarn package, or
+  writes dev-service logs to /tmp. Also triggers on legacy tool names — nvm, pyenv,
+  rbenv, asdf, direnv, pm2, nohup — and on explicit mentions of mise, pitchfork,
+  fnox.
 model: sonnet
 allowed-tools: Read, Grep, Glob
 ---
