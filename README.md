@@ -151,10 +151,6 @@ If commands don't appear, restart your editor/CLI to reload configurations.
 - **`/ci_commit`** - Commit changes in CI/CD environments
 - **`/create_worktree`** - Create and manage git worktrees
 
-### Handoff & Collaboration
-- **`/create_handoff`** - Create handoff documents for async collaboration
-- **`/resume_handoff`** - Resume work from handoff documents
-
 ### Project-Specific (Optional)
 - **`/linear`** - Manage Linear tickets (requires Linear MCP integration)
 
