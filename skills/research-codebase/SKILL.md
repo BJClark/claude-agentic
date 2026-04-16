@@ -1,6 +1,6 @@
 ---
 name: research-codebase
-description: Research codebase comprehensively by exploring components, patterns, and connections. Document what exists without evaluation. Use when you need a factual deep dive into how a specific part of the codebase works.
+description: "Research a part of the codebase comprehensively — components, patterns, connections — and document what exists without evaluation. Use when you need a factual deep-dive before planning a change. Triggers on 'research how X works', 'document the Y subsystem', 'map the code for Z'."
 model: opus
 allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, TodoWrite, Skill
 argument-hint: [research-question]
@@ -54,9 +54,9 @@ Use the Task tool to spawn these sub-agent types in parallel:
 - **codebase-analyzer**: Understand HOW code works
 - **codebase-pattern-finder**: Find similar patterns/examples
 
-**Documentation** (if available):
-- **thoughts-locator**: Find relevant documents
-- **thoughts-analyzer**: Extract insights
+**Prior artifacts** (research/, plans/, .jeff/):
+- **artifacts-locator**: Find relevant documents
+- **artifacts-analyzer**: Extract insights
 
 **External** (if explicitly requested):
 - **web-search-researcher**: External docs/resources

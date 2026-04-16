@@ -36,18 +36,16 @@ If the user selects "Other" for any question, they'll provide free-text input â€
 
 ## Artifact Search
 
-Spawn a `thoughts-locator` agent to find relevant documents in the thoughts/ directory:
+Spawn an `artifacts-locator` agent to find relevant prior artifacts across `research/`, `plans/`, and `.jeff/`:
 ```
-Search thoughts/ for documents related to: [ticket topic, keywords from title and description]
+Find artifacts related to: [ticket topic, keywords from title and description]
 ```
 
-If relevant documents are found, spawn a `thoughts-analyzer` agent to extract insights:
+If relevant documents are found, spawn an `artifacts-analyzer` agent to extract insights:
 ```
 Extract insights relevant to [ticket topic] from these documents: [list of found docs]
 Focus on: decisions made, constraints identified, technical context, and anything that answers the gaps identified in the quality assessment.
 ```
-
-Also check for any `docs/` directory content related to the ticket topic using Grep.
 
 ## Preview & Confirm Template
 

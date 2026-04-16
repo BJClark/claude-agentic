@@ -1,6 +1,6 @@
 ---
 name: create-plan
-description: Create detailed implementation plans through interactive research and iteration. Optionally syncs plan to Linear tickets with phase sub-issues. Use when you need to create a new implementation plan for a ticket or feature.
+description: "Create detailed implementation plans through interactive research and iteration. Optionally syncs the plan to Linear with phase sub-issues. Use when a ticket or feature needs a plan before coding. Triggers on 'plan this ticket', 'make a plan for X', 'create an implementation plan'."
 model: opus
 allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, Skill
 argument-hint: [ticket-or-description]
@@ -52,7 +52,7 @@ If the input references a Linear ticket (e.g. `ENG-1234`, `PLAT-56`, or a `thoug
    - **codebase-locator**: Find related files
    - **codebase-analyzer**: Understand current implementation
    - **codebase-pattern-finder**: Find similar features
-   - **thoughts-locator**: Find existing documentation (if thoughts/ exists)
+   - **artifacts-locator**: Find existing research, plans, and .jeff/ discovery artifacts
 3. **Read all identified files FULLY**
 4. **Analyze and verify**: Cross-reference requirements with actual code
 5. **Present informed understanding** with findings and unanswered questions

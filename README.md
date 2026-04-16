@@ -170,8 +170,8 @@ These specialized agents are used by commands (or can be invoked directly):
 
 ### Research & Documentation
 - **`web-search-researcher`** - Researches information from web sources
-- **`thoughts-locator`** - Locates relevant documentation (if thoughts/ exists)
-- **`thoughts-analyzer`** - Analyzes documentation for insights (if thoughts/ exists)
+- **`artifacts-locator`** - Locates prior artifacts across `research/`, `plans/`, and `.jeff/`
+- **`artifacts-analyzer`** - Extracts insights from located artifacts
 
 ## Configuration
 
@@ -179,19 +179,14 @@ These specialized agents are used by commands (or can be invoked directly):
 
 These commands adapt based on what's present in your project:
 
-**Thoughts Directory** (optional):
+**Artifact directories**:
 ```
-thoughts/
-├── shared/
-│   ├── plans/      # Implementation plans
-│   ├── research/   # Research documents
-│   └── tickets/    # Ticket files
+research/          # Date-prefixed research notes (YYYY-MM-DD-topic.md)
+├── ddd/           # DDD step outputs (01-alignment.md, 02-events.md, ...)
+└── pm/            # PM synthesis output (build-plan.md)
+plans/             # Date-prefixed implementation plans
+.jeff/             # Jeff Patton product discovery artifacts
 ```
-
-If `thoughts/` doesn't exist, commands will use:
-- `plans/` for implementation plans
-- `research/` for research documents
-- Root directory for other artifacts
 
 **Linear Integration** (optional):
 - Install Linear MCP server for `/linear` command

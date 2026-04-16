@@ -96,8 +96,8 @@ Available for Task tool:
 - `codebase-locator`: Find WHERE files/components live
 - `codebase-analyzer`: Understand HOW code works
 - `codebase-pattern-finder`: Find similar patterns/examples
-- `thoughts-locator`: Find relevant documents in thoughts/
-- `thoughts-analyzer`: Extract insights from documents
+- `artifacts-locator`: Find relevant documents across research/, plans/, .jeff/
+- `artifacts-analyzer`: Extract insights from those documents
 - `web-search-researcher`: External docs/resources
 
 ## Anti-Patterns
