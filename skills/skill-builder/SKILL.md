@@ -10,7 +10,7 @@ argument-hint: [skill-name]
 
 Ultrathink about what makes a great Claude Skill: clear triggering, progressive disclosure, interactive validation, and artifact-driven output. A skill is a set of instructions that Claude follows when a user invokes it — the quality of those instructions determines the quality of every future invocation.
 
-Build new skills for this repository following established conventions and Context Engineering principles.
+Build new skills for this repository following established conventions and the best practices in [The Complete Guide to Building Skills for Claude](references/The-Complete-Guide-to-Building-Skill-for-Claude-3.pdf). Consult this reference for description formulas, use case categories, instruction patterns, testing approaches, and troubleshooting.
 
 **Input**: $ARGUMENTS
 
@@ -43,9 +43,13 @@ Goal: Understand what this skill needs to do and how it fits into existing conve
 
 #### 1a. Understand the Skill
 
+Determine the skill's **framing** (from the guide, Ch.5 "Problem-first vs tool-first"):
+- **Problem-first**: User describes an outcome ("I need to set up a project workspace") — the skill orchestrates the right tools in the right sequence
+- **Tool-first**: User has tools connected ("I have Notion MCP connected") — the skill teaches optimal workflows and best practices
+
 Get use case details using AskUserQuestion:
-- **Category**: What type of skill is this?
-- Options should cover: Workflow Automation (multi-step process), Research & Analysis (investigate and document), Document Creation (generate artifacts), MCP Enhancement (guide connector usage), Other
+- **Category**: What type of skill is this? (from the guide, Ch.2 "Common skill use case categories")
+- Options should cover: Document & Asset Creation (consistent high-quality output using templates, style guides, quality checklists), Workflow Automation (multi-step process with validation gates, templates, refinement loops), MCP Enhancement (workflow guidance on top of MCP tool access, error handling for common MCP issues), Research & Analysis (investigate and document), Other
 
 Then get scope details using AskUserQuestion:
 - **Scope**: How complex is this skill?
@@ -62,11 +66,12 @@ Spawn parallel research tasks:
 
 Work through these with the user:
 
-1. **Trigger**: When should this skill activate? What input does it expect?
-2. **Workflow**: What are the 3-7 major steps?
+1. **Trigger**: When should this skill activate? What input does it expect? Include 2-3 concrete use cases (guide, Ch.2: "Before writing any code, identify 2-3 concrete use cases")
+2. **Workflow**: What are the 3-7 major steps? Choose the right pattern from the guide (Ch.5): Sequential orchestration, Multi-MCP coordination, Iterative refinement, Context-aware tool selection, or Domain-specific intelligence
 3. **Tools needed**: Which tools does this skill require? (Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, Bash)
 4. **Output**: What artifact does it produce? Where does it go?
 5. **User interaction**: What decisions need user input?
+6. **Success criteria** (guide, Ch.2): Define at least one quantitative metric (e.g., completes workflow in X tool calls) and one qualitative metric (e.g., workflows complete without user correction)
 
 Get validation using AskUserQuestion:
 - **Requirements check**: Do these requirements capture your intent?
@@ -114,17 +119,23 @@ Goal: Design the complete skill structure before writing it.
 
 #### 2a. Design Frontmatter
 
-Draft the YAML frontmatter based on research:
+Draft the YAML frontmatter based on research. Use the guide's description formula (Ch.2 "Writing effective skills"):
+
+```
+[What it does] + [When to use it] + [Key capabilities]
+```
 
 ```yaml
 ---
 name: [kebab-case]
-description: "[What it does]. Use when [trigger conditions]."
+description: "[What it does]. Use when [trigger conditions]. Triggers on '[phrase 1]', '[phrase 2]'."
 model: opus
 allowed-tools: [minimal set needed]
 argument-hint: [what user provides]
 ---
 ```
+
+The description is the most important field — it determines whether Claude loads the skill (guide, Ch.2). It must be specific and actionable, include trigger phrases users would actually say, and stay under 1024 characters. Avoid vague descriptions like "Helps with projects" or purely technical descriptions like "Implements the Project entity model."
 
 Follow these conventions from existing skills:
 - `model: opus` unless the skill is simple enough for a smaller model
@@ -185,14 +196,18 @@ Write the skill to `skills/[skill-name]/SKILL.md` following the plan.
 
 Use the template in [templates/skill-template.md](templates/skill-template.md) as a starting scaffold, then customize based on the plan.
 
-Key quality rules:
+Key quality rules (from the guide, Ch.2 "Best Practices for Instructions"):
 - Frontmatter has `---` delimiters on their own lines
-- Description includes WHAT and WHEN
-- Instructions are actionable (not vague)
+- Description includes WHAT, WHEN, and trigger phrases
+- Instructions are specific and actionable — not vague ("Validate the data before proceeding" is bad; explicit validation steps with expected formats is good)
+- Reference bundled resources clearly (e.g., "Consult `references/api-patterns.md` for rate limiting guidance")
+- Use progressive disclosure: keep SKILL.md focused on core workflow, move detailed docs to `references/` (guide Ch.1: three-level system)
 - AskUserQuestion is used for all user decisions — never print questions as plain text
 - Options in AskUserQuestion are tailored to the specific context, not generic
-- Examples show realistic scenarios
-- Error handling covers common failures
+- Examples show realistic scenarios with expected inputs and outputs
+- Error handling covers common failures with specific solutions
+- Include troubleshooting section for common error scenarios (guide, Ch.5)
+- Keep SKILL.md under 5,000 words to avoid context bloat (guide, Ch.5 "Large context issues")
 - File references use `file:line` format where applicable
 
 #### 3b. Create Templates (if planned)
@@ -205,24 +220,42 @@ Write any reference files to `skills/[skill-name]/references/`.
 
 #### 3d. Quality Checklist
 
-Verify against this checklist:
+Verify against this checklist (combines repo conventions + guide Reference A):
 
-- [ ] Folder name is kebab-case
-- [ ] `SKILL.md` exists (exact spelling, exact case)
+**Before you start** (guide, Ref A):
+- [ ] 2-3 concrete use cases identified
+- [ ] Tools identified (built-in or MCP)
+- [ ] Reviewed the guide and similar existing skills
+- [ ] Planned folder structure
+
+**During development**:
+- [ ] Folder name is kebab-case (no spaces, underscores, or capitals)
+- [ ] `SKILL.md` exists (exact spelling, exact case — no README.md inside skill folder)
 - [ ] YAML frontmatter has `---` delimiters
 - [ ] `name` field matches folder name
-- [ ] `description` includes what AND when
+- [ ] `description` follows guide formula: [What it does] + [When to use it] + trigger phrases (under 1024 chars)
+- [ ] `description` has no XML angle brackets (security restriction)
 - [ ] `allowed-tools` is minimal (no unnecessary tools)
 - [ ] `$ARGUMENTS` is referenced in the body
 - [ ] Current Context block uses `!` backtick git commands
 - [ ] Initial Response handles both with-params and no-params
 - [ ] Process steps are numbered and clear
+- [ ] Instructions are specific and actionable (not ambiguous)
 - [ ] AskUserQuestion is used for all decisions (not plain text questions)
 - [ ] AskUserQuestion options are specific (not generic yes/no)
 - [ ] Output paths follow existing conventions (`thoughts/shared/`, `research/`, etc.)
+- [ ] Error handling included with specific solutions
+- [ ] References clearly linked from SKILL.md
 - [ ] Guidelines section exists with constraints
 - [ ] No XML/HTML tags in content
 - [ ] Templates referenced with relative paths
+- [ ] SKILL.md is under 5,000 words
+
+**Before shipping** (guide, Ref A):
+- [ ] Tested triggering on obvious tasks (skill loads when expected)
+- [ ] Tested triggering on paraphrased requests
+- [ ] Verified doesn't trigger on unrelated topics
+- [ ] Functional tests pass (valid outputs, error cases covered)
 
 #### 3e. Present Result
 
@@ -236,11 +269,15 @@ If tweaks needed, iterate on the specific feedback.
 
 ## Guidelines
 
-1. **Progressive Disclosure**: Keep SKILL.md focused on workflow. Put detailed docs in `references/`, structured output formats in `templates/`
-2. **Minimal Tools**: Only grant the tools the skill actually needs. Over-permissioning is an anti-pattern
-3. **Ultrathink First**: Every skill should start with an ultrathink prompt that frames the problem space
-4. **Interactive Over Autonomous**: Use AskUserQuestion at every major decision point. Never assume user intent
-5. **Artifact-Driven**: Skills should produce concrete artifacts at known paths, not just chat output
-6. **Convention Over Configuration**: Follow the patterns established by existing skills (git context block, initial response pattern, etc.)
-7. **No Vibe Coding**: Every instruction should be specific enough that following it produces consistent results
-8. **Error Amplification Awareness**: Invest time in research and planning — a bad plan produces 10x bad implementation
+1. **Progressive Disclosure** (guide, Ch.1): Three-level system — frontmatter (always loaded), SKILL.md body (loaded when relevant), linked files in `references/` and `templates/` (loaded on demand). Keep SKILL.md under 5,000 words.
+2. **Description is King** (guide, Ch.2): The description field determines whether Claude loads the skill. Use the formula: [What it does] + [When to use it] + [trigger phrases]. Test for under/over-triggering.
+3. **Be Specific and Actionable** (guide, Ch.2): "Run `python scripts/validate.py --input {filename}`" beats "Validate the data before proceeding." Ambiguous instructions produce inconsistent results.
+4. **Minimal Tools**: Only grant the tools the skill actually needs. Over-permissioning is an anti-pattern.
+5. **Ultrathink First**: Every skill should start with an ultrathink prompt that frames the problem space.
+6. **Interactive Over Autonomous**: Use AskUserQuestion at every major decision point. Never assume user intent.
+7. **Artifact-Driven**: Skills should produce concrete artifacts at known paths, not just chat output.
+8. **Convention Over Configuration**: Follow the patterns established by existing skills (git context block, initial response pattern, etc.)
+9. **Iterate on a Single Task** (guide, Ch.3): Build and test on one challenging use case first, then expand. This leverages in-context learning and provides faster signal than broad testing.
+10. **Error Amplification Awareness**: Invest time in research and planning — a bad plan produces 10x bad implementation.
+
+**Best Practices Reference**: For the full guide on description writing, instruction patterns, testing approaches, workflow patterns (sequential, multi-MCP, iterative refinement, context-aware, domain-specific), troubleshooting, and the complete quality checklist, consult [The Complete Guide to Building Skills for Claude](references/The-Complete-Guide-to-Building-Skill-for-Claude-3.pdf).

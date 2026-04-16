@@ -25,7 +25,11 @@
       "Bash(ls:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(wc -l /Users/willclark/Developer/scidept/claude-agentic/skills/*/SKILL.md)",
+      "Bash(wc -l /Users/willclark/Developer/scidept/claude-agentic/agents/*.md)",
+      "Bash(wc -l /Users/willclark/Developer/scidept/claude-agentic/commands/*.md)",
+      "Bash(bash:*)"
     ]
   }
 }
