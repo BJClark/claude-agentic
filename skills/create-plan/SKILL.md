@@ -92,6 +92,20 @@ Record each decision and its rationale -- these go into the plan's "Key Discover
 
 If no technical decisions are needed, skip this step.
 
+### Step 3.5: Spec-First Gating (Outside-In)
+
+**Run this step only if research detected a BDD / outside-in test harness** (Cucumber, pytest-bdd, RSpec feature specs, Playwright+cucumber, Behave, Cypress cucumber-preprocessor, Capybara, etc.). If research explicitly confirmed none exists, skip to Step 4.
+
+When a harness exists, the plan **must** be organized spec-first:
+
+1. **Phase 0 is always "Write failing executable specifications"**. Author `.feature` files (or equivalent) covering the acceptance criteria before any production code is planned for later phases.
+2. **Specs must fail for the right reason.** The plan must require running the new specs and documenting the expected failure mode — e.g. "missing step definition", "route not found", "assertion on not-yet-built behavior". Syntax errors, environment errors, or unrelated test failures do not count as "failing correctly" and must be fixed before Phase 0 closes.
+3. **Every later phase's Automated Verification must include the exact spec command that goes green when that phase is done.** Use the runner command and tag/filter captured in research (e.g. `cucumber features/checkout.feature:42`, `pytest tests/acceptance -m checkout`).
+4. **Final phase cannot close** until all new scenarios pass and the pre-existing suite shows no regressions.
+5. **Record the spec↔phase mapping** in the plan's "Executable Specifications" section (see template).
+
+Goal: every phase gate is backed by an executable behavior check, compounding verifiable knowledge of the system.
+
 ### Step 4: Plan Structure Development
 
 1. Create initial outline with phases
@@ -126,6 +140,7 @@ If a Linear ticket was detected in the input, automatically invoke `/linear-tick
 5. **No Open Questions in Final Plan**: Research or ask immediately
 6. **Decide Before Writing**: Resolve technical decisions interactively before committing them to the plan, not after
 7. **Linear Sync is Separate**: Linear sync is handled by `/linear-ticket-status-sync`, not this skill
+8. **Spec-First When Possible**: If the codebase has an outside-in / BDD harness, specs lead implementation. Phase 0 writes failing scenarios that fail for the right reason; later phases close only when their designated specs pass. Always invest in executable behavior knowledge over ad-hoc verification.
 
 ## Common Patterns
 

@@ -54,6 +54,18 @@ Use the Task tool to spawn these sub-agent types in parallel:
 - **codebase-analyzer**: Understand HOW code works
 - **codebase-pattern-finder**: Find similar patterns/examples
 
+**Executable Specification Surface (always run):**
+Spawn a dedicated locator/analyzer pass to detect any outside-in / BDD test harness and document it. Look for Cucumber/Gherkin `.feature` files, pytest-bdd, RSpec feature or request specs, Playwright + cucumber-preprocessor, Cypress + cucumber-preprocessor, Behave, Jest-cucumber, Capybara, Robot Framework, or any custom acceptance-test runner. Capture:
+- Framework name and version
+- Runner command (exact CLI)
+- Spec file locations and step-definition locations
+- Tagging / filtering conventions
+- CI integration (where/when specs run)
+- Current baseline (passing/pending/skipped counts if obtainable)
+- Which behaviors in the research topic are already covered by specs
+
+If **no** outside-in harness exists, state that explicitly in the research document — do not stay silent. This signal gates planning strategy downstream.
+
 **Prior artifacts** (research/, plans/, .jeff/):
 - **artifacts-locator**: Find relevant documents
 - **artifacts-analyzer**: Extract insights

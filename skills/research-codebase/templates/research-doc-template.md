@@ -81,6 +81,19 @@ Entry Point → Processing → Storage → Response
 1. **[Decision 1]**: [Rationale found in code/comments]
 2. **[Decision 2]**: [Rationale found in code/comments]
 
+## Executable Specification Surface
+
+Outside-in / BDD harness detection. If absent, state "No outside-in harness detected" explicitly.
+
+- **Harness**: [Cucumber / pytest-bdd / RSpec feature / Playwright+cucumber / Behave / none]
+- **Run command**: `[exact CLI]`
+- **Spec locations**: `[e.g. features/**/*.feature, spec/acceptance/**]`
+- **Step definitions**: `[path]`
+- **Tag conventions**: `[@wip, @smoke, etc.]`
+- **CI integration**: [yes/no — which job/stage]
+- **Current baseline**: [N passing / M pending / K skipped]
+- **Coverage of this topic**: [which behaviors already have specs; which do not]
+
 ## Historical Context
 
 [If relevant documents/tickets exist, reference them]
