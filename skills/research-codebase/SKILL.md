@@ -1,7 +1,7 @@
 ---
 name: research-codebase
 description: "Research a part of the codebase comprehensively — components, patterns, connections — and document what exists without evaluation. Use when you need a factual deep-dive before planning a change. Triggers on 'research how X works', 'document the Y subsystem', 'map the code for Z'."
-model: opus
+model: sonnet
 allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, TodoWrite, Skill
 argument-hint: [research-question]
 ---

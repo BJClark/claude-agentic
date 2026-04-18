@@ -1,7 +1,7 @@
 ---
 name: debug-issue
 description: "Debug issues by investigating logs, database state, and git history without editing files. Use when something is broken and you need to investigate root cause read-only. Triggers on 'debug this', 'why is X broken', 'investigate this error'."
-model: opus
+model: sonnet
 user-invocable: true
 allowed-tools: Read, Grep, Glob, Bash, Task, AskUserQuestion
 argument-hint: [issue-description-or-plan-path]

@@ -1,7 +1,7 @@
 ---
 name: implement-plan
 description: "Implement technical plans phase-by-phase with automated verification and phase gates between phases. Use when you have an approved plan file and are ready to execute it. Triggers on 'implement the plan', 'execute this plan', 'start implementation'."
-model: opus
+model: sonnet
 allowed-tools: Read, Grep, Glob, Bash(git *), Task, TodoWrite, AskUserQuestion, Skill
 argument-hint: [plan-file-path]
 ---

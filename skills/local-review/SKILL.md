@@ -1,7 +1,7 @@
 ---
 name: local-review
 description: "Set up a git worktree for reviewing a colleague's branch with an optional parallel review team. Use when you need to review a PR locally in an isolated worktree. Triggers on 'review this branch locally', 'check out gh_user:feature', 'local review of the PR'."
-model: opus
+model: sonnet
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit, AskUserQuestion, Task
 argument-hint: [gh_username:branchName]
 ---

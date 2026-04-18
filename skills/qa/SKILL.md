@@ -1,7 +1,7 @@
 ---
 name: qa
 description: "Walk through a ticket's acceptance criteria in Chrome to validate the feature actually works. Use after implementation when a feature needs manual QA verification. Triggers on 'QA this ticket', 'verify acceptance criteria', 'test the feature in the browser'."
-model: opus
+model: sonnet
 allowed-tools: Read, Grep, Glob, Bash, Task, AskUserQuestion, TodoWrite, Skill, mcp__claude-in-chrome__*
 argument-hint: [ticket-id-or-url]
 ---
