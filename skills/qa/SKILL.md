@@ -205,6 +205,8 @@ Tailor options based on the actual results.
 
 After presenting results, if a Linear ticket was detected, automatically invoke `/linear-ticket-status-sync [TICKET-ID] qa` using the Skill tool to sync the QA report and advance the ticket status.
 
+**Important**: QA passing is necessary but not sufficient for Done. The sync skill will only move the ticket to Done when (a) every criterion passed **and** (b) the associated PR is merged. If the PR is still open/draft, the QA comment is posted but the ticket stays at its current status (typically "In Review"). Do not manually override this — the merge gate exists because shipping unmerged work as "Done" breaks the release audit trail.
+
 ## Guidelines
 
 1. **Chrome required**: This skill cannot function without Chrome integration. Check for it early and fail gracefully if not available

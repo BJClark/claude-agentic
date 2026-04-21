@@ -2,7 +2,7 @@
 name: linear-ticket-status-sync
 description: "Sync skill artifacts (research docs, plans, implementation notes, QA results) to a Linear ticket and advance its status. Use after running research, plan, implement, or QA skills to keep the ticket current. Triggers on 'sync to Linear', 'update the ticket status', 'attach artifacts to ENG-1234'."
 model: sonnet
-allowed-tools: Read, Grep, Glob, Bash(git *), Task, AskUserQuestion, ToolSearch, mcp__mise-tools__linear_*
+allowed-tools: Read, Grep, Glob, Bash(git *), Bash(gh *), Task, AskUserQuestion, ToolSearch, mcp__mise-tools__linear_*
 argument-hint: [ticket-id] [skill-name?]
 ---
 
@@ -190,12 +190,28 @@ Determine the target status from the [skill-artifact-map](references/skill-artif
 | create-plan | In Plan |
 | implement-plan | In Progress |
 | describe-pr | In Review |
-| qa | Done (all pass) or no change (failures) |
+| qa | Done (all AC pass AND PR merged) — otherwise no change |
 
 **Rules**:
 - Only advance forward. If the ticket is already at or past the target status, do not change it.
-- For QA: only advance to Done if all criteria passed. If there are failures, leave the status unchanged.
+- For QA: advancing to Done requires **both** (a) all criteria passed **and** (b) the associated PR is merged. If either is false, leave the status unchanged.
 - Use the correct state ID from [Linear reference IDs](../linear/references/ids.md) matching the ticket's team and workspace.
+
+**QA → Done PR-merge check** (only for the `qa` skill):
+
+1. Find the PR associated with this ticket. Try in order:
+   - Linear attachments on the ticket — look for a GitHub PR URL (`github.com/*/pull/\d+`).
+   - The ticket's `gitBranchName` field, then `gh pr list --head <branch> --state all --json url,state,mergedAt --limit 1`.
+   - The current git branch, same `gh pr list` call.
+2. Once a PR URL is resolved, check merge state: `gh pr view <url> --json state,mergedAt,isDraft`.
+3. Decide:
+   - `state == "MERGED"` (or `mergedAt` is non-null) → safe to advance to Done (if all AC passed).
+   - `state == "OPEN"` or `"DRAFT"` → do **not** advance. Leave status at its current value (typically "In Review") and note in the sync summary: "holding at {current status} until PR merges".
+   - `state == "CLOSED"` (not merged) → do not advance. Flag this to the user — a closed-without-merge PR usually means the ticket shouldn't be closed either.
+   - No PR found at all → do **not** advance to Done. Ask the user via AskUserQuestion:
+     - **Done without PR**: I couldn't find a PR for this ticket. How should I handle the status?
+     - Options: Leave status unchanged (recommended), Advance to Done anyway (no-PR work), Cancel
+4. If the PR is not merged, still post the QA comment — only the status change is gated.
 
 If advancing, update the ticket using `mcp__mise-tools__linear_{workspace}_save_issue` with the new `stateId`.
 
