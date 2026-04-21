@@ -11,7 +11,7 @@ This reference maps each skill to its output artifacts and the Linear status the
 | `implement-plan` | Plan file (updated checkboxes), code changes on branch | In Progress | Implementation progress + branch ref |
 | `describe-pr` | `prs/*_description.md`, `thoughts/shared/prs/*_description.md` | In Review | PR link + summary |
 | `qa` | `research/YYYY-MM-DD-qa-*.md` | Done (if all pass) or stays In Review (if failures) | QA verdict + issue list |
-| `improve-issue` | (modifies ticket directly) | Ready for Research | (already synced) |
+| `improve-issue` | (modifies ticket directly + advances status itself) | Ready for Research | (skill self-syncs — no action needed) |
 | `debug-issue` | Debug report | (no status change) | Debug findings summary |
 | `ddd-*` | `research/ddd/*.md` | (no status change) | DDD artifact summary |
 
