@@ -13,6 +13,15 @@ gh pr checks <n> --json name,state,conclusion,link,workflow
 
 Snapshot relevant fields at end of each cycle into the status artifact's cycle block. "New event" = present in current fetch AND either absent or in a different state from the previous snapshot.
 
+**First cycle (no prior snapshot):** the effective baseline is empty, so "new event" expands to *everything currently unresolved on the PR*:
+
+- every `reviews[]` entry that is `CHANGES_REQUESTED` and not yet addressed
+- every `comments[]` entry or review-thread comment that asks for a code change
+- every failing check in `statusCheckRollup[]`
+- any `mergeable == CONFLICTING` state
+
+Cycle 1 typically processes several events and produces multiple `AskUserQuestion` turns (one per reviewer ask). The cycle is not complete — and Step 4 must not schedule the cron — until each first-cycle event has been routed through the matrix below (addressed via plan-implementer, deferred to next cycle, or recorded under `### Needs your reply`).
+
 ### Event types
 
 | Event | Detection |
@@ -20,8 +29,8 @@ Snapshot relevant fields at end of each cycle into the status artifact's cycle b
 | `ci-green` | all `statusCheckRollup.state` == `SUCCESS` |
 | `ci-red-trivial` | any check in {lint, format, prettier, eslint, typecheck-lint-only} failed with a diff that the repo's autofix command would resolve |
 | `ci-red-nontrivial` | any check failed that isn't in the trivial set — test failures, build errors, integration failures, security scans |
-| `review-new` | a `reviews[]` entry with `submittedAt` newer than last cycle's snapshot |
-| `comment-new` | a `comments[]` entry with `createdAt` newer than last cycle's snapshot |
+| `review-new` | a `reviews[]` entry with `submittedAt` newer than last cycle's snapshot — or, on cycle 1, any unresolved `CHANGES_REQUESTED` review |
+| `comment-new` | a `comments[]` entry with `createdAt` newer than last cycle's snapshot — or, on cycle 1, any open review-thread comment asking for a code change |
 | `conflict` | `mergeable` == `CONFLICTING` OR `mergeStateStatus` == `DIRTY` |
 | `mergeable` | `mergeable` == `MERGEABLE` AND `reviewDecision` in {`APPROVED`, null} AND all checks green AND no unresolved review threads |
 | `closed` | `state` == `CLOSED` |
