@@ -35,31 +35,6 @@ If the input references a Linear ticket (e.g. `ENG-1234`, `PLAT-56`, or a `thoug
 3. If only an identifier is provided, fetch ticket details using Linear MCP tools (see [Linear reference IDs](../linear/references/ids.md) for workspace and team IDs)
 4. Use the ticket's title and description to inform the research question
 
-## Worktree Preflight (run before Step 1)
-
-If a ticket was detected above — or if the current branch name matches the `[A-Z]+-\d+` pattern — check whether a worktree exists for that ticket before doing any research:
-
-```bash
-ROOT=$(git rev-parse --show-toplevel)
-SLUG=<ticket-id-lowercased>    # e.g. ENG-1234 -> eng-1234
-WT="$ROOT/.worktrees/$SLUG"
-CURRENT=$(git rev-parse --show-toplevel)
-git worktree list --porcelain | grep -F "worktree $WT" && echo "wt-exists" || echo "wt-missing"
-```
-
-Three cases:
-
-- **No worktree exists** → proceed to Step 1. Nothing to do.
-- **Worktree exists AND `$CURRENT == $WT`** → Claude is already inside the worktree; proceed to Step 1.
-- **Worktree exists AND `$CURRENT != $WT`** → the research would operate on the main checkout's code, not the ticket's branch. Ask via `AskUserQuestion`:
-  - **Worktree detected**: A worktree for `{TICKET}` exists at `{WT}`. Research run from the main checkout will read the wrong code. How should we proceed?
-  - Options:
-    - *Stop — I'll restart Claude inside the worktree* (print: `cd .worktrees/<slug> && claude`, then stop)
-    - *Continue in the main checkout anyway* (note in the research document's frontmatter: `operated_from: main-checkout-despite-worktree`, then proceed)
-    - *Cancel research*
-
-Rationale: `Read`, `Grep`, and `Glob` resolve paths relative to the session's launch CWD. A worktree at `.worktrees/<slug>` is *inside* that root, so those tools *can* reach it — but they default to the main checkout, and duplicate paths across both trees are easy to confuse. Force the choice explicitly rather than silently researching the wrong branch.
-
 ## Research Process
 
 ### 1. Read Mentioned Files First
