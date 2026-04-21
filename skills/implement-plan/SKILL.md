@@ -25,6 +25,30 @@ When given a plan path:
 - Identify the first unchecked phase (or the phase the user specified)
 - If no plan path was provided, ask for one and wait
 
+## Worktree Preflight (run before the first phase)
+
+Detect the Linear ticket from the plan's frontmatter/title, from the plan's filename, or from the current branch name (`[A-Z]+-\d+`). If a ticket is detected, check whether a worktree exists and whether Claude is running inside it:
+
+```bash
+ROOT=$(git rev-parse --show-toplevel)
+SLUG=<ticket-id-lowercased>    # e.g. ENG-1234 -> eng-1234
+WT="$ROOT/.worktrees/$SLUG"
+git worktree list --porcelain | grep -F "worktree $WT" && echo "wt-exists" || echo "wt-missing"
+```
+
+Three cases:
+
+- **No worktree exists** → proceed to the per-phase loop.
+- **Worktree exists AND current `git rev-parse --show-toplevel` equals `$WT`** → already inside the worktree; proceed.
+- **Worktree exists AND we are in the main checkout (or any other tree)** → implementing here will edit/commit on the wrong branch. Ask via `AskUserQuestion`:
+  - **Worktree detected**: A worktree for `{TICKET}` exists at `{WT}`. Implementing from the main checkout will touch the wrong branch. How should we proceed?
+  - Options:
+    - *Stop — I'll restart Claude inside the worktree* (print: `cd .worktrees/<slug> && claude`, then stop — do NOT spawn the plan-implementer)
+    - *Continue in the main checkout anyway* (note this in the phase-1 `plan-implementer` prompt so the subagent is explicit about the branch it's committing to; proceed)
+    - *Cancel*
+
+This is especially important for implement-plan: the `plan-implementer` subagent commits directly. If it runs in the wrong tree, commits land on the wrong branch and a later worktree swap won't silently reconcile them.
+
 ## Per-Phase Loop
 
 For each phase you intend to implement:
