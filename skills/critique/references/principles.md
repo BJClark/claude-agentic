@@ -1,6 +1,6 @@
-# Principles (v1)
+# Principles (v2)
 
-Twenty-five principles drawn from Rails convention, 37signals OSS (Campfire, Writebook, Fizzy), Domain-Driven Design (Evans), and Rails performance (Berkopec).
+Thirty-one principles drawn from Rails convention, 37signals OSS (Campfire, Writebook, Fizzy), Domain-Driven Design (Evans), Rails performance (Berkopec), and a set of recurring root-cause framings that cut across all of the above.
 
 Each principle has a stable id (`P01`…`P25`), a one-line rule, a `stack:` tag, a review prompt, and — where the Rails framing doesn't translate cleanly — a note for other stacks.
 
@@ -156,3 +156,42 @@ Each principle has a stable id (`P01`…`P25`), a one-line rule, a `stack:` tag,
 **Rule**: Defaults are a guess. I/O-bound → more threads; CPU-bound → more workers, fewer threads. Set `MALLOC_ARENA_MAX=2` or use jemalloc before concluding you have a memory leak.
 **Stack**: rails-runtime
 **Review prompt**: Is Puma/Sidekiq config being changed without workload evidence (thread wait ratio, CPU saturation, memory growth curve)? Flag.
+
+---
+
+## Recurring Root Causes
+
+Six cross-cutting framings. Most individual findings in a real critique fall under one of these — they're the "why" behind many P01–P25 violations. Prefer citing the specific principle (P08, P20, etc.) when it fits; cite P26–P31 when the problem is structural and doesn't pin to a single earlier rule.
+
+### P26 — Rescue narrowly, fail loudly
+**Rule**: Rescue only error classes you can name a recovery for. Broad `rescue StandardError` + log-and-continue, "rescue-the-universe" blocks at layer boundaries, and `rescue NameError`/`NoMethodError` fallback shims during renames all convert loud failures into silent drift.
+**Stack**: general
+**Review prompt**: Flag (a) any `rescue` clause whose body is just log + return/continue, (b) `rescue StandardError`/`rescue => e` at an internal boundary that isn't a top-level dispatcher/job wrapper, (c) `rescue NoMethodError|NameError|NotImplementedError` used as a rename-compatibility shim, (d) any rescue that swallows more than one distinct failure mode with one handler.
+**Translation outside Rails**: Equivalent in any language — bare `except:` in Python, `catch (Throwable)` in Java, `} catch {}` in JS.
+
+### P27 — If nothing reads it, it isn't observable
+**Rule**: Every write must have a reader. Log-and-swallow ("logged; moved on") pages no one; Redis/S3 snapshots with no consumer are false durability; `broadcast`/event emissions with zero subscribers are dead code dressed as domain events.
+**Stack**: general
+**Review prompt**: Flag (a) `rescue … logger.warn … return` with no metric, alert, or downstream reader; (b) writes to a store where no code path and no dashboard reads the key/namespace; (c) `broadcast`/`publish`/pub-sub emissions for which no current subscriber exists; (d) "we'll know because it's in the logs" without a defined query, alert, or dashboard.
+
+### P28 — Test through public contracts, not internals
+**Rule**: Assert observable behavior at real seams. Avoid raw SQL in specs, `ActiveRecord::Base.connection.open_transactions` peeking, assertions against Faraday/HTTP-library internals, or "contract tests" that grep implementation source.
+**Stack**: general
+**Review prompt**: Flag tests that (a) execute raw SQL to verify state a model API would show; (b) inspect `open_transactions`, connection pool, or thread locals to prove transactional/locking behavior; (c) assert on the adapter class, middleware stack, or private members of Faraday / HTTPClient / etc.; (d) use `source_location`, `instance_methods`, or regex over code text as a stand-in for real contract verification.
+**Translation outside Rails**: Same smell applies to any testing stack — assertions on ORM/driver internals, private method presence, or source scans.
+
+### P29 — Rule of Three before abstraction
+**Rule**: Two uses is coincidence; three is a pattern. Resist dry-monads `Result`/`Try` ceremony wrapping a single happy path; resist 3-layer request plumbing (form object → service → command) with only one caller; resist a Strategy/Adapter pattern with only two implementations — a conditional is simpler and cheaper to refactor.
+**Stack**: general
+**Review prompt**: Flag any new abstraction (monadic wrapper, Strategy/Adapter, multi-stage pipeline, generic builder, base class with one subclass) that currently serves fewer than three concrete callers or implementations. Prefer the concrete form until the third case appears and shows the real axis of variation.
+
+### P30 — Ship only the slice that's needed now
+**Rule**: YAGNI. Don't add subscribers without a producer, state columns without a writer, or `respond_to?(:column)` guards protecting code that doesn't exist yet. Future-proofing is how half-features calcify into dead scaffolding.
+**Stack**: general
+**Review prompt**: Flag (a) event listeners / subscribers whose producer isn't in this PR or the next planned one; (b) new columns, state fields, or enum values nothing in the codebase currently writes; (c) `respond_to?`/feature-detection guards for methods/columns that should either exist or not — "maybe exist" is the smell; (d) interfaces or abstract classes with a single implementation introduced "for the next slice".
+
+### P31 — Don't test the framework's declarations back to it
+**Rule**: A test that asserts `scope :active, -> { where(active: true) }` returns only active records is restating the scope in spec syntax. Same for `validates :email, presence: true` → "test that absence triggers an error". Test *domain behavior the declaration enables*, not the declaration itself.
+**Stack**: rails
+**Review prompt**: Flag tests that (a) set up a record, call a scope, and assert on the same predicate the scope defines; (b) iterate over boolean predicate methods asserting they match their own definition; (c) assert that a declared validator fires when its field is absent, with no user-observable scenario wrapping it; (d) mirror the shape of `has_many`/`belongs_to` declarations in assertions like "responds to `:posts`".
+**Translation outside Rails**: Applies to any declarative framework — Django validators, Ecto changesets, NestJS pipes/decorators, FastAPI dependencies, Zod schemas. The tell is: deleting the test also deletes the only call site exercising the declaration, i.e. the test proves the declaration exists, not that the feature works.

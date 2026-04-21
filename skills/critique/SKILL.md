@@ -1,6 +1,6 @@
 ---
 name: critique
-description: "Critique code or a planned approach against a 25-principle checklist covering convention, domain language, DDD, structure, events vs callbacks, and performance. Writes findings to a structured artifact for handoff to a planning skill — never modifies source, never prescribes a fix. Use when reviewing a PR, file, or branch, or when deciding how to structure code before writing it. Triggers on 'critique this', 'review this approach', 'is this idiomatic', 'check my structure', 'critique this PR'."
+description: "Critique code or a planned approach against a 31-principle checklist covering convention, domain language, DDD, structure, events vs callbacks, performance, and six recurring root causes (rescue-the-universe, log-and-swallow, contract-test-by-internals, premature abstraction, premature-subscriber/YAGNI, framework-declaration tautology). Writes findings to a structured artifact for handoff to a planning skill — never modifies source, never prescribes a fix. Use when reviewing a PR, file, or branch, or when deciding how to structure code before writing it. Triggers on 'critique this', 'review this approach', 'is this idiomatic', 'check my structure', 'critique this PR'."
 model: opus
 allowed-tools: Read, Grep, Glob, Bash(git *:*), Bash(gh *:*), Bash(mkdir *:*), Task, Write
 argument-hint: "[file-path | PR-url | #PR-num | \"approach description\"]"

@@ -2,7 +2,7 @@
 date: <ISO-8601 timestamp>
 target: <file-path | pr-url | branch-ref | approach-summary>
 mode: <advise-on-file | advise-on-approach | review-pr | review-branch>
-principles_version: 1
+principles_version: 2
 counts:
   must_fix: <N>
   should_fix: <M>
