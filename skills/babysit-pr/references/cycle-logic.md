@@ -94,9 +94,11 @@ Probing is done each cycle via `Read` of the relevant file (do not cache across 
    - **Discussion / question** — interrogative, or concerns about approach that don't propose a specific change
    - **Blocker** — review state `CHANGES_REQUESTED` with specific asks
 
-2. For code-change or blocker: draft a proposed approach (1-3 sentences). Do NOT write code yet.
+2. **Check author first — bot vs human** (see "Bot comment auto-dispatch" below). If the author is a bot AND the intent is code-change or blocker, skip steps 3-4 entirely — dispatch `plan-implementer` immediately per the bot template. Do not draft an approach, do not ask the user.
 
-3. `AskUserQuestion`:
+3. For code-change or blocker (human authors only): draft a proposed approach (1-3 sentences). Do NOT write code yet.
+
+4. `AskUserQuestion` (human authors only):
    - **Review comment**: Reviewer `{author}` on `{file}:{line}`: "{comment-excerpt}". My proposed approach: `{approach}`. What next?
    - Options:
      - *Apply my approach* — spawn plan-implementer with the approach as the plan
@@ -104,7 +106,62 @@ Probing is done each cycle via `Read` of the relevant file (do not cache across 
      - *Defer to next cycle* — record in artifact `Outstanding`, move on
      - *I'll handle it manually* — record in artifact `Needs your reply`, don't touch
 
-4. For discussion / question: **never respond on GitHub.** Append verbatim to `### Needs your reply` in the status artifact. Move on.
+5. For discussion / question: **never respond on GitHub.** Append verbatim to `### Needs your reply` in the status artifact. Move on. (Bot-authored discussion/question comments — rare but possible, e.g. CodeRabbit "nitpick" commentary without an actionable ask — are also recorded here, not auto-dispatched.)
+
+## Bot comment auto-dispatch
+
+**Standing order (set by the user):** bot review comments are always addressed immediately via `plan-implementer` without `AskUserQuestion`. The user does not want to be prompted for each bot nit — they want them cleared as they arrive.
+
+### Bot detection
+
+A comment is bot-authored if ANY of:
+
+1. `author.is_bot == true` in the `gh pr view --json comments,reviews` payload (GitHub's own flag — most reliable).
+2. `author.login` ends with `[bot]` (GitHub App convention, e.g. `dependabot[bot]`, `github-actions[bot]`).
+3. `author.login` matches any of these known review-bot logins (case-insensitive): `coderabbitai`, `coderabbitai[bot]`, `copilot-pull-request-reviewer[bot]`, `greptile-apps[bot]`, `greptileai`, `sonarcloud[bot]`, `sonarqubecloud[bot]`, `codecov[bot]`, `graphite-app[bot]`, `ellipsis-dev[bot]`, `sourcery-ai[bot]`, `deepsource-io[bot]`, `qlty-cloud[bot]`.
+
+Cache the bot classification per comment-id in the cycle block so re-fires don't re-probe.
+
+### Collection and ordering
+
+Each cycle, after fetching review state:
+
+1. Build the list of **outstanding bot code-change comments** — every bot-authored `comments[]` entry or review-thread comment that (a) is a code-change or blocker per step 1 of `review-new`, (b) is unresolved (thread not marked resolved), and (c) has not already been addressed by a commit in this PR (check via `Outstanding` entries in the artifact and commit subjects ending in `(babysit-pr bot: <comment-id>)`).
+2. Order by `createdAt` ascending (oldest first).
+3. Process **sequentially**: dispatch one `plan-implementer` via `Task`, await the return, record the outcome, then dispatch the next. Do not parallelize — the fixes touch overlapping files and plan-implementer's own git writes would race.
+
+### Dispatch template (bot comment)
+
+```
+Task: address bot review comment on PR #<n>.
+
+Context:
+- Branch: <headRefName>
+- Bot reviewer: <author.login>
+- Location: <file>:<line>   (or "general comment" if no location)
+- Comment id: <comment-id>
+- Comment body (verbatim):
+  <paste>
+
+Standing order from user: address bot feedback directly without prompting. Use your judgement for the implementation.
+
+Constraints:
+- Commit message: "fix: address <bot-login> review (babysit-pr bot: <comment-id>)"
+- Scope the change to what the bot flagged. If the bot's suggestion is wrong or would break something, return status: blocked with a short explanation — do NOT push an incorrect fix.
+- If multiple bot nits in this thread point at the same symbol/file, it's fine to fix them together in one commit; reference the additional comment ids in the body.
+- After the commit, push to the PR branch.
+- Return status: completed | blocked | partial with files changed + commit sha.
+```
+
+### After each dispatch
+
+- On `status: completed` → append to the cycle block under `Actions taken` and continue to the next bot comment.
+- On `status: blocked` → **do not** auto-dispatch another for the same comment. Record under `Outstanding` with the blocker reason and surface via `AskUserQuestion` with options: *retry with more context*, *mark this bot comment as wontfix (ignore in future cycles)*, *I'll handle manually*, *pause babysit*. Continue processing remaining bot comments only after the user answers.
+- On `status: partial` → record what was done, treat the remainder as a new outstanding bot-comment entry (same id) for the next cycle.
+
+### Anti-loop guard
+
+If the same bot comment-id has been dispatched 2 times across cycles and is still outstanding, stop auto-dispatching it and escalate via `AskUserQuestion` (options: *try one more time with extra context*, *mark wontfix*, *I'll handle manually*). Prevents infinite plan-implementer churn when a bot disagrees with the fix.
 
 ### `conflict`
 

@@ -88,7 +88,9 @@ High-level:
 3. **For each new event, route through references/cycle-logic.md**:
    - CI red + trivial → inline autofix detection (probe `package.json` scripts, `Makefile`, `Cargo.toml`, etc.) → run → commit → push. No AskUserQuestion.
    - CI red + non-trivial → AskUserQuestion (spawn plan-implementer / revert / skip / pause)
-   - New review comment needing code change → AskUserQuestion approach confirmation → Task(plan-implementer). **Never post a reply via `gh pr review`.**
+   - New review comment needing code change:
+     - **Bot author** (see "Bot comment auto-dispatch" below) → **no AskUserQuestion**. Dispatch `Task(plan-implementer)` immediately. If multiple bot comments are outstanding, process them **sequentially** — one `plan-implementer` task per comment, awaiting each before starting the next. Never post a reply via `gh pr review`.
+     - **Human author** → AskUserQuestion approach confirmation → Task(plan-implementer). Never post a reply via `gh pr review`.
    - New review comment needing textual reply → append to status artifact under `### Needs your reply`. Do not respond.
    - Merge conflict → AskUserQuestion (resolve via plan-implementer / defer / pause)
    - Mergeable (CI green + no unresolved reviews + no conflicts) → **Step 5**.
@@ -182,7 +184,10 @@ state: active  # active | paused | terminal
 ## Guidelines
 
 1. **Never reply to review comments in the user's voice.** The only permitted GitHub write actions are: `gh pr merge` (after explicit user choice), `git commit` + `git push` (for approved code changes). `gh pr review --comment`, `gh pr comment`, and `gh pr review --approve|--request-changes` are **forbidden**.
-2. **Auto-run whitelist.** Only these commands run without `AskUserQuestion`: the detected repo autofix command (one of `pnpm lint --fix`, `pnpm format`, `make fmt`, `cargo fmt`, `yarn lint --fix`, `npm run format`), plus the final `git commit -m "fix: ... (babysit-pr)"` + `git push` immediately following a successful autofix. Everything else asks.
+2. **Auto-run whitelist.** The following run without `AskUserQuestion`:
+   - The detected repo autofix command (one of `pnpm lint --fix`, `pnpm format`, `make fmt`, `cargo fmt`, `yarn lint --fix`, `npm run format`), plus the final `git commit -m "fix: ... (babysit-pr)"` + `git push` immediately following a successful autofix.
+   - **Bot review comments**: standing order to dispatch `plan-implementer` for every bot-authored review comment or review-thread comment requesting a code change. Process bot comments **sequentially** — one plan-implementer task at a time, awaiting each before starting the next. See "Bot comment auto-dispatch" in `references/cycle-logic.md` for detection rules and dispatch template. Do **not** ask the user between bot comments; only escalate if a plan-implementer returns `status: blocked`.
+   - Everything else still asks.
 3. **No direct source edits.** The skill never calls `Edit` or `Write` on source files. For any code change, delegate to a `plan-implementer` `Task` subagent. `Write`/`Edit` are scoped to the status artifact at `thoughts/shared/prs/babysit-<n>.md`.
 4. **Off-minute cron.** Use `*/17 * * * *` and `*/47 * * * *`, never `*/15` or `*/30` or `0 * * * *`. Avoids fleet-wide API pile-ups; `CronCreate`'s own jitter is insufficient on its own.
 5. **7-day auto-expiry.** Recurring cron jobs die after 7 days. If the PR isn't merged by then, the skill must be re-invoked. Mention this to the user on first schedule.
