@@ -1,9 +1,9 @@
 ---
 name: babysit-pr
-description: "Monitor a PR end-to-end: run initial QA, watch CI, auto-fix trivial failures, address review comments by editing code (not replying), gate engineering decisions via AskUserQuestion, poll on a schedule until mergeable, then clean up the git worktree once the PR is merged and the Linear ticket is Done. Use when a PR is open and needs autonomous shepherding to merge-ready. Triggers on 'babysit this PR', 'watch PR 1234 to merge', 'shepherd this to green'."
+description: "Monitor a PR end-to-end: run initial QA, watch CI, auto-fix trivial failures, address review comments by editing code (not replying), gate engineering decisions via AskUserQuestion, and poll on a schedule until mergeable. Use when a PR is open and needs autonomous shepherding to merge-ready. Triggers on 'babysit this PR', 'watch PR 1234 to merge', 'shepherd this to green'."
 model: opus
 user-invocable: true
-allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *), Bash(pnpm *), Bash(npm *), Bash(make *), Bash(cargo *), Bash(yarn *), Write, Edit, Task, AskUserQuestion, Skill, TodoWrite, ToolSearch, mcp__mise-tools__linear_stellar_get_issue, mcp__mise-tools__linear_kickplan_get_issue, mcp__mise-tools__linear_meerkat_get_issue
+allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *), Bash(pnpm *), Bash(npm *), Bash(make *), Bash(cargo *), Bash(yarn *), Write, Edit, Task, AskUserQuestion, Skill, TodoWrite
 argument-hint: [pr-url-or-number] [cycle?]
 ---
 
@@ -138,65 +138,7 @@ Triggered when the cycle body detects a terminal state:
   1. `CronDelete(cron_job_id)`
   2. Append `## Final` section to the status artifact with outcome + timestamp.
   3. If `TICKET` was found, invoke `/linear-ticket-status-sync <TICKET> babysit-pr` via the `Skill` tool.
-  4. **Re-check ticket status** (only if `PR.state == MERGED` and `TICKET` is known): re-fetch the ticket via the Linear MCP tools (load with `ToolSearch select:mcp__mise-tools__linear_{workspace}_get_issue` if not already loaded). Record `TICKET_STATE`.
-  5. **Worktree cleanup (gated)** — see Step 5a below.
-  6. Print a one-line summary: `Babysit complete: PR #<n> {merged|closed|paused}. Log: thoughts/shared/prs/babysit-<n>.md`. Include cleanup outcome if applicable.
-
-### Step 5a: Worktree cleanup
-
-**Run only when all of the following are true:**
-
-- `PR.state == MERGED` (not closed-without-merge, not paused).
-- `TICKET_STATE == "Done"` (ticket has actually moved to Done — if still In Review or earlier, skip cleanup).
-
-If either condition is false, skip cleanup entirely and print one line, e.g.:
-```
-Ticket still in "{TICKET_STATE}"; worktree cleanup skipped. When ready: git worktree remove .worktrees/<slug>
-```
-
-If both conditions are true:
-
-1. **Derive slug + path** (run from the main checkout, not from inside the worktree):
-   ```bash
-   ROOT=$(git rev-parse --show-toplevel)
-   SLUG=<PR.headRefName>   # branch name, used as-is by the worktree skill
-   WT_PATH="$ROOT/.worktrees/$SLUG"
-   ```
-   If the worktree was created under the older `$HOME/wt/<repo>/<slug>` layout, fall back to that path — `git worktree list --porcelain` is the authoritative source; use the path it reports.
-
-2. **Confirm the worktree exists**:
-   ```bash
-   git worktree list --porcelain | grep -F "$WT_PATH" || echo "(none)"
-   ```
-   If no worktree exists at that path, skip — nothing to clean up.
-
-3. **Detect self-removal**: compare `git rev-parse --show-toplevel` to `$WT_PATH`. If they match, Claude is running inside the target worktree. `git worktree remove` will fail. **Do not attempt removal.** Instead, print the cleanup command for the user to run from the main checkout and stop:
-   ```
-   Cleanup skipped — you're currently inside the worktree being removed.
-   From the main checkout, run:
-     git worktree remove .worktrees/<slug>
-     git branch -D <slug>
-   ```
-
-4. **Ask via AskUserQuestion**:
-   - **Cleanup**: PR #{n} merged and ticket marked Done. Clean up the worktree at `{WT_PATH}`?
-   - Options: *Remove worktree + delete branch*, *Remove worktree only (keep branch)*, *Skip — I'll clean up later*, *Print commands and exit*
-
-5. **Execute the chosen option**:
-   - *Remove worktree + delete branch*: `git worktree remove "$WT_PATH"` then `git branch -D "$SLUG"`.
-   - *Remove worktree only*: `git worktree remove "$WT_PATH"`.
-   - *Skip*: record in the artifact's `## Final` section; do nothing.
-   - *Print commands and exit*: print the two commands above and stop.
-
-6. **Handle errors**:
-   - If `git worktree remove` reports uncommitted changes or untracked files, **do not `--force`**. Ask:
-     - **Dirty worktree**: `{WT_PATH}` has uncommitted changes. How should I proceed?
-     - Options: *Force remove (lose changes)*, *Skip cleanup*, *I'll resolve manually*
-   - If the branch doesn't exist locally (e.g. already deleted), note it and continue.
-
-7. **Record the outcome** in the status artifact's `## Final` section (worktree path, whether removed, branch disposition).
-
-**Note:** Per-worktree Postgres DBs are *not* dropped by this flow — they're cheap to recreate and safer to leave. If the user wants to reclaim them, they can run `dropdb <repo>_<slug>_development <repo>_<slug>_test` manually.
+  4. Print a one-line summary: `Babysit complete: PR #<n> {merged|closed|paused}. Log: thoughts/shared/prs/babysit-<n>.md`.
 
 ## Status artifact format
 
@@ -248,7 +190,6 @@ state: active  # active | paused | terminal
 7. **Terminal closure recovery.** Because `durable: true`, the cron job persists. When Claude restarts, the job will fire and re-enter the skill in cycle mode. If for any reason it doesn't, the user re-invoking `/babysit-pr <n>` will find the existing artifact and reattach in Step 1.
 8. **Linear sync on terminal only.** Don't sync mid-cycle; only on merged / closed / paused via `/linear-ticket-status-sync`.
 9. **First cycle runs synchronously after QA.** The cron scheduled in Step 4 only drives cycles ≥2. Never schedule the cron and exit before Step 3 has processed every outstanding reviewer ask, failing check, and code-change comment. "QA complete" is **not** a stopping point — it is a gate into the first cycle.
-10. **Worktree cleanup is destructive and gated.** Only runs when (PR merged AND ticket Done AND Claude is NOT inside the target worktree). Always confirm via `AskUserQuestion`. Never pass `--force` to `git worktree remove` without an explicit user choice. Do not touch per-worktree Postgres DBs.
 
 ## Troubleshooting
 
@@ -257,5 +198,3 @@ state: active  # active | paused | terminal
 - **`plan-implementer` returns `status: blocked`** → do not spawn another; surface the blocker to the user via `AskUserQuestion` with options: *retry with more context*, *I'll handle manually*, *defer*, *pause babysit*.
 - **Autofix command detection fails** (no known script in package.json / no Makefile target) → do not guess. `AskUserQuestion` with options: *Provide the command*, *Treat as non-trivial CI failure*, *Skip this check*.
 - **Two cron jobs for the same PR** (stale from a previous session) → on re-attach, `CronList`, identify duplicates by matching the `/babysit-pr <n> cycle` prompt, `CronDelete` all but the newest, update the artifact's `cron_job_id`.
-- **`git worktree remove` fails with uncommitted changes** → do NOT `--force` unprompted. `AskUserQuestion` with options: *Force remove (lose changes)*, *Skip cleanup*, *I'll resolve manually*.
-- **Claude is inside the worktree being cleaned up** → `git worktree remove` will refuse. Do not attempt it. Print the exact commands for the user to run from the main checkout and stop.

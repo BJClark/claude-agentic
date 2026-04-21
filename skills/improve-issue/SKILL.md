@@ -1,6 +1,6 @@
 ---
 name: improve-issue
-description: "Enrich a Linear or GitHub ticket with acceptance criteria and technical context, advance Linear status to Ready for Research, and create a git worktree so an engineer can start working immediately. Use as the first command on a new ticket. Triggers on 'improve this ticket', 'clarify ENG-1234', 'start working on ENG-1234', 'kick off #123', 'get me ready for ENG-1234'."
+description: "Enrich a Linear or GitHub ticket with acceptance criteria and technical context and advance Linear status to Ready for Research. Use as the first command on a new ticket. Triggers on 'improve this ticket', 'clarify ENG-1234', 'start working on ENG-1234', 'kick off #123', 'get me ready for ENG-1234'."
 model: sonnet
 allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, Skill, ToolSearch, Bash, mcp__mise-tools__linear_stellar_get_issue, mcp__mise-tools__linear_stellar_save_issue, mcp__mise-tools__linear_stellar_list_issue_statuses, mcp__mise-tools__linear_kickplan_get_issue, mcp__mise-tools__linear_kickplan_save_issue, mcp__mise-tools__linear_kickplan_list_issue_statuses, mcp__mise-tools__linear_meerkat_get_issue, mcp__mise-tools__linear_meerkat_save_issue, mcp__mise-tools__linear_meerkat_list_issue_statuses
 argument-hint: [ENG-1234 or #123 or github-url]
@@ -10,7 +10,7 @@ argument-hint: [ENG-1234 or #123 or github-url]
 
 Ultrathink about what an engineer would need to know to create an implementation plan for this ticket. Consider the problem statement, actors, acceptance criteria, technical context, and any ambiguities.
 
-Enrich a Linear or GitHub issue so it's ready for an engineer to start planning, advance its Linear status to "Ready for Research", and bootstrap a worktree so work can begin. Read the ticket, check existing project artifacts for relevant context, ask the user clarifying questions, append enriched content back into the ticket description, advance status (Linear only), and create a branch + worktree named after the ticket.
+Enrich a Linear or GitHub issue so it's ready for an engineer to start planning and advance its Linear status to "Ready for Research". Read the ticket, check existing project artifacts for relevant context, ask the user clarifying questions, append enriched content back into the ticket description, and advance status (Linear only).
 
 **Input**: $ARGUMENTS
 
@@ -92,25 +92,7 @@ For Linear tickets only:
 
 5. See [../linear-ticket-status-sync/SKILL.md](../linear-ticket-status-sync/SKILL.md) Step 5 for the same pattern — follow its forward-only rule.
 
-### Step 5: Bootstrap Workspace (Git Worktree)
-
-Ask using AskUserQuestion whether to create a worktree now:
-- **Worktree**: Create a git worktree so you can start working on this ticket?
-- Options: yes create the worktree, skip (stay on current branch), cancel
-
-If the user chooses to skip or cancel, jump to Step 6.
-
-If the user chooses yes:
-
-1. Derive the slug from the ticket ID: lowercase the identifier, keep alphanumerics and hyphens. Examples: `ENG-1234` → `eng-1234`; GitHub `#123` → `issue-123`.
-
-2. Invoke the `worktree` skill via the Skill tool with the slug as the argument. The `worktree` skill handles branch creation, `mise.local.toml` setup, Redis DB index allocation, and DB bootstrap — do not reproduce that logic here.
-
-3. Capture the resulting worktree path for the summary.
-
-If the worktree skill reports a conflict (slug already exists, branch already checked out), surface it to the user and let them choose: reuse the existing worktree, pick a different slug, or skip worktree creation.
-
-### Step 6: Summary
+### Step 5: Summary
 
 ```
 Ticket [ID] is ready to work on:
@@ -118,9 +100,8 @@ Ticket [ID] is ready to work on:
 - Clarifications resolved: [Number]
 - Artifacts referenced: [Number]
 - Status: [previous] -> Ready for Research (or "unchanged — already at [status]")
-- Worktree: [path] (or "skipped")
 
-Next: `cd [worktree-path]` and run `/research-codebase` or `/create-plan`.
+Next: run `/research-codebase` or `/create-plan`.
 ```
 
 ## Guidelines
@@ -134,6 +115,4 @@ Next: `cd [worktree-path]` and run `/research-codebase` or `/create-plan`.
 7. **Technical focus**: The clarifications you add are typically technical — constraints, edge cases, integration points — not business strategy
 8. **No meta-questions**: Never ask "should I ask questions?" — just ask the actual clarifying questions directly using AskUserQuestion. Never print questions as plain text.
 9. **Forward-only status**: Only advance Linear status forward. Never move a ticket backward from a later state to "Ready for Research".
-10. **Ticket ID becomes slug**: The worktree slug is derived mechanically from the ticket identifier — don't invent creative slugs.
-11. **Delegate worktree creation**: Always invoke the `worktree` skill; never inline `git worktree add` or `mise.local.toml` logic.
-12. **GitHub skips status advance**: The status workflow lives in Linear. For GitHub issues, perform enrichment + optional worktree only.
+10. **GitHub skips status advance**: The status workflow lives in Linear. For GitHub issues, perform enrichment only.
