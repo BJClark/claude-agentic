@@ -58,14 +58,17 @@ Determine the platform from the input:
 
 ### Step 3: Assess, Clarify, and Update
 
-See [references/enrichment-checklist.md](references/enrichment-checklist.md) for the detailed quality assessment criteria, clarification patterns, preview template, and update procedures.
+See [references/enrichment-checklist.md](references/enrichment-checklist.md) for the full Definition-of-Ready checklist (Core + Contextual), ticket-type triage, clarification patterns, preview template, and update procedures.
 
 Follow the checklist to:
-1. Assess current ticket quality against the criteria table
-2. Search existing artifacts for relevant context
-3. Work through gaps interactively using AskUserQuestion
-4. Preview proposed additions and get confirmation
-5. Update the ticket (append only, never overwrite)
+1. **Triage ticket type** — classify as feature (user-facing / backend) / bug / chore / migration / spike using the table in the reference. This gates which contextual DoR items apply. If the type is ambiguous, ask directly.
+2. **Assess current ticket quality** against the Core criteria table (problem, actors, acceptance, out-of-scope, dependencies, size, edge cases, observability, context, ambiguities). These are always checked.
+3. **Pick contextual criteria** that apply given the ticket type — design link, a11y/i18n, NFRs, rollout/flag, data impact, PII/compliance, repro steps, deliverable shape. Skip the ones that don't apply; don't pad the skill with irrelevant questions.
+4. **Size check (INVEST-Small)** — if the ticket looks larger than one sprint, flag it via AskUserQuestion *before* drilling into clarifications. An oversized ticket should be split before enrichment, not enriched whole.
+5. **Search existing artifacts** for relevant context (via `artifacts-locator` / `artifacts-analyzer` agents).
+6. **Work through gaps** interactively using AskUserQuestion. Apply the Brief-then-Ask pattern — every question carries enough context that the user can answer without scrolling back: brief in prose first, then AskUserQuestion with options whose descriptions restate the substance.
+7. **Preview proposed additions** and get confirmation.
+8. **Update the ticket** (append only, never overwrite).
 
 ### Step 4: Advance Linear Status to "Ready for Research"
 
@@ -111,8 +114,10 @@ Next: run `/research-codebase` or `/create-plan`.
 3. **Be concise**: Added sections should be scannable, not walls of text
 4. **Suggest, don't assume**: Use AskUserQuestion to validate interpretations rather than guessing
 5. **Link sources**: When referencing artifacts, include links to the source documents
-6. **Know when to stop**: If the ticket is already well-specified, say so and don't add noise
+6. **Know when to stop**: If the ticket is already well-specified, say so and don't add noise. Skip contextual DoR items that don't apply to the triaged ticket type — padding with N/A sections is a smell.
 7. **Technical focus**: The clarifications you add are typically technical — constraints, edge cases, integration points — not business strategy
 8. **No meta-questions**: Never ask "should I ask questions?" — just ask the actual clarifying questions directly using AskUserQuestion. Never print questions as plain text.
 9. **Forward-only status**: Only advance Linear status forward. Never move a ticket backward from a later state to "Ready for Research".
 10. **GitHub skips status advance**: The status workflow lives in Linear. For GitHub issues, perform enrichment only.
+11. **Brief-then-Ask for every question**: Every `AskUserQuestion` is preceded by a short prose brief naming the options with substance. Option descriptions carry the choice, not just a label.
+12. **Splitting beats enriching oversized tickets**: If Step 3's size check flags the ticket as > 1 sprint, get the split done before enriching — don't polish a ticket that's about to be carved up.
