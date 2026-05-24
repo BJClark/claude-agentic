@@ -21,6 +21,7 @@ This skill sits **between** `/research-codebase` (documents what exists, no eval
 - **Last Commit**: !`git log -1 --oneline`
 - **Open PR on branch**: !`gh pr view --json number,title,url 2>/dev/null || echo "(none)"`
 - **Recent tech specs**: !`ls -t research/*techspec*.md 2>/dev/null | head -5 || echo "(none)"`
+- **DDD artifacts**: !`ls research/ddd/ 2>/dev/null | head -10 || echo "(none)"`
 
 ## Initial Response
 

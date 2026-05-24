@@ -19,6 +19,7 @@ Ultrathink about how the requested changes affect the plan's coherence, phasing,
 - **Branch**: !`git branch --show-current`
 - **Last Commit**: !`git log -1 --oneline`
 - **Modified Files**: !`git status --short`
+- **DDD artifacts**: !`ls research/ddd/ 2>/dev/null | head -10 || echo "(none)"`
 
 ## Initial Response
 
@@ -58,7 +59,8 @@ Ultrathink about how the requested changes affect the plan's coherence, phasing,
 **Only spawn research if changes require new technical understanding.**
 
 1. Create research todo list using TodoWrite
-2. Spawn parallel sub-tasks (codebase-locator, analyzer, pattern-finder)
+2. Spawn parallel sub-tasks (codebase-locator, analyzer, pattern-finder, artifacts-locator)
+   - Include **artifacts-locator** to check `research/ddd/` bounded-context canvases and prior research — changes must stay consistent with established domain boundaries and decisions
 3. Read new files FULLY
 4. Wait for ALL sub-tasks
 
@@ -92,10 +94,11 @@ Please review. Any further changes needed?
 3. **Preserve context**: Don't remove important context unless asked
 4. **Research when uncertain**: Spawn research tasks if unsure
 5. **Confirm understanding**: Always present interpretation before changes
+6. **Preserve vertical slicing**: When restructuring phases, keep them end-to-end. Each phase should still answer "what user-visible capability does this ship?" Don't introduce horizontal sub-phases unless the original plan explicitly justified one.
 
 ## Common Update Patterns
 
-**Adding a Phase**: Research needs, identify files/patterns, write complete success criteria, insert in order
+**Adding a Phase**: Research needs, identify files/patterns, write complete success criteria, insert in order. Name the phase by user-visible capability, not by layer.
 **Updating Success Criteria**: Ensure measurable, separate automated from manual, include commands
 **Adjusting Scope**: Update "NOT Doing" section, remove implementation details, adjust phases
-**Splitting a Phase**: Find natural break point, ensure each new phase has complete criteria
+**Splitting a Phase**: Find a natural break point by **user story or workflow** — not by stack layer. Each new phase must still pass the shippable-phase smoke test: *"what new thing can a user do after only this phase?"* Avoid: Phase 2a = data model, Phase 2b = API. Ensure each new phase has complete criteria including a user-visible outcome.

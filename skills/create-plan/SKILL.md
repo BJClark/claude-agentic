@@ -10,7 +10,7 @@ argument-hint: [ticket-or-description]
 
 Create detailed implementation plans through an interactive, iterative process. Be skeptical, thorough, and work collaboratively with the user.
 
-Ultrathink about the problem space, existing architecture, and implementation approach before starting.
+Ultrathink about the problem space, existing architecture, and implementation approach before starting. Default to **vertical slices**: each phase ships a thin end-to-end user-visible capability, not a layer of the stack. Horizontal phasing (schema first, then services, then API, then UI) defers integration risk and produces non-shippable intermediate states.
 
 **Input**: $ARGUMENTS
 
@@ -51,7 +51,7 @@ If the input references a Linear ticket (e.g. `ENG-1234`, `PLAT-56`, or a `thoug
 2. **Spawn parallel research tasks**:
    - **codebase-locator**: Find related files
    - **codebase-analyzer**: Understand current implementation
-   - **codebase-pattern-finder**: Find similar features
+   - **codebase-pattern-finder**: Find similar features — for at least one, return the **full vertical path** (e.g. DB migration → repository → service → API endpoint → UI/consumer) so new phases can be modeled on an existing end-to-end slice
    - **artifacts-locator**: Find existing research, plans, and .jeff/ discovery artifacts
 3. **Read all identified files FULLY**
 4. **Analyze and verify**: Cross-reference requirements with actual code
@@ -106,10 +106,14 @@ When a harness exists, the plan **must** be organized spec-first:
 
 Goal: every phase gate is backed by an executable behavior check, compounding verifiable knowledge of the system.
 
-### Step 4: Plan Structure Development
+### Step 4: Plan Structure Development (Vertical-First)
 
-1. Create initial outline with phases
-2. Get feedback on structure before writing details
+1. **Default to vertical slices** — each phase delivers a thin end-to-end capability (one user story, one workflow, one scenario) cutting through every layer it touches. Phase 1 is the *walking skeleton*: the thinnest possible end-to-end path that exercises the full stack.
+2. **Apply the shippable-phase smoke test** to every candidate phase: *"If we shipped only this phase, what new thing could a user / caller / downstream system do that they couldn't before?"* If the answer is "nothing — it's foundation," merge it into the phase that consumes its output, or justify it explicitly as a named exception (see [references/slicing-strategy.md](references/slicing-strategy.md)).
+3. **Name phases by capability, not by layer.** `Phase 1: customer can submit a draft order` — yes. `Phase 1: order schema + repository` — no.
+4. **Horizontal phasing is the named exception.** Mark any horizontal phase with its justification: pure data migration with no behavior change, library upgrade, cross-cutting refactor, or a genuine technical precondition. Rare.
+5. Create initial outline with phases, each labeled with its user-visible capability.
+6. Get feedback on structure before writing details.
 
 ### Step 5: Detailed Plan Writing
 
@@ -141,9 +145,14 @@ If a Linear ticket was detected in the input, automatically invoke `/linear-tick
 6. **Decide Before Writing**: Resolve technical decisions interactively before committing them to the plan, not after
 7. **Linear Sync is Separate**: Linear sync is handled by `/linear-ticket-status-sync`, not this skill
 8. **Spec-First When Possible**: If the codebase has an outside-in / BDD harness, specs lead implementation. Phase 0 writes failing scenarios that fail for the right reason; later phases close only when their designated specs pass. Always invest in executable behavior knowledge over ad-hoc verification.
+9. **Vertical Slices by Default**: Each phase must answer "what user-visible capability does this ship?" Horizontal phases (all schema, all API, all UI) defer integration risk and produce unshippable intermediate states. Acceptable exceptions: pure data migrations, library upgrades, cross-cutting refactors, or genuine technical preconditions — mark them explicitly. Reference: [references/slicing-strategy.md](references/slicing-strategy.md).
 
 ## Common Patterns
 
-**Database Changes**: Schema/migration -> Store methods -> Business logic -> API -> Clients
-**New Features**: Research patterns -> Data model -> Backend -> API -> UI
-**Refactoring**: Document current behavior -> Plan incremental changes -> Maintain backwards compat
+**New Features (vertical)**: Phase 1 = thinnest end-to-end happy path (one workflow through all layers — migration + repo + service + endpoint + UI/consumer); each subsequent phase extends with one more user-visible capability or edge case. *Avoid: Phase 1 = data model only.*
+
+**Schema migrations (expand-contract)**: Phase 1 = expand (add new column/table, dual-write, old path still authoritative); Phase 2 = backfill + verify under production read traffic; Phase 3 = flip reads to new path, keep old as fallback; Phase 4 = contract (remove old path). Each phase is independently safe to halt at. Horizontal by nature — mark each phase as such.
+
+**Refactoring (strangler / branch-by-abstraction)**: Slice by behavior, not by file. Phase 1 = introduce the new abstraction and route one complete user-facing flow through it end-to-end; subsequent phases migrate remaining flows one at a time. *Avoid: "Phase 1 = rewrite the service layer."*
+
+**Performance / cross-cutting work**: Legitimate horizontal slicing — phase by hot path (P50 → P90 → P99) or by metric, not by user feature. State the metric delta each phase achieves.

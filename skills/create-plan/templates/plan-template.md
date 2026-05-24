@@ -59,10 +59,16 @@ Write the executable scenarios that describe the target behavior and confirm the
 
 ---
 
-## Phase 1: [Descriptive Name]
+## Phase 1: [Capability Name — describe what a user/caller can do after this phase]
+
+### User-Visible Capability
+[What new thing a user / caller / downstream system can do after this phase ships. If the answer is "nothing — this is foundation," justify why this horizontal phase is required.]
+
+### Slicing Direction
+vertical  <!-- change to: horizontal — [one-line justification] if applicable -->
 
 ### Overview
-[What this phase accomplishes]
+[What this phase accomplishes at the implementation level]
 
 ### Changes Required:
 
