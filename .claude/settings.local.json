@@ -29,7 +29,14 @@
       "Bash(wc -l /Users/willclark/Developer/scidept/claude-agentic/skills/*/SKILL.md)",
       "Bash(wc -l /Users/willclark/Developer/scidept/claude-agentic/agents/*.md)",
       "Bash(wc -l /Users/willclark/Developer/scidept/claude-agentic/commands/*.md)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Read(//Users/willclark/Downloads/**)",
+      "WebFetch(domain:rsmck.co.uk)",
+      "Bash(chmod +x /Users/willclark/Developer/scidept/claude-agentic/skills/fgl-layout/scripts/png_to_fgl.py)",
+      "Bash(python3 /Users/willclark/Developer/scidept/claude-agentic/skills/fgl-layout/scripts/png_to_fgl.py --validate /Users/willclark/Developer/scidept/claude-agentic/skills/fgl-layout/templates/event-ticket.fgl --canvas-rows 600 --canvas-cols 1650)",
+      "Bash(python3 *)",
+      "Skill(skill-builder)",
+      "Bash(awk -F: '{sum+=$NF} END {print sum}')"
     ]
   }
 }
