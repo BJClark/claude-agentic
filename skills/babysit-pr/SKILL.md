@@ -56,8 +56,22 @@ Detect mode first:
      - Options: *Provide a ticket ID*, *Skip QA and only watch CI/reviews*, *Cancel babysit*
 
 3. Check for an existing status artifact at `thoughts/shared/prs/babysit-<PR.number>.md`:
-   - **If exists**: we're re-attaching to an already-babysat PR. Read it to recover `cron_job_id`, previous cycle state, and outstanding todos. Skip **Step 2** (QA already ran). Jump to **Step 3**.
-   - **If not**: create the artifact (see "Status artifact format" below) and continue to **Step 2**.
+   - **If exists**: we're re-attaching to an already-babysat PR. Read it to recover `cron_job_id`, `scope_files`, previous cycle state, and outstanding todos. Skip step 4 below (scope already frozen), skip **Step 2** (QA already ran), and re-set the goal in step 5 before jumping to **Step 3**.
+   - **If not**: create the artifact (see "Status artifact format" below) and continue to step 4.
+
+4. **Freeze scope.** Capture the set of files the PR currently touches — this anchors anti-drift for every plan-implementer dispatch:
+   ```
+   gh pr diff <PR.number> --name-only
+   ```
+   Store the returned list in the artifact front-matter as `scope_files`. Bot-driven changes that would wander outside this set must return `status: off-topic` instead of pushing — see `references/cycle-logic.md`.
+
+5. **Set the session goal.** This is what lets the loop run unattended between user check-ins:
+
+   ```
+   /goal PR #<n> is merged, OR a tripwire is recorded under "Needs your reply" in thoughts/shared/prs/babysit-<n>.md. Mergeable means: all CI checks green, no unresolved review threads, no merge conflicts. Tripwires: any commit in this session modifies a file outside scope_files; any bot comment-id has been auto-dispatched 2+ times; any plan-implementer returns status: off-topic or status: blocked; the user has been asked a question that is still unanswered.
+   ```
+
+   The evaluator (Haiku) reads the transcript and the status artifact after every turn; if the condition isn't met, another turn fires automatically. Combined with auto mode this is what makes `babysit-pr` genuinely unattended — the model can't quietly exit halfway through cycle 1 because the goal hasn't cleared.
 
 ### Step 2: First-cycle QA (new babysit only)
 
@@ -67,11 +81,9 @@ If QA reports blocking failures, ask with `AskUserQuestion`:
 - **QA blockers**: QA found {N} blocker(s): {summary}. How to proceed?
 - Options: *Continue babysitting, will address during cycles*, *Pause babysit until blockers resolved*, *Abort babysit*
 
-**Transition:** Whether QA passed cleanly or the user chose *Continue*, proceed **immediately** to Step 3 to run the first cycle synchronously. The cron scheduled in Step 4 drives *future* cycles only — cycle 1 always runs now, before any cron is created. Do not stop after QA.
+**Transition:** Proceed to Step 3 for the first cycle. The cron in Step 4 only drives cycles ≥2; the `/goal` from Step 1 keeps cycle 1 turning until every outstanding event is routed.
 
 ### Step 3: Run one cycle
-
-**First-cycle semantics (important):** On the first cycle, the artifact has no prior snapshot, so the effective baseline is empty — the **full current state** of the PR counts as "new events". That means every unresolved review thread, every `CHANGES_REQUESTED` review, every failing CI check, and every review comment requesting a code change must be routed through the event matrix in `references/cycle-logic.md` **before the cycle closes**. The first cycle typically produces multiple `AskUserQuestion` turns — one per outstanding reviewer ask — and that is expected. Do not schedule the cron or return until these events have been processed (addressed via plan-implementer, deferred, or recorded as "needs your reply").
 
 Delegate the full event-handling matrix to the reference: see **[references/cycle-logic.md](references/cycle-logic.md)** for the complete (CI × review × merge-state) branching, the trivial-autofix whitelist, and the plan-implementer dispatch prompt templates.
 
@@ -100,8 +112,6 @@ High-level:
 5. **Append a cycle block** to the status artifact (format below).
 
 ### Step 4: Schedule next cycle
-
-**Precondition:** Step 3's cycle body must have completed (all first-cycle new events routed through AskUserQuestion, plan-implementer dispatches awaited, cycle block appended to the artifact) before this step runs. Step 4 schedules the recurring cron that drives cycles ≥2; it never substitutes for running cycle 1.
 
 Load the cron tools: use `ToolSearch` with query `select:CronCreate,CronDelete,CronList` once per session.
 
@@ -156,6 +166,10 @@ started: 2026-04-16T14:17:00
 cron_job_id: cron_abc123
 interval: "*/17 * * * *"
 state: active  # active | paused | terminal
+scope_files:
+  - src/auth/login.ts
+  - src/auth/login.test.ts
+  - src/auth/session.ts
 ---
 
 # Babysit log: PR #1234 — <title>
@@ -179,7 +193,15 @@ state: active  # active | paused | terminal
 
 ## Cycle 2 — 2026-04-16 14:51
 ...
+
+## Bot dispatch ledger
+| comment-id | bot | file:line | dispatches | last status |
+|---|---|---|---|---|
+| r9881 | coderabbitai[bot] | src/auth/login.ts:42 | 1 | completed (8dadb24) |
+| r9912 | coderabbitai[bot] | src/auth/session.ts:17 | 2 | off-topic (wants new file src/util/cookies.ts) |
 ```
+
+Re-fires consult the ledger first: any `comment-id` with `dispatches >= 2` triggers the anti-loop escalation in `references/cycle-logic.md` instead of another auto-dispatch.
 
 ## Guidelines
 
@@ -194,7 +216,8 @@ state: active  # active | paused | terminal
 6. **Cycle idempotency.** A cycle might fire on the same PR state twice (cron retry after missed fire). Always diff against the last cycle block in the artifact; if nothing is new, record an empty cycle and exit the cycle body cleanly.
 7. **Terminal closure recovery.** Because `durable: true`, the cron job persists. When Claude restarts, the job will fire and re-enter the skill in cycle mode. If for any reason it doesn't, the user re-invoking `/babysit-pr <n>` will find the existing artifact and reattach in Step 1.
 8. **Linear sync on terminal only.** Don't sync mid-cycle; only on merged / closed / paused via `/linear-ticket-status-sync`.
-9. **First cycle runs synchronously after QA.** The cron scheduled in Step 4 only drives cycles ≥2. Never schedule the cron and exit before Step 3 has processed every outstanding reviewer ask, failing check, and code-change comment. "QA complete" is **not** a stopping point — it is a gate into the first cycle.
+9. **The `/goal` is the completion contract.** Step 1's goal — not prose in this file — is what keeps the loop running until the PR is merged or a tripwire fires. Do not call `/goal clear` unless terminating the babysit. If the goal evaluator stops firing turns and the artifact still shows outstanding events, the goal condition was written too permissively — tighten it on re-attach rather than papering over it with extra prose here.
+10. **Scope-frozen bot dispatches.** Every plan-implementer dispatched for a bot comment carries the `scope_files` set as a hard constraint. Off-topic returns escalate to the user; they don't get re-dispatched. This is what stops Claude-bot "consider extracting this" comments from spiraling into 12-file refactors.
 
 ## Troubleshooting
 

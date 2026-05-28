@@ -146,22 +146,24 @@ Context:
 Standing order from user: address bot feedback directly without prompting. Use your judgement for the implementation.
 
 Constraints:
+- **Scope freeze (hard rule).** The PR's original touched-files set is: <scope_files from artifact front-matter>. You may only modify files in that set, plus — if the comment targets a specific file — that exact file. If addressing the bot's suggestion would require creating or editing any other file, do NOT push. Return status: off-topic with: (a) the file(s) you would have needed to touch, and (b) one sentence on why the bot's ask falls outside the PR's scope. Do not "fix consistency elsewhere", do not extract helpers into new files, do not rename across the codebase, do not pull in `while we're here` cleanups. Bots commonly suggest these; the user has decided they are out of scope for an unattended fix.
 - Commit message: "fix: address <bot-login> review (babysit-pr bot: <comment-id>)"
-- Scope the change to what the bot flagged. If the bot's suggestion is wrong or would break something, return status: blocked with a short explanation — do NOT push an incorrect fix.
-- If multiple bot nits in this thread point at the same symbol/file, it's fine to fix them together in one commit; reference the additional comment ids in the body.
+- If the bot's suggestion is wrong or would break something, return status: blocked with a short explanation — do NOT push an incorrect fix.
+- If multiple bot nits in this thread point at the same symbol/file *within scope_files*, it's fine to fix them together in one commit; reference the additional comment ids in the body.
 - After the commit, push to the PR branch.
-- Return status: completed | blocked | partial with files changed + commit sha.
+- Return status: completed | blocked | partial | off-topic with files changed + commit sha (or, for off-topic, the out-of-scope file list).
 ```
 
 ### After each dispatch
 
-- On `status: completed` → append to the cycle block under `Actions taken` and continue to the next bot comment.
-- On `status: blocked` → **do not** auto-dispatch another for the same comment. Record under `Outstanding` with the blocker reason and surface via `AskUserQuestion` with options: *retry with more context*, *mark this bot comment as wontfix (ignore in future cycles)*, *I'll handle manually*, *pause babysit*. Continue processing remaining bot comments only after the user answers.
-- On `status: partial` → record what was done, treat the remainder as a new outstanding bot-comment entry (same id) for the next cycle.
+- On `status: completed` → append to the cycle block under `Actions taken`, increment the comment-id's row in the **Bot dispatch ledger** (see SKILL.md artifact format), and continue to the next bot comment.
+- On `status: blocked` → **do not** auto-dispatch another for the same comment. Record under `Outstanding` with the blocker reason, update the ledger row, and record a tripwire entry under `### Needs your reply` (the `/goal` evaluator watches for these). Surface via `AskUserQuestion` with options: *retry with more context*, *mark this bot comment as wontfix (ignore in future cycles)*, *I'll handle manually*, *pause babysit*. Continue processing remaining bot comments only after the user answers.
+- On `status: off-topic` → **do not** retry. The bot is asking for a change outside the PR's scope_files. Update the ledger row with `off-topic` and the out-of-scope file list, record under `### Needs your reply` as a tripwire, and surface via `AskUserQuestion` with options: *expand scope_files to include `<file>` and re-dispatch*, *mark this bot comment as wontfix*, *I'll handle manually*, *pause babysit*. This is the primary anti-spiral guard for Claude-bot review comments.
+- On `status: partial` → record what was done in the ledger, treat the remainder as a new outstanding bot-comment entry (same id) for the next cycle.
 
 ### Anti-loop guard
 
-If the same bot comment-id has been dispatched 2 times across cycles and is still outstanding, stop auto-dispatching it and escalate via `AskUserQuestion` (options: *try one more time with extra context*, *mark wontfix*, *I'll handle manually*). Prevents infinite plan-implementer churn when a bot disagrees with the fix.
+Before dispatching, read the **Bot dispatch ledger** in the status artifact. If the row for this `comment-id` shows `dispatches >= 2` and the bot is still posting on it, stop auto-dispatching and escalate via `AskUserQuestion` (options: *try one more time with extra context*, *mark wontfix*, *I'll handle manually*). Record a tripwire entry under `### Needs your reply`. Prevents infinite plan-implementer churn when a bot disagrees with the fix or the fix doesn't satisfy the bot's heuristic.
 
 ### `conflict`
 
@@ -221,10 +223,11 @@ Proposed approach (approved by user via babysit-pr):
   <approach>
 
 Constraints:
+- **Scope freeze.** PR scope_files: <scope_files from artifact>. You may modify files in that set plus the file the comment targets. If the reviewer's ask requires creating or editing other files, return status: off-topic with the file list — the user will decide whether to expand scope.
 - Commit message: "fix: address review #<r-id> (babysit-pr)"
-- Scope the change to what the reviewer asked for — do NOT bundle unrelated refactors.
+- Do NOT bundle unrelated refactors with the requested change.
 - After the commit, push to the PR branch.
-- Return status: completed | blocked | partial with files changed + commit sha.
+- Return status: completed | blocked | partial | off-topic with files changed + commit sha (or, for off-topic, the out-of-scope file list).
 ```
 
 ### For merge-conflict resolution
