@@ -5,39 +5,33 @@ A collection of specialized skills, commands, and agents for Claude Code to help
 ## Overview
 
 This toolkit provides:
-- **Skills**: Advanced orchestrating workflows with isolated execution, supporting files, and auto-approved tools
-- **Commands**: Simple interactive workflows for git, commits, and single-file operations
-- **Agents**: Specialized sub-agents for codebase analysis, pattern finding, and web research
+- **Skills**: All workflows live here — orchestrating pipelines (DDD, PM, QRSPI), simple operations (commit, validate-plan), and specialized tools. Supports isolated execution, auto-approved tools, and inter-step gates via `AskUserQuestion`.
+- **Agents**: Role-based sub-agents (developer, architect, qa-engineer, researcher, scout) and DDD Architect-family specialists. See `references/ROLES.md` for the full role taxonomy.
+- **Commands**: Empty — all commands have been migrated to skills. The `commands/` directory is retained for structural compatibility but contains no active files.
 
 ## Installation
 
 ### Claude Code (CLI)
 
-Claude Code uses a `.claude/` directory for skills, commands, and agents.
+Claude Code uses a `.claude/` directory for skills and agents.
 
 ```bash
 # Clone the repository
 git clone https://github.com/your-org/claude-agentic.git
 
-# Copy to your project
-mkdir -p .claude
-cp -r claude-agentic/agents .claude/
-cp -r claude-agentic/commands .claude/
-cp -r claude-agentic/skills .claude/
+# Install globally for all projects (recommended)
+bash claude-agentic/scripts/install.sh
 ```
 
-Or install globally for all projects:
+Or copy manually:
 
 ```bash
 mkdir -p ~/.claude
 cp -r claude-agentic/agents ~/.claude/
-cp -r claude-agentic/commands ~/.claude/
 cp -r claude-agentic/skills ~/.claude/
 ```
 
-Skills and commands are available immediately - use `/create_plan`, `/research-codebase`, etc.
-
-> **Note**: Skills (in `skills/`) are the recommended format for complex workflows. They support isolated execution (`context: fork`), auto-approved tools, and supporting files. Commands (in `commands/`) still work and are used for simpler operations.
+Skills are available immediately — use `/ddd`, `/pm`, `/create-plan`, `/research-codebase`, etc. All workflows live in `skills/`; `commands/` is empty.
 
 ### Cursor
 
@@ -110,68 +104,118 @@ Agents and commands are automatically discovered on startup.
 
 ### Verification
 
-After installation, verify commands are available:
+After installation, verify skills are available:
 
 ```
-/create_plan - Create implementation plans
-/research_codebase - Research how code works
-/describe_pr - Generate PR descriptions
+/create-plan - Create implementation plans
+/research-codebase - Research how code works
+/describe-pr - Generate PR descriptions
+/ddd - Full DDD discovery workflow (7 steps with gates)
+/pm - PM workspace build workflow
+/commit - Commit changes without Claude attribution
 ```
 
-If commands don't appear, restart your editor/CLI to reload configurations.
+If skills don't appear, restart your editor/CLI to reload configurations.
 
-## Available Commands
+## Available Skills
+
+All workflows are skills (in `skills/`). The `commands/` directory is empty — all commands have been migrated to skills.
 
 ### Planning & Design
-- **`/create_plan`** - Create detailed implementation plans through interactive research
-- **`/iterate_plan`** - Update existing implementation plans based on feedback
-- **`/validate_plan`** - Validate implementation plans against codebase reality
+- **`/create-plan`** - Create detailed implementation plans through interactive research
+- **`/iterate-plan`** - Update existing implementation plans based on feedback
+- **`/validate-plan`** - Validate implementation plans against codebase reality (delegates to qa-engineer)
+- **`/tech-spec`** - Interactive technical specification with the Architect persona
 
 ### DDD Discovery-to-Implementation
-- **`/ddd_full`** - Complete end-to-end DDD workflow (all 7 steps with confirmation gates)
-- **`/ddd_align`** - Step 1: Align & understand the business domain from a PRD
-- **`/ddd_discover`** - Step 2: EventStorming — discover events, commands, actors, policies
-- **`/ddd_decompose`** - Step 3: Decompose domain into sub-domains and bounded contexts
-- **`/ddd_strategize`** - Step 4: Classify sub-domains on Core Domain Chart
-- **`/ddd_connect`** - Step 5: Context mapping — define relationships between contexts
-- **`/ddd_define`** - Step 7: Build Bounded Context and Aggregate Design Canvases
-- **`/ddd_plan`** - Step 8: Convert DDD artifacts into `/implement_plan`-compatible plans
+- **`/ddd`** - Complete end-to-end DDD workflow (all 7 steps with inline AskUserQuestion gates)
+- **`/ddd-align`** - Step 1: Align & understand the business domain from a PRD
+- **`/ddd-discover`** - Step 2: EventStorming — discover events, commands, actors, policies
+- **`/ddd-decompose`** - Step 3: Decompose domain into sub-domains and bounded contexts
+- **`/ddd-strategize`** - Step 4: Classify sub-domains on Core Domain Chart
+- **`/ddd-connect`** - Step 5: Context mapping — define relationships between contexts
+- **`/ddd-define`** - Step 6: Build Bounded Context and Aggregate Design Canvases
+- **`/ddd-plan`** - Step 7: Convert DDD artifacts into `/implement-plan`-compatible plans
+
+### PM Workflow
+- **`/pm`** - Full PM workspace build workflow with gates (orchestrates pm-synthesize inline)
+- **`/pm-synthesize`** - PM inline persona: synthesize story map + DDD into a Linear build plan
 
 ### Research & Analysis
-- **`/research_codebase`** - Comprehensively research codebase using parallel agents
-- **`/debug`** - Debug issues with systematic investigation
+- **`/research-codebase`** - Comprehensively research codebase using parallel agents
+- **`/debug-issue`** - Debug issues with systematic investigation
 
 ### Implementation & Review
-- **`/implement_plan`** - Execute implementation plans step by step
-- **`/local_review`** - Review code changes before committing
-- **`/describe_pr`** - Generate comprehensive PR descriptions
+- **`/implement-plan`** - Execute implementation plans step by step (delegates to developer subagent)
+- **`/local-review`** - Review code changes before committing
+- **`/describe-pr`** - Generate comprehensive PR descriptions
+- **`/critique`** - Forked code review against a checklist
 
 ### Git Workflows
-- **`/commit`** - Create well-formatted git commits with co-authorship
-- **`/ci_commit`** - Commit changes in CI/CD environments
-- **`/create_worktree`** - Create and manage git worktrees
+- **`/commit`** - Create well-formatted git commits without Claude attribution (`disable-model-invocation: true`)
 
 ### Project-Specific (Optional)
 - **`/linear`** - Manage Linear tickets (requires Linear MCP integration)
 
 ## Available Agents
 
-These specialized agents are used by commands (or can be invoked directly):
+These specialized agents are used by skills (or can be invoked directly via the Task tool). See `references/ROLES.md` for the full role taxonomy including model tiers and tool scopes.
 
-### Codebase Analysis
-- **`codebase-analyzer`** - Analyzes HOW code works, traces data flow
-- **`codebase-locator`** - Finds WHERE code lives in the codebase
-- **`codebase-pattern-finder`** - Finds similar implementations and patterns
+### Core Roles
+- **`developer`** (opus) - Implements a plan phase or applies a scoped fix; returns structured report
+- **`architect`** (opus) - Batch design-it-twice worker: produces one alternative interface under a stated constraint
+- **`qa-engineer`** (opus) - Thoroughly tests completed work through actual execution; surfaces findings
+- **`researcher`** (sonnet) - Investigates code, prior artifacts, or the web; specify mode in prompt: `code-investigation`, `artifact-research`, or `web-research`
+- **`scout`** (haiku) - Locates files, directories, and components by pattern; returns paths + line numbers only
 
-### DDD Discovery
-- **`ddd-event-discoverer`** - Extracts domain building blocks (events, commands, actors, policies) from requirements
-- **`ddd-context-analyzer`** - Identifies bounded context boundaries from language patterns
-- **`ddd-canvas-builder`** - Synthesizes DDD artifacts into formal canvases with Mermaid diagrams
+### DDD Discovery (Architect-family)
+- **`ddd-event-discoverer`** (opus) - Extracts domain building blocks (events, commands, actors, policies) from requirements
+- **`ddd-context-analyzer`** (opus) - Identifies bounded context boundaries from language patterns
+- **`ddd-canvas-builder`** (opus) - Synthesizes DDD artifacts into formal canvases with Mermaid diagrams
 
-### Research & Documentation
-- **`web-search-researcher`** - Researches information from web sources
-- **`artifacts-locator`** - Locates prior artifacts across `research/`, `plans/`, and `.jeff/`
-- **`artifacts-analyzer`** - Extracts insights from located artifacts
+## Operating model
+
+This repo is designed for **Sonnet as the default main-loop model**, with heavier models promoted only for the turns that need them.
+
+### Session setup
+
+Start every Claude Code session with:
+
+```
+/model sonnet
+```
+
+Sonnet is the cheap, fast orchestration layer. Expensive skills auto-promote the main loop for their turn only and then revert. Subagents always run their own role tier regardless of the main loop model.
+
+### Role tiers
+
+| Role | Model | Rationale |
+|---|---|---|
+| Developer | opus | Autonomous code editing — errors are hard to catch |
+| Architect | opus | Interface/boundary design requires strong reasoning |
+| QA Engineer | opus | Test execution and judgment on failure modes |
+| DDD Specialists | opus | Domain modelling is nuanced, high-stakes |
+| Researcher | sonnet | Broad investigation — quality-to-cost tradeoff is good |
+| Scout | haiku | Mechanical grep/glob locate; no reasoning required |
+
+### Inline vs. forked skills
+
+- **Inline skills with `model: opus`** (`create-plan`, `tech-spec`, `grill-me`, `improve-codebase-architecture`) temporarily promote the whole main loop for that turn, then revert. Use these interactively — they need `AskUserQuestion` gates.
+- **Forked skills (`context: fork`)** (`critique`) run in an isolated subagent; only a summary returns to main context. The main loop model is unaffected. Note: forked skills cannot use `AskUserQuestion` — callers must pass the target explicitly.
+
+### Orchestrator model recommendations
+
+| Scenario | Recommended model |
+|---|---|
+| Interactive session (human present at each gate) | Sonnet (`/model sonnet`) |
+| Purely mechanical / polling (no judgment required) | Haiku — only if the session is stateless and mechanical |
+| Unattended / auto-mode orchestrator (e.g. `babysit-pr` in cron/loop with no human gate) | **Opus** — autonomous routing, anti-loop judgment, and escalation decisions need the strong model |
+
+Never run an unattended orchestrator (`babysit-pr`, `/qrspi` in fully-autonomous loop mode) on Haiku or Sonnet. Without a human gate catching bad calls, the model tier IS the safety net.
+
+### QRSPI in loop mode
+
+`/qrspi` is designed for interactive use (`model: sonnet`, gates present). If you run it via `/loop` or cron with no human at each gate, treat it as unattended and set `/model opus` before starting the loop.
 
 ## Configuration
 
@@ -218,7 +262,7 @@ tools: Read, Grep, Glob  # Available tools
 ### Create an Implementation Plan
 
 ```
-User: /create_plan
+User: /create-plan
 Claude: I'll help you create a detailed implementation plan.
         Please provide: [...]
 
@@ -229,7 +273,7 @@ Claude: [Researches codebase, asks clarifying questions, creates plan]
 ### Research a Feature
 
 ```
-User: /research_codebase
+User: /research-codebase
 Claude: I'm ready to research the codebase. What would you like to know?
 
 User: How does webhook processing work?
@@ -239,37 +283,37 @@ Claude: [Spawns parallel agents, synthesizes findings, creates research doc]
 ### DDD Discovery Workflow
 
 ```
-User: /ddd_full path/to/prd.md
-Claude: [Runs all 7 DDD steps interactively, with confirmation gates between each]
+User: /ddd path/to/prd.md
+Claude: [Runs all 7 DDD steps interactively, with real AskUserQuestion gates between each]
 ```
 
 Or run individual steps:
 
 ```
-User: /ddd_align path/to/prd.md        → research/ddd/01-alignment.md
-User: /ddd_discover                     → research/ddd/02-event-catalog.md
-User: /ddd_decompose                    → research/ddd/03-sub-domains.md
-User: /ddd_strategize                   → research/ddd/04-strategy.md
-User: /ddd_connect                      → research/ddd/05-context-map.md
-User: /ddd_define                       → research/ddd/06-canvases.md
-User: /ddd_plan                         → plans/YYYY-MM-DD-ddd-*.md
-User: /implement_plan plans/...         → code implementation
+User: /ddd-align path/to/prd.md        → research/ddd/01-alignment.md
+User: /ddd-discover                     → research/ddd/02-event-catalog.md
+User: /ddd-decompose                    → research/ddd/03-sub-domains.md
+User: /ddd-strategize                   → research/ddd/04-strategy.md
+User: /ddd-connect                      → research/ddd/05-context-map.md
+User: /ddd-define                       → research/ddd/06-canvases.md
+User: /ddd-plan                         → plans/YYYY-MM-DD-ddd-*.md
+User: /implement-plan plans/...         → code implementation
 ```
 
 ### Generate PR Description
 
 ```
-User: /describe_pr
+User: /describe-pr
 Claude: [Analyzes PR, runs verification commands, generates description]
 ```
 
-## Command Patterns
+## Skill Patterns
 
-Most commands follow this pattern:
+Most skills follow this pattern:
 
 1. **Initial Setup** - Gather context and understand requirements
 2. **Research** - Spawn parallel agents to investigate codebase
-3. **Interactive Design** - Collaborate with user on approach
+3. **Interactive Design** - Collaborate with user on approach (AskUserQuestion gates)
 4. **Execution** - Perform the task (write plan, create docs, etc.)
 5. **Review** - Present results and iterate based on feedback
 
@@ -309,31 +353,35 @@ Most commands follow this pattern:
 
 ## Advanced Usage
 
-### Creating Custom Commands
+### Creating Custom Skills
 
-1. Create a new `.md` file in `commands/`
-2. Add frontmatter with description and model
-3. Write command instructions in markdown
-4. Reference existing agents or create new ones
+1. Create a new directory in `skills/` (e.g., `skills/my-skill/`)
+2. Create `skills/my-skill/SKILL.md` with frontmatter and body
+3. Add `name:`, `description:`, `model:`, and `allowed-tools:` to frontmatter
+4. Write skill instructions in markdown
 
 Example:
 ```markdown
 ---
-description: Your custom command
+name: my-skill
+description: Does something specific
 model: sonnet
+allowed-tools: Read, Grep, AskUserQuestion
 ---
 
-# My Custom Command
+# My Skill
 
 Instructions for Claude on what to do...
 ```
 
+**Key rule**: If your skill uses `AskUserQuestion` for gates, do NOT add `context: fork` — forked skills cannot use `AskUserQuestion`. Run inline instead.
+
 ### Creating Custom Agents
 
 1. Create a new `.md` file in `agents/`
-2. Define name, description, and tools in frontmatter
-3. Write agent-specific instructions
-4. Reference from commands using the agent name
+2. Define name, description, model, and tools in frontmatter
+3. Write agent-specific instructions with a persona line first
+4. Reference from skills using the agent name in Task calls
 
 Example:
 ```markdown
@@ -344,24 +392,26 @@ tools: Read, Grep
 model: sonnet
 ---
 
-You are a specialist at [specific task]...
+You are a senior specialist at [specific task].
+
+[Sharp invocation contract here...]
 ```
 
-### Chaining Commands
+### Chaining Skills
 
-Commands can be chained for complex workflows:
-
-```
-/research_codebase → /create_plan → /implement_plan → /describe_pr
-```
-
-DDD discovery workflow:
+Skills can be chained for complex workflows:
 
 ```
-/ddd_align → /ddd_discover → /ddd_decompose → /ddd_strategize → /ddd_connect → /ddd_define → /ddd_plan → /implement_plan
+/research-codebase → /create-plan → /implement-plan → /describe-pr
 ```
 
-Or use `/ddd_full` for the complete end-to-end chain with confirmation gates.
+DDD discovery workflow (individual steps):
+
+```
+/ddd-align → /ddd-discover → /ddd-decompose → /ddd-strategize → /ddd-connect → /ddd-define → /ddd-plan → /implement-plan
+```
+
+Or use `/ddd` for the complete end-to-end chain with real AskUserQuestion confirmation gates.
 
 ## Contributing
 
