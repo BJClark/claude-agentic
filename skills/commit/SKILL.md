@@ -1,6 +1,12 @@
 ---
+name: commit
 description: Create git commits with user approval and no Claude attribution
+model: sonnet
+disable-model-invocation: true
+allowed-tools: Read, Bash, AskUserQuestion
 ---
+
+**Flag**: This skill conflicts with the global harness instruction to append `Co-Authored-By: Claude` to commits. This skill sets `disable-model-invocation: true` to prevent model-level attribution. Per-repo behavior takes precedence; verify your CLAUDE.md or global settings don't override this.
 
 # Commit Changes
 
