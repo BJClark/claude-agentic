@@ -51,8 +51,6 @@ Present boundaries and validate each interactively:
 
 ```
 
-After presenting each proposed boundary, ask:
-
 After presenting each proposed boundary, get validation using AskUserQuestion:
 - **Boundary check**: Does the [Context Name] boundary grouping make sense?
 - Options should cover: grouping correct, blocks misplaced, should be split, should be merged

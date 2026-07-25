@@ -42,8 +42,6 @@ From shared events, identify all context pairs with direction.
 
 ### Step 4: Define Each Relationship Interactively
 
-For each context pair, present shared events and direction, then ask:
-
 For each context pair, present shared events and direction, then get a decision using AskUserQuestion:
 - **Pattern selection**: What integration pattern fits between [Context A] (upstream) and [Context B] (downstream)?
 - Options should include the most relevant patterns: Customer-Supplier, Conformist, ACL, Partnership

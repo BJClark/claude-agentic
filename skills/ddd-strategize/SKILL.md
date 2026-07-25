@@ -41,8 +41,6 @@ Explain the two axes (Business Differentiation x Model Complexity) and quadrants
 
 ### Step 3: Classify Each Sub-domain Interactively
 
-For each context, present the context description and ask:
-
 For each context, get classification using AskUserQuestion with two questions:
 - **Differentiation**: How differentiating is [Context Name] for the business? (High/Medium/Low)
 - **Complexity**: How complex is the domain model for [Context Name]? (High/Medium/Low)

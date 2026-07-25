@@ -3,7 +3,7 @@ name: critique
 description: "Critique code or a planned approach against a 33-principle checklist covering convention, domain language, DDD, structure, events vs callbacks, performance, six recurring root causes (rescue-the-universe, log-and-swallow, contract-test-by-internals, premature abstraction, premature-subscriber/YAGNI, framework-declaration tautology), and design-doc framing (goals-as-impact, right-size-the-design). Writes findings to a structured artifact for handoff to a planning skill — never modifies source, never prescribes a fix. Use when reviewing a PR, file, or branch, or when deciding how to structure code before writing it. Triggers on 'critique this', 'review this approach', 'is this idiomatic', 'check my structure', 'critique this PR'."
 model: opus
 context: fork
-allowed-tools: Read, Grep, Glob, Bash(git *:*), Bash(gh *:*), Bash(mkdir *:*), Task, Write
+allowed-tools: Read, Grep, Glob, Bash(git *:*), Bash(gh *:*), Bash(mkdir *:*), Write
 argument-hint: "[file-path | PR-url | #PR-num | \"approach description\"]"
 ---
 
@@ -86,7 +86,7 @@ For each applicable principle, ask its `review prompt` against the evidence. Emi
 - `should-fix`: idiom / convention miss with material maintainability cost (service object where a concern fits, verb-shaped controller action, boolean flag where a record belongs).
 - `consider`: stylistic or longer-term (callback chain that *could* be an event, primitive that *could* be a value object).
 
-Be sparing. A critique with 40 `consider` items is noise. Collapse related findings under the most apt principle.
+Report every finding you can anchor to evidence — do not filter for importance at this stage; the `severity` field and downstream consumer handle prioritization. Collapse only true duplicates (same evidence, same principle).
 
 ### 6. Write the artifact
 

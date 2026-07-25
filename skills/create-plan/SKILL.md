@@ -62,7 +62,7 @@ If the input references a Linear ticket (e.g. `ENG-1234`, `PLAT-56`, or a `thoug
 
 1. If user corrects misunderstanding, spawn new research to verify
 2. Create research todo list using TodoWrite
-3. Spawn parallel sub-tasks for targeted investigation
+3. Spawn at most 2 additional targeted sub-tasks, and only when a question needs a fan-out search across files you haven't already read. Otherwise investigate inline.
 4. Wait for ALL sub-tasks, then present findings with design options
 
 5. **Get structured decisions** using AskUserQuestion:
@@ -111,7 +111,7 @@ Goal: every phase gate is backed by an executable behavior check, compounding ve
 
 ### Step 4: Plan Structure Development (Vertical-First)
 
-1. **Default to vertical slices** — each phase delivers a thin end-to-end capability (one user story, one workflow, one scenario) cutting through every layer it touches. Phase 1 is the *walking skeleton*: the thinnest possible end-to-end path that exercises the full stack.
+1. **Default to vertical slices** — each phase delivers a thin end-to-end capability (one user story, one workflow, one scenario) cutting through every layer it touches. Phase 1 is the *walking skeleton*: the thinnest possible end-to-end path that exercises the full stack. Plan only the change that was asked for — adjacent improvements go in a "Not in scope" list, not a phase.
 2. **Apply the shippable-phase smoke test** to every candidate phase: *"If we shipped only this phase, what new thing could a user / caller / downstream system do that they couldn't before?"* If the answer is "nothing — it's foundation," merge it into the phase that consumes its output, or justify it explicitly as a named exception (see [references/slicing-strategy.md](references/slicing-strategy.md)).
 3. **Name phases by capability, not by layer.** `Phase 1: customer can submit a draft order` — yes. `Phase 1: order schema + repository` — no.
 4. **Horizontal phasing is the named exception.** Mark any horizontal phase with its justification: pure data migration with no behavior change, library upgrade, cross-cutting refactor, or a genuine technical precondition. Rare.
@@ -123,6 +123,8 @@ Goal: every phase gate is backed by an executable behavior check, compounding ve
 Write plan to `thoughts/shared/plans/YYYY-MM-DD-description.md` or `plans/YYYY-MM-DD-description.md`
 
 Use the template in [templates/plan-template.md](templates/plan-template.md).
+
+Each phase section covers what changes, why, and verification — no restated context, no summary sections, no padding.
 
 Always separate success criteria into **Automated Verification** and **Manual Verification**.
 
@@ -142,7 +144,7 @@ If a Linear ticket was detected in the input, automatically invoke `/linear-tick
 
 1. **Be Skeptical**: Question vague requirements, identify issues early, verify with code
 2. **Be Interactive**: Don't write full plan in one shot, get buy-in at each step
-3. **Be Thorough**: Read files completely, include file:line references, write measurable criteria
+3. **Be Precise**: Read files completely, include file:line references, write measurable criteria — without padding the plan beyond what's needed
 4. **Be Practical**: Incremental testable changes, consider migration/rollback
 5. **No Open Questions in Final Plan**: Research or ask immediately
 6. **Decide Before Writing**: Resolve technical decisions interactively before committing them to the plan, not after

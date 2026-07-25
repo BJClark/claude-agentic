@@ -213,7 +213,7 @@ After presenting results, if a Linear ticket was detected, automatically invoke 
 2. **User controls the browser**: When login, CAPTCHA, or sensitive actions are needed, always defer to the user. Never attempt to enter credentials
 3. **One criterion at a time**: Verify each acceptance criterion individually. Don't batch them — failures in batched checks are hard to diagnose
 4. **Evidence over assertion**: When reporting results, describe what you observed in the browser, not just whether it "passed". Include what was on screen, what the console said, what changed
-5. **Conservative verdicts**: When in doubt between PASS and PARTIAL, choose PARTIAL. False positives are worse than false negatives in QA
+5. **Prefer the harsher verdict when uncertain**: when torn between PASS and PARTIAL, record PARTIAL
 6. **No code changes**: This skill is pure verification. If a fix is needed, report it and let the user decide how to proceed
 7. **Console is your friend**: Always check the browser console after each action. Errors that don't manifest visually still matter
 8. **Workspace-aware**: Always use the correct workspace-namespaced Linear MCP tools and matching IDs from references/ids.md

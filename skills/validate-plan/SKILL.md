@@ -40,7 +40,7 @@ Contract:
    - Phase-by-phase implementation status (pass/fail)
    - Automated verification results (each command + pass/fail)
    - Deviations from plan (list each)
-   - Potential issues found
+   - Potential issues found — report every one you find, including low-severity or uncertain ones; do not pre-filter. Tag each with severity (critical/major/minor) and confidence (high/medium/low) so the summary in Step 3 can prioritize.
    - Manual testing steps required
 6. Return the full validation report as your output — nothing else
 ```
@@ -62,7 +62,7 @@ Present the qa-engineer's validation report inline. Add a brief executive summar
 
 ## Guidelines
 
-1. **Be thorough but practical** — focus on what matters
+1. **Report every deviation and potential issue found** — do not pre-filter for importance; severity/confidence tags let the reader prioritize
 2. **Run all automated checks** — don't skip verification commands
 3. **Think critically** — question if the implementation truly solves the problem
 

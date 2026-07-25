@@ -57,7 +57,7 @@ Then get scope details using AskUserQuestion:
 
 #### 1b. Research Conventions
 
-Spawn parallel research tasks:
+Spawn a research task:
 
 - **researcher** (code-investigation mode): Find skills similar to [skill-name] in `skills/` directory — read their SKILL.md files, note patterns for the same category; also analyze the frontmatter conventions, tool restrictions, and hook patterns across existing skills in `skills/`
 
@@ -137,7 +137,7 @@ argument-hint: [what user provides]
 The description is the most important field — it determines whether Claude loads the skill (guide, Ch.2). It must be specific and actionable, include trigger phrases users would actually say, and stay under 1024 characters. Avoid vague descriptions like "Helps with projects" or purely technical descriptions like "Implements the Project entity model."
 
 Follow these conventions from existing skills:
-- `model: opus` unless the skill is simple enough for a smaller model
+- Pick the model tier for what the skill actually needs: `sonnet` is the default for most workflow/orchestration skills; reserve `opus` for skills doing genuinely open-ended judgment (interface design, architecture critique, multi-agent coordination). Do not default to `opus` for simple or mechanical skills — Opus is more prone to scope creep and over-verification, so use the cheaper tier unless the task needs Opus's judgment.
 - **Do NOT set `context: fork`** if the skill uses `AskUserQuestion`. That tool is unavailable in subagents (see [Claude Code docs — Limitations](https://code.claude.com/docs/en/agent-sdk/user-input#limitations)). Leave `context` unset so the skill runs inline in the main session.
 - `allowed-tools`: Only include tools the skill actually needs. Common patterns:
   - Research-only: `Read, Grep, Glob, Bash(git *), TodoWrite`
@@ -219,46 +219,17 @@ Write any reference files to `skills/[skill-name]/references/`.
 
 #### 3d. Quality Checklist
 
-Verify against this checklist (combines repo conventions + guide Reference A):
+Check the handful of items that are genuinely mechanical and easy to get wrong — don't re-derive or narrate a full pass over everything else you just wrote:
 
-**Before you start** (guide, Ref A):
-- [ ] 2-3 concrete use cases identified
-- [ ] Tools identified (built-in or MCP)
-- [ ] Reviewed the guide and similar existing skills
-- [ ] Planned folder structure
-
-**During development**:
-- [ ] Folder name is kebab-case (no spaces, underscores, or capitals)
-- [ ] `SKILL.md` exists (exact spelling, exact case — no README.md inside skill folder)
-- [ ] YAML frontmatter has `---` delimiters
-- [ ] `name` field matches folder name
-- [ ] `description` follows guide formula: [What it does] + [When to use it] + trigger phrases (under 1024 chars)
-- [ ] `description` has no XML angle brackets (security restriction)
-- [ ] `allowed-tools` is minimal (no unnecessary tools)
-- [ ] `$ARGUMENTS` is referenced in the body
-- [ ] Current Context block uses `!` backtick git commands
-- [ ] Initial Response handles both with-params and no-params
-- [ ] Process steps are numbered and clear
-- [ ] Instructions are specific and actionable (not ambiguous)
-- [ ] AskUserQuestion is used for all decisions (not plain text questions)
-- [ ] AskUserQuestion options are specific (not generic yes/no)
-- [ ] Output paths follow existing conventions (`thoughts/shared/`, `research/`, etc.)
-- [ ] Error handling included with specific solutions
-- [ ] References clearly linked from SKILL.md
-- [ ] Guidelines section exists with constraints
-- [ ] No XML/HTML tags in content
-- [ ] Templates referenced with relative paths
+- [ ] Folder name is kebab-case; `name` field matches the folder name
+- [ ] `description` follows guide formula (what/when/trigger phrases), under 1024 chars, no XML angle brackets
+- [ ] `allowed-tools` is minimal — no unnecessary tools
+- [ ] No `context: fork` alongside `AskUserQuestion`
 - [ ] SKILL.md is under 5,000 words
-
-**Before shipping** (guide, Ref A):
-- [ ] Tested triggering on obvious tasks (skill loads when expected)
-- [ ] Tested triggering on paraphrased requests
-- [ ] Verified doesn't trigger on unrelated topics
-- [ ] Functional tests pass (valid outputs, error cases covered)
 
 #### 3e. Present Result
 
-Show the created files, line counts, invocation syntax, and completed quality checklist.
+Show the created files, line counts, and invocation syntax.
 
 **Human Review Gate**: Get final approval using AskUserQuestion:
 - **Final review**: Skill looks good?

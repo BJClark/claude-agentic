@@ -41,7 +41,7 @@ Then use AskUserQuestion: "Resume from Step N, or start fresh? (resume / fresh)"
 
 ## DDD Step Sequence
 
-Run each step in order. After each step completes, gate before proceeding.
+Run each step in order. After each step completes, gate before proceeding. For **every** step below, the same gate semantics apply: `yes` → proceed to the next step; `stop` → exit with a summary of what was completed; `redo` → re-invoke that same step's skill with the user's feedback, then gate again. This applies to Steps 2 through 6 even where the step's text doesn't restate it, and to Step 1's `stop` case. Step 7 is terminal — it ends the workflow rather than gating to a next step.
 
 ### Step 1: Align
 Invoke `Skill(ddd-align)` with:
@@ -86,10 +86,10 @@ Invoke `Skill(ddd-define)`.
 After completion, use AskUserQuestion:
 "Step 6 (Define) complete. Review `research/ddd/06-canvases.md`. Proceed to Step 7 (Plan)? (yes / stop / redo)"
 
-### Step 7: Plan
+### Step 7: Plan (terminal — no gate)
 Invoke `Skill(ddd-plan)`.
 
-After completion, present the final summary:
+After completion, present the final summary — there is no further step to gate into:
 
 ```
 DDD Discovery Workflow Complete!

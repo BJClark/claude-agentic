@@ -141,7 +141,7 @@ Brief-then-Ask whether to explore alternative interfaces:
 - **Brief**: *"grill-me surfaced 2 real open questions on the interface shape. 'Design it twice' runs 3 parallel subagents with different constraints (minimize surface / maximize flexibility / optimize common case) and compares. Worth ~5 min of wall time; produces a clearly-motivated interface."*
 - Options: `design-twice`, `skip-use-grilled-sketch`.
 
-If `design-twice`: follow [references/INTERFACE-DESIGN.md](references/INTERFACE-DESIGN.md) exactly. Spawn 3+ parallel Task subagents with different constraints, each producing a full interface proposal. Present sequentially, then compare by depth / locality / seam placement. Give your own opinionated recommendation. Brief-then-Ask to pick one (or propose a hybrid).
+If `design-twice`: follow [references/INTERFACE-DESIGN.md](references/INTERFACE-DESIGN.md) exactly. Spawn exactly 3 parallel Task subagents with different constraints (4 only when dependency category is 3 or 4), each producing a full interface proposal. Present sequentially, then compare by depth / locality / seam placement. Give your own opinionated recommendation. Brief-then-Ask to pick one (or propose a hybrid).
 
 ### Step 5: Side effects (inline)
 

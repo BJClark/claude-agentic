@@ -91,6 +91,8 @@ Initiative: {product_name}
 
 ### Step 3: Enrich with DDD (if available)
 
+Enrichment is capped to what the story map already implies: one bounded-context label, one linked domain event, one aggregate reference per story. Do not invent new stories or activities beyond what's in the story map.
+
 If DDD artifacts exist:
 
 1. **Labels from bounded contexts**: Read `research/ddd/03-sub-domains.md` for sub-domain/bounded context names. Each becomes a label candidate.
@@ -180,5 +182,5 @@ Ready for Linear build creation (via `/pm` when available in Phase 3).
 4. **One project per release**: Walking skeleton gets its own project, each numbered release gets one, future gets one
 5. **Milestones are activity-scoped**: Within the MVP project, each backbone activity with walking skeleton stories gets a milestone
 6. **State assignment is conservative**: When in doubt, use Backlog — it's better to start low than skip needed research
-7. **Descriptions are rich**: Include activity context, DDD enrichment, acceptance criteria, and opportunity linkage — everything the engineer needs
+7. **Descriptions are bounded**: 3-6 lines. Include activity context and acceptance criteria; link to DDD/opportunity artifacts by path rather than restating their content
 8. **Machine-readable output**: The build plan must be parseable by the downstream Linear build step — use consistent table formatting

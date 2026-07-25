@@ -102,7 +102,7 @@ Emit no other prose. Callers only need this single line.
 
 ## Guidelines
 
-1. **Silent by default**: the fork runs in a subagent — keep commentary minimal. Return the single status line.
+1. **Silent by default**: brevity applies to your final message only — return the single status line, nothing more. It does not mean skipping a required step: always Read the template, always create the parent directory before writing, always Write via the tool.
 2. **Deterministic**: same input produces the same output. Do not reword the caller's body.
 3. **Fail loudly and fast**: malformed input returns an error, never a partial write.
 4. **Preserve the body verbatim**: template substitution only touches `{{placeholder}}` tokens.

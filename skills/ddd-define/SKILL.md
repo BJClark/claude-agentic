@@ -61,13 +61,13 @@ After presenting the Bounded Context Canvas, get validation using AskUserQuestio
 
 Tailor options based on the specific canvas fields presented.
 
-**C. For core/supporting, present Aggregate Design Canvas** with: Enforced Invariants, Handled Commands, Created Events, State Lifecycle (Mermaid stateDiagram-v2), Correctness Criteria.
+**C. For core/supporting, present an Aggregate Design Canvas for every aggregate in this context** (not just the primary one) — one at a time, each with: Enforced Invariants, Handled Commands, Created Events, State Lifecycle (Mermaid stateDiagram-v2), Correctness Criteria.
 
-After presenting the Aggregate Design Canvas, get validation using AskUserQuestion:
+After presenting each Aggregate Design Canvas, get validation using AskUserQuestion:
 - **Aggregate review**: Does this Aggregate Design Canvas for [Aggregate Name] look correct?
 - Options should cover: canvas correct, wrong invariants, state lifecycle issues, missing information
 
-Tailor options based on the specific aggregate being reviewed. Wait for confirmation on each canvas before proceeding to the next context.
+Tailor options based on the specific aggregate being reviewed. Wait for confirmation on each aggregate's canvas before presenting the next aggregate in this context, and before proceeding to the next context.
 
 ### Step 4: Write Canvases Artifact
 

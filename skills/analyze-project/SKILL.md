@@ -111,4 +111,3 @@ If there are remaining concerns (flagged stories, cross-project gaps), list them
 6. **Respect scope boundaries**: Don't suggest stories that belong in sibling projects
 7. **Forward-looking**: Assess whether the plan is clear enough, not whether the current implementation is correct
 8. **No meta-questions**: Never ask "should I continue?" — use the defined gates. Never print questions as plain text — always use AskUserQuestion
-9. **Progress visibility**: Report progress during batch operations so the user knows what's happening

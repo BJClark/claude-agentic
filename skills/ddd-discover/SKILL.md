@@ -72,8 +72,6 @@ Tailor options to the specific flow being reviewed.
 
 ### Step 4: Fill Gaps Interactively
 
-For each gap found, present it clearly and ask:
-
 For each gap, present it clearly and get a decision using AskUserQuestion:
 - **Gap resolution**: How should we handle [this specific gap]?
 - Options should include: user will fill it in, out of scope, needs more research
