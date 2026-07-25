@@ -20,7 +20,7 @@ Snapshot relevant fields at end of each cycle into the status artifact's cycle b
 - every failing check in `statusCheckRollup[]`
 - any `mergeable == CONFLICTING` state
 
-Cycle 1 typically processes several events and produces multiple `AskUserQuestion` turns (one per reviewer ask). The cycle is not complete — and Step 4 must not schedule the cron — until each first-cycle event has been routed through the matrix below (addressed via plan-implementer, deferred to next cycle, or recorded under `### Needs your reply`).
+Cycle 1 typically processes several events and produces multiple `AskUserQuestion` turns (one per reviewer ask). The cycle is not complete — and Step 4 must not schedule the cron — until each first-cycle event has been routed through the matrix below (addressed via developer, deferred to next cycle, or recorded under `### Needs your reply`).
 
 ### Event types
 
@@ -82,7 +82,7 @@ Probing is done each cycle via `Read` of the relevant file (do not cache across 
 3. `AskUserQuestion`:
    - **CI failure**: `{checkName}` failed: `{summary-first-line}`. How to handle?
    - Options:
-     - *Spawn plan-implementer to investigate and fix* — dispatch per template below
+     - *Spawn developer to investigate and fix* — dispatch per template below
      - *Revert last commit* — `git revert HEAD && git push`; confirm with user before pushing
      - *Skip this check* — record in artifact; don't block on it; next cycle ignores this specific failure
      - *Pause babysit until I handle it* — CronDelete, update artifact state to `paused`
@@ -94,14 +94,14 @@ Probing is done each cycle via `Read` of the relevant file (do not cache across 
    - **Discussion / question** — interrogative, or concerns about approach that don't propose a specific change
    - **Blocker** — review state `CHANGES_REQUESTED` with specific asks
 
-2. **Check author first — bot vs human** (see "Bot comment auto-dispatch" below). If the author is a bot AND the intent is code-change or blocker, skip steps 3-4 entirely — dispatch `plan-implementer` immediately per the bot template. Do not draft an approach, do not ask the user.
+2. **Check author first — bot vs human** (see "Bot comment auto-dispatch" below). If the author is a bot AND the intent is code-change or blocker, skip steps 3-4 entirely — dispatch `developer` immediately per the bot template. Do not draft an approach, do not ask the user.
 
 3. For code-change or blocker (human authors only): draft a proposed approach (1-3 sentences). Do NOT write code yet.
 
 4. `AskUserQuestion` (human authors only):
    - **Review comment**: Reviewer `{author}` on `{file}:{line}`: "{comment-excerpt}". My proposed approach: `{approach}`. What next?
    - Options:
-     - *Apply my approach* — spawn plan-implementer with the approach as the plan
+     - *Apply my approach* — spawn developer with the approach as the plan
      - *Modify approach* — user provides alternate; re-ask with the new approach
      - *Defer to next cycle* — record in artifact `Outstanding`, move on
      - *I'll handle it manually* — record in artifact `Needs your reply`, don't touch
@@ -110,7 +110,7 @@ Probing is done each cycle via `Read` of the relevant file (do not cache across 
 
 ## Bot comment auto-dispatch
 
-**Standing order (set by the user):** bot review comments are always addressed immediately via `plan-implementer` without `AskUserQuestion`. The user does not want to be prompted for each bot nit — they want them cleared as they arrive.
+**Standing order (set by the user):** bot review comments are always addressed immediately via `developer` without `AskUserQuestion`. The user does not want to be prompted for each bot nit — they want them cleared as they arrive.
 
 ### Bot detection
 
@@ -128,7 +128,7 @@ Each cycle, after fetching review state:
 
 1. Build the list of **outstanding bot code-change comments** — every bot-authored `comments[]` entry or review-thread comment that (a) is a code-change or blocker per step 1 of `review-new`, (b) is unresolved (thread not marked resolved), and (c) has not already been addressed by a commit in this PR (check via `Outstanding` entries in the artifact and commit subjects ending in `(babysit-pr bot: <comment-id>)`).
 2. Order by `createdAt` ascending (oldest first).
-3. Process **sequentially**: dispatch one `plan-implementer` via `Task`, await the return, record the outcome, then dispatch the next. Do not parallelize — the fixes touch overlapping files and plan-implementer's own git writes would race.
+3. Process **sequentially**: dispatch one `developer` via `Task`, await the return, record the outcome, then dispatch the next. Do not parallelize — the fixes touch overlapping files and developer's own git writes would race.
 
 ### Dispatch template (bot comment)
 
@@ -163,7 +163,7 @@ Constraints:
 
 ### Anti-loop guard
 
-Before dispatching, read the **Bot dispatch ledger** in the status artifact. If the row for this `comment-id` shows `dispatches >= 2` and the bot is still posting on it, stop auto-dispatching and escalate via `AskUserQuestion` (options: *try one more time with extra context*, *mark wontfix*, *I'll handle manually*). Record a tripwire entry under `### Needs your reply`. Prevents infinite plan-implementer churn when a bot disagrees with the fix or the fix doesn't satisfy the bot's heuristic.
+Before dispatching, read the **Bot dispatch ledger** in the status artifact. If the row for this `comment-id` shows `dispatches >= 2` and the bot is still posting on it, stop auto-dispatching and escalate via `AskUserQuestion` (options: *try one more time with extra context*, *mark wontfix*, *I'll handle manually*). Record a tripwire entry under `### Needs your reply`. Prevents infinite developer churn when a bot disagrees with the fix or the fix doesn't satisfy the bot's heuristic.
 
 ### `conflict`
 
@@ -171,7 +171,7 @@ Before dispatching, read the **Bot dispatch ledger** in the status artifact. If 
 2. `AskUserQuestion`:
    - **Merge conflict**: PR has conflicts with `{baseRefName}`. How to resolve?
    - Options:
-     - *Spawn plan-implementer to rebase and resolve* — dispatch with rebase context
+     - *Spawn developer to rebase and resolve* — dispatch with rebase context
      - *Defer* — record outstanding; skip until a future cycle
      - *Pause babysit until I resolve* — CronDelete, state → paused
 
@@ -183,9 +183,9 @@ See SKILL.md Step 5. Offer merge via `AskUserQuestion`.
 
 Terminal. Go to SKILL.md Step 5 cleanup.
 
-## plan-implementer dispatch — prompt templates
+## developer dispatch — prompt templates
 
-When spawning `plan-implementer` via `Task` (`subagent_type: "plan-implementer"`):
+When spawning `developer` via `Task` (`subagent_type: "developer"`):
 
 ### For CI failure investigation
 

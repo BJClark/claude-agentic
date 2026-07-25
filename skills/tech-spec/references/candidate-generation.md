@@ -2,9 +2,10 @@
 
 Referenced from `SKILL.md` Step 3. Use these prompts verbatim (with placeholders filled) when spawning `Task` subagents to surface candidate approaches.
 
-## codebase-pattern-finder
+## researcher (code-investigation mode)
 
 ```
+Mode: code-investigation
 Task: find prior solutions to problems analogous to "<problem statement>".
 
 Context:
@@ -20,9 +21,10 @@ What to do:
 Do NOT propose a design. Just surface prior art with file:line evidence.
 ```
 
-## artifacts-analyzer
+## researcher (artifact-research mode)
 
 ```
+Mode: artifact-research
 Task: mine research/, plans/, and .jeff/ for prior decisions adjacent to "<problem statement>".
 
 Look for:
@@ -36,7 +38,7 @@ For each relevant artifact, return: path, date, one-line relevance, and the spec
 Do NOT synthesize. Just collect and cite.
 ```
 
-## web-search-researcher (pattern) — conditional
+## researcher (web-research mode, pattern) — conditional
 
 Only spawn this if the problem has a recognizable industry pattern (event sourcing, CQRS, SAGA, strangler fig, CDC, outbox, feature flagging, blue-green deploy, ship-of-theseus migration, etc.).
 
@@ -53,7 +55,7 @@ For each source, return: URL, author, one-paragraph summary of what it says, and
 Skip vendor marketing, intro-level blog posts that only describe the pattern abstractly, and AI-generated content farms.
 ```
 
-## web-search-researcher (prior art / OSS) — ALWAYS RUN
+## researcher (web-research mode, prior art / OSS) — ALWAYS RUN
 
 This one runs every spec. Its job is to surface "someone already built this" candidates so **adopt-don't-build** becomes a first-class candidate on the slate, not an afterthought.
 

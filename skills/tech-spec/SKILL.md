@@ -7,6 +7,8 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, 
 argument-hint: [linear-ticket-or-pr-number]
 ---
 
+You are operating in **Architect mode** — your role is to design interfaces and boundaries with the user.
+
 # Tech Spec
 
 Ultrathink about the design space before writing anything. A tech spec is not a plan — it is a *decision artifact*. Its job is to make the "which approach" choice visible: to surface the 2–4 real options (including "adopt something that already exists"), to state the tradeoffs in the user's terms with concrete numbers, and to record which one was chosen and why. Plans execute a choice; specs make it.
@@ -128,15 +130,15 @@ Persist the final scoping answers; they go into the artifact's `Scoping` section
 **Size-gated** per `references/complexity-triage.md`:
 
 - **Light**: 1 approach. **Skip all subagents.** Sketch the approach inline from user input + Step 1 bundle. If you can't sketch a clear approach in 2 sentences, stop and offer an upgrade to Standard.
-- **Standard**: 2 approaches. Spawn **codebase-pattern-finder** only. Run the **OSS web search** only if the problem category matches a known primitive (queue, cache, search, workflow engine, feature flag, CDC, auth, scheduler, job runner, pub/sub, rate limiter, secrets). Otherwise skip it.
-- **Heavy**: 2–4 approaches. Spawn all 4 subagents in parallel (below).
+- **Standard**: 2 approaches. Spawn **researcher** (code-investigation mode) only. Run the **OSS web search** only if the problem category matches a known primitive (queue, cache, search, workflow engine, feature flag, CDC, auth, scheduler, job runner, pub/sub, rate limiter, secrets). Otherwise skip it.
+- **Heavy**: 2–4 approaches. Spawn all subagents in parallel (below).
 
 Subagents available (prompts in [references/candidate-generation.md](references/candidate-generation.md)):
 
-- **codebase-pattern-finder** — prior solutions to analogous problems in this repo.
-- **artifacts-analyzer** — prior research/specs/DDD artifacts bearing on this area.
-- **web-search-researcher (prior art / OSS)** — always on for Heavy; conditional on category-match for Standard; skipped for Light. Produces adopt/fork/build-inspired candidates from OSS & SaaS landscape.
-- **web-search-researcher (pattern)** — only if a named industry pattern applies (event sourcing, CQRS, SAGA, CDC, strangler fig, outbox, etc.).
+- **researcher** (code-investigation mode) — prior solutions to analogous problems in this repo (patterns/examples).
+- **researcher** (artifact-research mode) — prior research/specs/DDD artifacts bearing on this area.
+- **researcher** (web-research mode, prior art / OSS) — always on for Heavy; conditional on category-match for Standard; skipped for Light. Produces adopt/fork/build-inspired candidates from OSS & SaaS landscape.
+- **researcher** (web-research mode, pattern) — only if a named industry pattern applies (event sourcing, CQRS, SAGA, CDC, strangler fig, outbox, etc.).
 
 Synthesize into **2–4 genuinely different candidates**, each with: name, 1-paragraph sketch, key tradeoff, effort (S/M/L/XL), risks, reversibility. Adopt-OSS candidates must include: license, scale evidence, custom delta, gotchas. See candidate-generation.md synthesis checklist.
 

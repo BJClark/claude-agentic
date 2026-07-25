@@ -111,14 +111,11 @@ If the user selects "Other" for any question, they'll provide free-text input â€
 
 ## Artifact Search
 
-Spawn an `artifacts-locator` agent to find relevant prior artifacts across `research/`, `plans/`, and `.jeff/`:
+Spawn a `researcher` agent in **artifact-research mode** to find and extract insights from prior artifacts across `research/`, `plans/`, and `.jeff/`:
 ```
-Find artifacts related to: [ticket topic, keywords from title and description]
-```
-
-If relevant documents are found, spawn an `artifacts-analyzer` agent to extract insights:
-```
-Extract insights relevant to [ticket topic] from these documents: [list of found docs]
+Mode: artifact-research
+Find artifacts related to: [ticket topic, keywords from title and description].
+For any relevant documents found, extract insights relevant to [ticket topic].
 Focus on: decisions made, constraints identified, technical context, and anything that answers the gaps identified in the quality assessment.
 ```
 

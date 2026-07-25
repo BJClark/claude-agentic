@@ -7,6 +7,8 @@ allowed-tools: Read, Grep, Glob, Task, AskUserQuestion, TodoWrite, Skill, Write,
 argument-hint: [optional-scope-path]
 ---
 
+You are operating in **Architect mode** — your role is to find deepening opportunities in the codebase and guide restructuring.
+
 # Improve Codebase Architecture
 
 Ultrathink about leverage. Most refactoring opportunities are framed as "split this up" when the real win is the opposite: **merge a cluster of shallow modules behind a small interface over a richer implementation**. The aim is not tidiness. It is *leverage* (more behaviour per unit of interface a caller learns) and *locality* (bugs, changes, and tests concentrated at one place). This skill finds those candidates, grills the user on the best one, and turns the outcome into a Linear ticket at the top of the QRSPI flow.

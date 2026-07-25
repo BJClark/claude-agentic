@@ -126,7 +126,8 @@ Create `research/ddd/` directory if it doesn't exist.
 Alignment artifact written to `research/ddd/01-alignment.md`.
 
 Next step: Run `/ddd-discover` to perform EventStorming.
-Or invoke the `ddd-architect` agent for the complete end-to-end DDD workflow.
+Or run `/ddd` for the complete end-to-end DDD workflow.
+# TODO(phase3): the orchestrating agent is removed — wire to inline ddd skill in Phase 3
 ```
 
 ## Guidelines

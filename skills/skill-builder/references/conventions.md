@@ -92,13 +92,12 @@ hooks:
 
 ## Sub-Agent Types
 
-Available for Task tool:
-- `codebase-locator`: Find WHERE files/components live
-- `codebase-analyzer`: Understand HOW code works
-- `codebase-pattern-finder`: Find similar patterns/examples
-- `artifacts-locator`: Find relevant documents across research/, plans/, .jeff/
-- `artifacts-analyzer`: Extract insights from those documents
-- `web-search-researcher`: External docs/resources
+Available for Task tool (see `references/ROLES.md` for the full role taxonomy):
+- `scout`: Find WHERE files/components live (codebase and artifact directories); returns paths + line numbers only
+- `researcher`: Investigate code, prior artifacts, or the web. Specify mode in the prompt: `code-investigation` (HOW code works, patterns/examples), `artifact-research` (find and extract insights from research/, plans/, .jeff/), or `web-research` (external docs/resources)
+- `developer`: Implement a plan phase or apply a scoped fix; returns structured report
+- `qa-engineer`: Execute and test completed work; returns findings
+- `architect`: Batch design-it-twice worker; produce one alternative interface under a stated constraint
 
 ## Anti-Patterns
 

@@ -6,6 +6,8 @@ allowed-tools: Read, Grep, Glob, Write, Edit, Task, AskUserQuestion, TodoWrite, 
 argument-hint: [ticket-or-description]
 ---
 
+You are operating in **Architect mode** — your role is to design a phased implementation plan with the user.
+
 # Implementation Plan
 
 Create detailed implementation plans through an interactive, iterative process. Be skeptical, thorough, and work collaboratively with the user.
@@ -49,10 +51,9 @@ If the input references a Linear ticket (e.g. `ENG-1234`, `PLAT-56`, or a `thoug
 
 1. **Read mentioned files FULLY** (no limit/offset)
 2. **Spawn parallel research tasks**:
-   - **codebase-locator**: Find related files
-   - **codebase-analyzer**: Understand current implementation
-   - **codebase-pattern-finder**: Find similar features — for at least one, return the **full vertical path** (e.g. DB migration → repository → service → API endpoint → UI/consumer) so new phases can be modeled on an existing end-to-end slice
-   - **artifacts-locator**: Find existing research, plans, and .jeff/ discovery artifacts
+   - **scout**: Find related files
+   - **researcher** (code-investigation mode): Understand current implementation; find similar features — for at least one, return the **full vertical path** (e.g. DB migration → repository → service → API endpoint → UI/consumer) so new phases can be modeled on an existing end-to-end slice
+   - **researcher** (artifact-research mode): Find existing research, plans, and .jeff/ discovery artifacts
 3. **Read all identified files FULLY**
 4. **Analyze and verify**: Cross-reference requirements with actual code
 5. **Present informed understanding** with findings and unanswered questions

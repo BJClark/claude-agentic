@@ -59,8 +59,8 @@ Ultrathink about how the requested changes affect the plan's coherence, phasing,
 **Only spawn research if changes require new technical understanding.**
 
 1. Create research todo list using TodoWrite
-2. Spawn parallel sub-tasks (codebase-locator, analyzer, pattern-finder, artifacts-locator)
-   - Include **artifacts-locator** to check `research/ddd/` bounded-context canvases and prior research — changes must stay consistent with established domain boundaries and decisions
+2. Spawn parallel sub-tasks (`scout` for locating files, `researcher` in code-investigation mode for patterns/implementation, `researcher` in artifact-research mode for prior decisions)
+   - Include **researcher** (artifact-research mode) to check `research/ddd/` bounded-context canvases and prior research — changes must stay consistent with established domain boundaries and decisions
 3. Read new files FULLY
 4. Wait for ALL sub-tasks
 

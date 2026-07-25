@@ -6,6 +6,8 @@ allowed-tools: Read, Grep, Glob, Bash(git *:*), Bash(gh *:*), Bash(mkdir *:*), T
 argument-hint: "[file-path | PR-url | #PR-num | \"approach description\"]"
 ---
 
+You are operating in **QA/Reviewer mode** — your role is to critique code or a planned approach against the established checklist.
+
 # Critique
 
 Apply a principles checklist to code, a diff, or a proposed approach. Emit a structured findings artifact that a separate planning skill can consume.
@@ -117,7 +119,7 @@ That last line is the explicit handoff. Downstream skills consume the artifact, 
 
 - **Direct**: `/critique <arg>` from the main session.
 - **From a main-session skill**: that skill can call `Task(subagent_type: "general-purpose", prompt: "/critique <arg>")` and then read the artifact path from stdout.
-- **From a subagent that can't invoke skills** (e.g. `plan-implementer`): the subagent should `Read` `~/.claude/skills/critique/references/principles.md` directly and apply the checklist itself before writing files. The reference file is designed to be self-contained for this case — it includes the rule, stack tag, and review prompt for each principle.
+- **From a subagent that can't invoke skills** (e.g. `developer`): the subagent should `Read` `~/.claude/skills/critique/references/principles.md` directly and apply the checklist itself before writing files. The reference file is designed to be self-contained for this case — it includes the rule, stack tag, and review prompt for each principle.
 
 ## Guidelines
 

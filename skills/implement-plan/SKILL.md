@@ -10,7 +10,7 @@ argument-hint: [plan-file-path]
 
 Implement the approved technical plan at: **$ARGUMENTS**
 
-You are an orchestrator. Each phase of the plan is implemented by a `plan-implementer` subagent in an isolated context — your job is to delegate, gate, and sync. Do NOT read implementation files, make edits, or run verification yourself; the subagent does that and returns a compact report.
+You are an orchestrator. Each phase of the plan is implemented by a `developer` subagent in an isolated context — your job is to delegate, gate, and sync. Do NOT read implementation files, make edits, or run verification yourself; the subagent does that and returns a compact report.
 
 ## Current Context
 
@@ -31,9 +31,9 @@ For each phase you intend to implement:
 
 ### 1. Delegate implementation
 
-Spawn a `plan-implementer` subagent via the `Task` tool:
+Spawn a `developer` subagent via the `Task` tool:
 
-- `subagent_type`: `"plan-implementer"`
+- `subagent_type`: `"developer"`
 - `description`: short, e.g. `"Implement phase N of <plan>"`
 - `prompt`: include
   - Absolute path to the plan file
@@ -60,7 +60,7 @@ Use `AskUserQuestion` to gate progression:
 
 If the user asked you to execute multiple phases consecutively, skip the gate until the last one. Otherwise assume one phase per invocation.
 
-Do not tick manual-verification checkboxes in the plan yourself — only do so after the user confirms the manual steps passed, by spawning a short `plan-implementer` task to tick them (or ask the user to confirm and then use `Edit` on the plan once, if that's cheaper).
+Do not tick manual-verification checkboxes in the plan yourself — only do so after the user confirms the manual steps passed, by spawning a short `developer` task to tick them (or ask the user to confirm and then use `Edit` on the plan once, if that's cheaper).
 
 ## Resuming Work
 

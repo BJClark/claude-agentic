@@ -59,8 +59,7 @@ Then get scope details using AskUserQuestion:
 
 Spawn parallel research tasks:
 
-- **codebase-pattern-finder**: Find skills similar to [skill-name] in `skills/` directory — read their SKILL.md files, note patterns for the same category
-- **codebase-analyzer**: Analyze the frontmatter conventions, tool restrictions, and hook patterns across existing skills in `skills/`
+- **researcher** (code-investigation mode): Find skills similar to [skill-name] in `skills/` directory — read their SKILL.md files, note patterns for the same category; also analyze the frontmatter conventions, tool restrictions, and hook patterns across existing skills in `skills/`
 
 #### 1c. Define Requirements
 

@@ -65,7 +65,7 @@ Follow the checklist to:
 2. **Assess current ticket quality** against the Core criteria table (problem, actors, acceptance, out-of-scope, dependencies, size, edge cases, observability, context, ambiguities). These are always checked.
 3. **Pick contextual criteria** that apply given the ticket type — design link, a11y/i18n, NFRs, rollout/flag, data impact, PII/compliance, repro steps, deliverable shape. Skip the ones that don't apply; don't pad the skill with irrelevant questions.
 4. **Size check (INVEST-Small)** — if the ticket looks larger than one sprint, flag it via AskUserQuestion *before* drilling into clarifications. An oversized ticket should be split before enrichment, not enriched whole.
-5. **Search existing artifacts** for relevant context (via `artifacts-locator` / `artifacts-analyzer` agents).
+5. **Search existing artifacts** for relevant context (via `researcher` agent in artifact-research mode).
 6. **Work through gaps** interactively using AskUserQuestion. Apply the Brief-then-Ask pattern — every question carries enough context that the user can answer without scrolling back: brief in prose first, then AskUserQuestion with options whose descriptions restate the substance.
 7. **Preview proposed additions** and get confirmation.
 8. **Update the ticket** (append only, never overwrite).

@@ -50,9 +50,9 @@ If user mentions specific files, read them FULLY (no limit/offset) before procee
 Use the Task tool to spawn these sub-agent types in parallel:
 
 **Codebase Research:**
-- **codebase-locator**: Find WHERE files/components live
-- **codebase-analyzer**: Understand HOW code works
-- **codebase-pattern-finder**: Find similar patterns/examples
+- **scout**: Find WHERE files/components live
+- **researcher** (code-investigation mode): Understand HOW code works
+- **researcher** (code-investigation mode): Find similar patterns/examples
 
 **Executable Specification Surface (always run):**
 Spawn a dedicated locator/analyzer pass to detect any outside-in / BDD test harness and document it. Look for Cucumber/Gherkin `.feature` files, pytest-bdd, RSpec feature or request specs, Playwright + cucumber-preprocessor, Cypress + cucumber-preprocessor, Behave, Jest-cucumber, Capybara, Robot Framework, or any custom acceptance-test runner. Capture:
@@ -67,11 +67,10 @@ Spawn a dedicated locator/analyzer pass to detect any outside-in / BDD test harn
 If **no** outside-in harness exists, state that explicitly in the research document — do not stay silent. This signal gates planning strategy downstream.
 
 **Prior artifacts** (research/, plans/, .jeff/):
-- **artifacts-locator**: Find relevant documents
-- **artifacts-analyzer**: Extract insights
+- **researcher** (artifact-research mode): Find relevant documents and extract insights
 
 **External** (if explicitly requested):
-- **web-search-researcher**: External docs/resources
+- **researcher** (web-research mode): External docs/resources
 
 Run agents in parallel when investigating independent areas.
 

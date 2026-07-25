@@ -59,7 +59,7 @@ Detect mode first:
    - **If exists**: we're re-attaching to an already-babysat PR. Read it to recover `cron_job_id`, `scope_files`, previous cycle state, and outstanding todos. Skip step 4 below (scope already frozen), skip **Step 2** (QA already ran), and re-set the goal in step 5 before jumping to **Step 3**.
    - **If not**: create the artifact (see "Status artifact format" below) and continue to step 4.
 
-4. **Freeze scope.** Capture the set of files the PR currently touches — this anchors anti-drift for every plan-implementer dispatch:
+4. **Freeze scope.** Capture the set of files the PR currently touches — this anchors anti-drift for every developer dispatch:
    ```
    gh pr diff <PR.number> --name-only
    ```
@@ -68,7 +68,7 @@ Detect mode first:
 5. **Set the session goal.** This is what lets the loop run unattended between user check-ins:
 
    ```
-   /goal PR #<n> is merged, OR a tripwire is recorded under "Needs your reply" in thoughts/shared/prs/babysit-<n>.md. Mergeable means: all CI checks green, no unresolved review threads, no merge conflicts. Tripwires: any commit in this session modifies a file outside scope_files; any bot comment-id has been auto-dispatched 2+ times; any plan-implementer returns status: off-topic or status: blocked; the user has been asked a question that is still unanswered.
+   /goal PR #<n> is merged, OR a tripwire is recorded under "Needs your reply" in thoughts/shared/prs/babysit-<n>.md. Mergeable means: all CI checks green, no unresolved review threads, no merge conflicts. Tripwires: any commit in this session modifies a file outside scope_files; any bot comment-id has been auto-dispatched 2+ times; any developer returns status: off-topic or status: blocked; the user has been asked a question that is still unanswered.
    ```
 
    The evaluator (Haiku) reads the transcript and the status artifact after every turn; if the condition isn't met, another turn fires automatically. Combined with auto mode this is what makes `babysit-pr` genuinely unattended — the model can't quietly exit halfway through cycle 1 because the goal hasn't cleared.
@@ -85,7 +85,7 @@ If QA reports blocking failures, ask with `AskUserQuestion`:
 
 ### Step 3: Run one cycle
 
-Delegate the full event-handling matrix to the reference: see **[references/cycle-logic.md](references/cycle-logic.md)** for the complete (CI × review × merge-state) branching, the trivial-autofix whitelist, and the plan-implementer dispatch prompt templates.
+Delegate the full event-handling matrix to the reference: see **[references/cycle-logic.md](references/cycle-logic.md)** for the complete (CI × review × merge-state) branching, the trivial-autofix whitelist, and the developer dispatch prompt templates.
 
 High-level:
 
@@ -99,12 +99,12 @@ High-level:
 
 3. **For each new event, route through references/cycle-logic.md**:
    - CI red + trivial → inline autofix detection (probe `package.json` scripts, `Makefile`, `Cargo.toml`, etc.) → run → commit → push. No AskUserQuestion.
-   - CI red + non-trivial → AskUserQuestion (spawn plan-implementer / revert / skip / pause)
+   - CI red + non-trivial → AskUserQuestion (spawn developer / revert / skip / pause)
    - New review comment needing code change:
-     - **Bot author** (see "Bot comment auto-dispatch" below) → **no AskUserQuestion**. Dispatch `Task(plan-implementer)` immediately. If multiple bot comments are outstanding, process them **sequentially** — one `plan-implementer` task per comment, awaiting each before starting the next. Never post a reply via `gh pr review`.
-     - **Human author** → AskUserQuestion approach confirmation → Task(plan-implementer). Never post a reply via `gh pr review`.
+     - **Bot author** (see "Bot comment auto-dispatch" below) → **no AskUserQuestion**. Dispatch `Task(developer)` immediately. If multiple bot comments are outstanding, process them **sequentially** — one `developer` task per comment, awaiting each before starting the next. Never post a reply via `gh pr review`.
+     - **Human author** → AskUserQuestion approach confirmation → Task(developer). Never post a reply via `gh pr review`.
    - New review comment needing textual reply → append to status artifact under `### Needs your reply`. Do not respond.
-   - Merge conflict → AskUserQuestion (resolve via plan-implementer / defer / pause)
+   - Merge conflict → AskUserQuestion (resolve via developer / defer / pause)
    - Mergeable (CI green + no unresolved reviews + no conflicts) → **Step 5**.
 
 4. **TodoWrite** every outstanding item: failing checks still red, review comments not yet addressed, deferred decisions. Persist equivalent entries in the status artifact so the next cron fire can see them.
@@ -183,8 +183,8 @@ scope_files:
 **New events**:
 - review-comment #r1: "rename `fooBar` → `foo_bar` in 3 files"
 **Actions taken**:
-- Asked user; approved plan-implementer dispatch
-- Spawned plan-implementer → committed 8dadb24 "fix: rename fooBar to foo_bar (babysit-pr)" → pushed
+- Asked user; approved developer dispatch
+- Spawned developer → committed 8dadb24 "fix: rename fooBar to foo_bar (babysit-pr)" → pushed
 **Outstanding**:
 - Merge conflict with main (new commits on main since branch)
 - CI check `integration-tests` still pending
@@ -208,21 +208,21 @@ Re-fires consult the ledger first: any `comment-id` with `dispatches >= 2` trigg
 1. **Never reply to review comments in the user's voice.** The only permitted GitHub write actions are: `gh pr merge` (after explicit user choice), `git commit` + `git push` (for approved code changes). `gh pr review --comment`, `gh pr comment`, and `gh pr review --approve|--request-changes` are **forbidden**.
 2. **Auto-run whitelist.** The following run without `AskUserQuestion`:
    - The detected repo autofix command (one of `pnpm lint --fix`, `pnpm format`, `make fmt`, `cargo fmt`, `yarn lint --fix`, `npm run format`), plus the final `git commit -m "fix: ... (babysit-pr)"` + `git push` immediately following a successful autofix.
-   - **Bot review comments**: standing order to dispatch `plan-implementer` for every bot-authored review comment or review-thread comment requesting a code change. Process bot comments **sequentially** — one plan-implementer task at a time, awaiting each before starting the next. See "Bot comment auto-dispatch" in `references/cycle-logic.md` for detection rules and dispatch template. Do **not** ask the user between bot comments; only escalate if a plan-implementer returns `status: blocked`.
+   - **Bot review comments**: standing order to dispatch `developer` for every bot-authored review comment or review-thread comment requesting a code change. Process bot comments **sequentially** — one developer task at a time, awaiting each before starting the next. See "Bot comment auto-dispatch" in `references/cycle-logic.md` for detection rules and dispatch template. Do **not** ask the user between bot comments; only escalate if a developer returns `status: blocked`.
    - Everything else still asks.
-3. **No direct source edits.** The skill never calls `Edit` or `Write` on source files. For any code change, delegate to a `plan-implementer` `Task` subagent. `Write`/`Edit` are scoped to the status artifact at `thoughts/shared/prs/babysit-<n>.md`.
+3. **No direct source edits.** The skill never calls `Edit` or `Write` on source files. For any code change, delegate to a `developer` `Task` subagent. `Write`/`Edit` are scoped to the status artifact at `thoughts/shared/prs/babysit-<n>.md`.
 4. **Off-minute cron.** Use `*/17 * * * *` and `*/47 * * * *`, never `*/15` or `*/30` or `0 * * * *`. Avoids fleet-wide API pile-ups; `CronCreate`'s own jitter is insufficient on its own.
 5. **7-day auto-expiry.** Recurring cron jobs die after 7 days. If the PR isn't merged by then, the skill must be re-invoked. Mention this to the user on first schedule.
 6. **Cycle idempotency.** A cycle might fire on the same PR state twice (cron retry after missed fire). Always diff against the last cycle block in the artifact; if nothing is new, record an empty cycle and exit the cycle body cleanly.
 7. **Terminal closure recovery.** Because `durable: true`, the cron job persists. When Claude restarts, the job will fire and re-enter the skill in cycle mode. If for any reason it doesn't, the user re-invoking `/babysit-pr <n>` will find the existing artifact and reattach in Step 1.
 8. **Linear sync on terminal only.** Don't sync mid-cycle; only on merged / closed / paused via `/linear-ticket-status-sync`.
 9. **The `/goal` is the completion contract.** Step 1's goal — not prose in this file — is what keeps the loop running until the PR is merged or a tripwire fires. Do not call `/goal clear` unless terminating the babysit. If the goal evaluator stops firing turns and the artifact still shows outstanding events, the goal condition was written too permissively — tighten it on re-attach rather than papering over it with extra prose here.
-10. **Scope-frozen bot dispatches.** Every plan-implementer dispatched for a bot comment carries the `scope_files` set as a hard constraint. Off-topic returns escalate to the user; they don't get re-dispatched. This is what stops Claude-bot "consider extracting this" comments from spiraling into 12-file refactors.
+10. **Scope-frozen bot dispatches.** Every developer dispatched for a bot comment carries the `scope_files` set as a hard constraint. Off-topic returns escalate to the user; they don't get re-dispatched. This is what stops Claude-bot "consider extracting this" comments from spiraling into 12-file refactors.
 
 ## Troubleshooting
 
 - **`gh: no default remote`** → instruct the user: `gh repo set-default`, then retry.
 - **Cron job not firing** → `CronList` to verify. If missing, recreate. If present but idle, the REPL has been mid-response continuously — this is rare; surface to the user.
-- **`plan-implementer` returns `status: blocked`** → do not spawn another; surface the blocker to the user via `AskUserQuestion` with options: *retry with more context*, *I'll handle manually*, *defer*, *pause babysit*.
+- **`developer` returns `status: blocked`** → do not spawn another; surface the blocker to the user via `AskUserQuestion` with options: *retry with more context*, *I'll handle manually*, *defer*, *pause babysit*.
 - **Autofix command detection fails** (no known script in package.json / no Makefile target) → do not guess. `AskUserQuestion` with options: *Provide the command*, *Treat as non-trivial CI failure*, *Skip this check*.
 - **Two cron jobs for the same PR** (stale from a previous session) → on re-attach, `CronList`, identify duplicates by matching the `/babysit-pr <n> cycle` prompt, `CronDelete` all but the newest, update the artifact's `cron_job_id`.

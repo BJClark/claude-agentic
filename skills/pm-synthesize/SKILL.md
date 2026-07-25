@@ -6,11 +6,14 @@ allowed-tools: Read, Grep, Glob, Write, Edit, AskUserQuestion, Task
 argument-hint: [story-map-path]
 ---
 
+You are operating in **Product Manager mode** — your role is to synthesize story maps and DDD artifacts into a build plan.
+
 # PM Synthesize: Artifacts to Build Plan
 
 Ultrathink about how the story map structure maps to Linear's hierarchy. Consider how DDD artifacts enrich the stories with bounded context labels and domain language. Think about which stories have enough detail for which workflow states.
 
-Reads Jeff product discovery artifacts and optional DDD domain artifacts, then produces a machine-readable build plan at `research/pm/build-plan.md` for the pm-architect agent to execute against Linear.
+Reads Jeff product discovery artifacts and optional DDD domain artifacts, then produces a machine-readable build plan at `research/pm/build-plan.md` for Linear creation.
+# TODO(phase3): the orchestrating agent is removed — wire Linear build execution to inline pm skill in Phase 3
 
 **Input**: $ARGUMENTS
 
@@ -166,7 +169,7 @@ Summary:
 - {n} milestones
 - {n} issues ({x} Backlog, {y} Todo, {z} Ready for Research)
 
-Ready for the pm-architect agent to build in Linear.
+Ready for Linear build creation (via `/pm` when available in Phase 3).
 ```
 
 ## Guidelines
@@ -178,4 +181,4 @@ Ready for the pm-architect agent to build in Linear.
 5. **Milestones are activity-scoped**: Within the MVP project, each backbone activity with walking skeleton stories gets a milestone
 6. **State assignment is conservative**: When in doubt, use Backlog — it's better to start low than skip needed research
 7. **Descriptions are rich**: Include activity context, DDD enrichment, acceptance criteria, and opportunity linkage — everything the engineer needs
-8. **Machine-readable output**: The build plan must be parseable by the pm-architect agent — use consistent table formatting
+8. **Machine-readable output**: The build plan must be parseable by the downstream Linear build step — use consistent table formatting
