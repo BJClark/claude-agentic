@@ -159,16 +159,31 @@ Handle `combine` / `need-more-info` / `more-options` per Step 4 of the prior spe
 
 ### Step 6: High-level design of the chosen approach
 
+**Decide what belongs here with one question: "what's the penalty for being wrong?"** Spec the decisions that are *expensive to reverse* — language, storage backend, public interface, consistency model, tenancy, sync-vs-async — because those are the ones a reader needs to weigh now. *Omit* what's cheap to change later (a "load more" button, a log level, an internal helper name): specifying it adds noise and creates the illusion the design is finished. Over-specification defeats the purpose of a design doc. When unsure whether a sub-decision earns a spot, ask: *if we guess wrong, is the fix hours or weeks?* Hours → leave it to the plan. Weeks → spec it.
+
+State **goals as impact, not implementation.** "Minimize outages from deploys" is a goal; "Add Kubernetes" is a tactic masquerading as one. If the scoping success metric reads like a tech choice, restate it as the outcome that choice is supposed to buy. The chosen approach is *how*; the goal is *what for*.
+
 Sketch — outline level, not phase level:
 
+- **Scenario walkthrough**: 1–3 sentences (or numbered steps) painting how the completed system behaves for a real request/user — the path through the new components, end to end. A reader should be able to picture it working before reading the component list. *Skip for Light.*
 - **Components**: added/changed/deleted, 1 line each.
 - **Data**: new entities/tables, schema shifts, migration *shape* (not SQL).
 - **Interfaces**: API/event/CLI surface, named endpoints only.
-- **Dependencies**: new libs/services/infra, version constraints if they matter.
+- **Dependencies**: new libs/services/infra, version constraints if they matter. Detail the *hard-to-swap* ones (storage, language, core service); don't sweat the easily-replaced.
+- **Diagram** (when data flow or component relationships aren't obvious from prose): use a **Mermaid** block (`flowchart`, `sequenceDiagram`, or `erDiagram`) so it lives in the markdown, diffs in review, and any reader can edit it. Prefer text-based diagrams over pasted images. Optional for Standard, encouraged for Heavy.
 - **Rollout shape**: dark-launch / flagged / big-bang / shadow-writes / incremental. One sentence.
 - **Open questions**: each with **owner** and **forcing function** (e.g. "before Phase 2", "by 2026-05-01").
 
 For each significant sub-decision (data store, sync vs async, library choice, tenancy), use Brief-then-Ask `AskUserQuestion`.
+
+**Operability & risk (Heavy specs only — gated by the penalty rule above).** For a Heavy spec, run a quick prompt over four operability dimensions and add a short section for any that are load-bearing. Skip silently any that don't apply — the rule is *include where the penalty for ignoring it is high*, not *fill in all four*:
+
+- **Security**: where does untrusted/malicious data enter? What's the trust boundary and attack surface this design adds?
+- **Privacy**: does it handle sensitive data? Retention, access control, encryption, and which existing policy it complies with.
+- **Monitoring/alerting**: *"if this goes down, how do we find out?"* — how the SLO is measured in production and what triggers an alert.
+- **Logging**: which critical events get logged, at what level, and what sensitive fields are excluded.
+
+For Standard and Light specs, skip this block. (Complexity-triage's per-size table records this.)
 
 ### Step 7: Self-critique
 
@@ -250,6 +265,10 @@ If no ticket was detected, skip sync silently.
 9. **Durable location.** `research/` — tech specs are referenced months later. Never `thoughts/shared/`.
 10. **Linear sync is the default, not a follow-up.** Step 9 runs `/linear-ticket-status-sync` unless the user explicitly opts out with a reason. A tech spec without a synced ticket tends to get forgotten.
 11. **Subagents do the heavy work.** Input resolution, scoping draft, candidate generation, critique — all delegated. The main session synthesizes and talks to the user.
+12. **"What's the penalty for being wrong?" decides what's in the spec.** Costly-to-reverse decisions earn a spot; hours-to-fix details don't. Over-specifying a design doc is as much a failure as under-specifying it — it hides the load-bearing choices in noise.
+13. **Goals are impact, not implementation.** "Minimize deploy outages" not "Add Kubernetes." A goal that names a technology is a chosen tactic with the *why* missing — restate it as the outcome.
+14. **Show the system working.** A scenario walkthrough and a Mermaid diagram (where flow isn't obvious) let a reader picture the design before auditing it. Text-based diagrams over images — they diff in review.
+15. **Operability is part of the design, sized to the risk.** Heavy specs prompt over security / privacy / monitoring / logging and include whichever the penalty rule flags. Don't bolt all four onto every spec.
 
 ## Troubleshooting
 

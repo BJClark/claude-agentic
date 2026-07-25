@@ -76,7 +76,9 @@ If the input references a Linear ticket (e.g. `ENG-1234`, `PLAT-56`, or a `thoug
 
 If the research surfaced technical choices that affect the plan, resolve them now before writing.
 
-For each significant technical decision (e.g. library choice, data model design, API pattern, migration strategy), get a decision using AskUserQuestion:
+**Triage by "what's the penalty for being wrong?"** Resolve the decisions that are *expensive to reverse* — data model, storage engine, public API shape, migration strategy, library choices the codebase will marry. Leave the *hours-to-fix* details (internal naming, a button's copy, a log level) to the implementer; pinning them in the plan adds noise without adding safety. If a tech spec already settled the costly decisions, inherit them rather than re-litigating.
+
+For each significant (costly-to-reverse) technical decision (e.g. library choice, data model design, API pattern, migration strategy), get a decision using AskUserQuestion:
 - **[Decision topic]**: Present the trade-offs clearly
 - Options should reflect the realistic choices discovered during research, with brief pros/cons for each
 - Include an "I need more info" option for decisions the user isn't ready to make
@@ -147,6 +149,8 @@ If a Linear ticket was detected in the input, automatically invoke `/linear-tick
 7. **Linear Sync is Separate**: Linear sync is handled by `/linear-ticket-status-sync`, not this skill
 8. **Spec-First When Possible**: If the codebase has an outside-in / BDD harness, specs lead implementation. Phase 0 writes failing scenarios that fail for the right reason; later phases close only when their designated specs pass. Always invest in executable behavior knowledge over ad-hoc verification.
 9. **Vertical Slices by Default**: Each phase must answer "what user-visible capability does this ship?" Horizontal phases (all schema, all API, all UI) defer integration risk and produce unshippable intermediate states. Acceptable exceptions: pure data migrations, library upgrades, cross-cutting refactors, or genuine technical preconditions — mark them explicitly. Reference: [references/slicing-strategy.md](references/slicing-strategy.md).
+10. **Phases Named as Impact, Not Layer**: A phase title states the outcome a user/caller/downstream system gains ("customer can submit a draft order"), not the implementation that delivers it ("add order schema + repository"). A title that names a technology or layer is the same smell as a goal that says "Add Kubernetes" instead of "minimize deploy outages" — restate it as the capability shipped.
+11. **Right-Size What the Plan Pins Down**: Spec the costly-to-reverse decisions; leave hours-to-fix details to the implementer. Over-specifying a plan buries the load-bearing choices in noise and invites churn when a trivial guess turns out wrong.
 
 ## Common Patterns
 

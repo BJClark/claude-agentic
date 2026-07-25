@@ -1,8 +1,8 @@
 # Principles (v2)
 
-Thirty-one principles drawn from Rails convention, 37signals OSS (Campfire, Writebook, Fizzy), Domain-Driven Design (Evans), Rails performance (Berkopec), and a set of recurring root-cause framings that cut across all of the above.
+Thirty-three principles drawn from Rails convention, 37signals OSS (Campfire, Writebook, Fizzy), Domain-Driven Design (Evans), Rails performance (Berkopec), a set of recurring root-cause framings that cut across all of the above, and effective-design-doc practice for critiquing a proposed approach.
 
-Each principle has a stable id (`P01`…`P25`), a one-line rule, a `stack:` tag, a review prompt, and — where the Rails framing doesn't translate cleanly — a note for other stacks.
+Each principle has a stable id (`P01`…`P33`), a one-line rule, a `stack:` tag, a review prompt, and — where the Rails framing doesn't translate cleanly — a note for other stacks.
 
 `stack:` values:
 - `general` — applies to any codebase.
@@ -195,3 +195,19 @@ Six cross-cutting framings. Most individual findings in a real critique fall und
 **Stack**: rails
 **Review prompt**: Flag tests that (a) set up a record, call a scope, and assert on the same predicate the scope defines; (b) iterate over boolean predicate methods asserting they match their own definition; (c) assert that a declared validator fires when its field is absent, with no user-observable scenario wrapping it; (d) mirror the shape of `has_many`/`belongs_to` declarations in assertions like "responds to `:posts`".
 **Translation outside Rails**: Applies to any declarative framework — Django validators, Ecto changesets, NestJS pipes/decorators, FastAPI dependencies, Zod schemas. The tell is: deleting the test also deletes the only call site exercising the declaration, i.e. the test proves the declaration exists, not that the feature works.
+
+---
+
+## Design-doc framing
+
+Two principles for critiquing a *proposed approach or design draft* (the `advise-on-approach` mode), drawn from effective-design-doc practice. They evaluate the framing of the design, not the code.
+
+### P32 — State goals as impact, not implementation
+**Rule**: A goal names the outcome you want; the approach names how you get there. "Minimize outages from deploying new versions" is a goal — "Add Kubernetes" is a chosen tactic with the *why* missing. A goal phrased as a technology pre-commits the design to a solution before the problem is stated.
+**Stack**: general
+**Review prompt**: In the approach/spec, does any stated goal or success metric name a technology, library, or layer instead of the user/business outcome it's meant to produce? Flag it and restate the impact it should describe.
+
+### P33 — Right-size the design to the penalty for being wrong
+**Rule**: A design doc should pin down the decisions that are *expensive to reverse* (storage backend, public interface, consistency model, language) and leave the *hours-to-fix* details (a button, a log level, an internal name) to implementation. Specifying everything defeats the purpose of design-level documentation and buries the load-bearing choices in noise; specifying nothing costly leaves the real risk unexamined.
+**Stack**: general
+**Review prompt**: Does the approach over-specify cheap-to-change details (exact UI copy, internal helper names) while a costly-to-reverse decision (data model, storage, API contract, tenancy) is left vague or unstated? Flag the mismatch — name what should be cut and what should be decided. Ask of each pinned decision: "if this is wrong, is the fix hours or weeks?"

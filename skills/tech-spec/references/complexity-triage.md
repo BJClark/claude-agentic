@@ -4,6 +4,8 @@ Referenced from `SKILL.md` Step 1.5. Sizes the spec to the problem so the full h
 
 One skill, three sizes: **Light / Standard / Heavy**. Auto-classify from the input bundle, then Brief-then-Ask to let the user override.
 
+Sizing is the *whole-spec* lens. The *per-decision* lens — what goes inside whatever size you pick — is "what's the penalty for being wrong?" (SKILL.md Step 6): spec the costly-to-reverse decisions, defer the hours-to-fix ones. The two compose: a Heavy spec still omits a trivial decision, and a Light spec still names the one choice that's expensive to undo.
+
 ## Auto-classification signals
 
 Input: the Step 1 bundle (`problem_text`, `scope_signals`, `prior_art`, plus `files_touched`, `labels`, `priority`, `size_hint`).
@@ -38,7 +40,7 @@ Everything else. Medium features, non-trivial refactors, single-context work tha
 | **2. Scoping Brief** | 3 questions only: A1 success metric, A7 scariest failure, A10 definition of done. No subagent — ask the user directly in one Brief-then-Ask. | 6–8 questions from Sets A + C. Triaged by relevance. Subagent drafts, user confirms. | Full triage across A + B + C per `references/framing-questions.md`. Subagent drafts. |
 | **4. Candidates** | 1 approach. Skip all subagents. If the user can't sketch a clear approach in 2 sentences, escalate to Standard. | 2 approaches. Spawn **researcher** (code-investigation mode) only. OSS search is optional (run only if the problem category matches a known primitive — queue, cache, search, workflow engine, feature flag, CDC, auth, scheduler, job runner, pub/sub). | 2–4 approaches. Spawn all researcher subagents in parallel (code-investigation, artifact-research, web-research OSS ALWAYS, web-research named-pattern if applicable). |
 | **5. Pick approach** | Skipped — there's one approach. Show it to the user for confirmation (Brief-then-Ask: *looks right* / *rethink* / *escalate to Standard*). | Brief-then-Ask between 2. | Full slate. |
-| **6. High-level design** | 3-bullet sketch: what changes, what interfaces shift, rollout in one line. No sub-decision AskUserQuestion passes. | Components + data + interfaces + rollout. Sub-decisions via Brief-then-Ask as needed. | Full outline per SKILL.md Step 6. |
+| **6. High-level design** | 3-bullet sketch: what changes, what interfaces shift, rollout in one line. No scenario, no diagram, no operability block. No sub-decision AskUserQuestion passes. | Scenario walkthrough + components + data + interfaces + rollout. Diagram optional. **Skip the Operability & risk block.** Sub-decisions via Brief-then-Ask as needed. | Full outline per SKILL.md Step 6, including the scenario walkthrough, a Mermaid diagram where flow isn't obvious, and the **Operability & risk** prompt (security / privacy / monitoring / logging — include each where the penalty for ignoring it is high). |
 | **7. Critique** | Skipped. (User can still invoke `/critique` manually.) | Optional — Brief-then-Ask at Step 7: *run critique* / *skip*. Default is *run* if the spec has ≥ 2 approaches with a real design tradeoff. | Mandatory unless user explicitly skips. |
 | **8. Artifact** | 1-page spec. Sections: Problem / Chosen approach / Open questions / Handoff. Skip Candidates-considered, Scoping Brief long form, Critique resolution if skipped. | Full template except Beck (Set B) section collapses to the 1–2 entries the user actually answered. | Full template. |
 | **9. Linear sync** | Same as Standard/Heavy — mandatory when ticket detected. | Same. | Same. |
