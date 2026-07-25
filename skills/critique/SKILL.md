@@ -1,7 +1,8 @@
 ---
 name: critique
-description: "Critique code or a planned approach against a 31-principle checklist covering convention, domain language, DDD, structure, events vs callbacks, performance, and six recurring root causes (rescue-the-universe, log-and-swallow, contract-test-by-internals, premature abstraction, premature-subscriber/YAGNI, framework-declaration tautology). Writes findings to a structured artifact for handoff to a planning skill — never modifies source, never prescribes a fix. Use when reviewing a PR, file, or branch, or when deciding how to structure code before writing it. Triggers on 'critique this', 'review this approach', 'is this idiomatic', 'check my structure', 'critique this PR'."
+description: "Critique code or a planned approach against a 33-principle checklist covering convention, domain language, DDD, structure, events vs callbacks, performance, six recurring root causes (rescue-the-universe, log-and-swallow, contract-test-by-internals, premature abstraction, premature-subscriber/YAGNI, framework-declaration tautology), and design-doc framing (goals-as-impact, right-size-the-design). Writes findings to a structured artifact for handoff to a planning skill — never modifies source, never prescribes a fix. Use when reviewing a PR, file, or branch, or when deciding how to structure code before writing it. Triggers on 'critique this', 'review this approach', 'is this idiomatic', 'check my structure', 'critique this PR'."
 model: opus
+context: fork
 allowed-tools: Read, Grep, Glob, Bash(git *:*), Bash(gh *:*), Bash(mkdir *:*), Task, Write
 argument-hint: "[file-path | PR-url | #PR-num | \"approach description\"]"
 ---
@@ -11,6 +12,8 @@ You are operating in **QA/Reviewer mode** — your role is to critique code or a
 # Critique
 
 Apply a principles checklist to code, a diff, or a proposed approach. Emit a structured findings artifact that a separate planning skill can consume.
+
+**Note:** This skill runs forked — it only sees what is passed as its argument, not conversational history. Callers must pass the target explicitly (file path, PR number, branch name, or draft text).
 
 **Input**: `$ARGUMENTS`
 

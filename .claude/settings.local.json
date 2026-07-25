@@ -36,7 +36,9 @@
       "Bash(python3 /Users/willclark/Developer/scidept/claude-agentic/skills/fgl-layout/scripts/png_to_fgl.py --validate /Users/willclark/Developer/scidept/claude-agentic/skills/fgl-layout/templates/event-ticket.fgl --canvas-rows 600 --canvas-cols 1650)",
       "Bash(python3 *)",
       "Skill(skill-builder)",
-      "Bash(awk -F: '{sum+=$NF} END {print sum}')"
+      "Bash(awk -F: '{sum+=$NF} END {print sum}')",
+      "Read(//Users/willclark/.claude/**)",
+      "Read(//Users/willclark/.claude/plugins/**)"
     ]
   }
 }
